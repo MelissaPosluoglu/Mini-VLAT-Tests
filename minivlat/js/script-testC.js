@@ -55,7 +55,7 @@ function renderViewMode(qIndex) {
 
     document.getElementById("app").innerHTML = `
         <h2>${q.prompt}</h2>
-        <img src="${q.img}">
+        <img src="${q.img}" class="vlat-image">
         <button onclick="goToAnswerMode('${q.id}')">Weiter</button>
     `;
 }

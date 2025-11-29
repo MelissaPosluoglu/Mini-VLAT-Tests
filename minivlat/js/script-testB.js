@@ -54,7 +54,7 @@ function render(qIndex) {
 
     document.getElementById("app").innerHTML = `
         <h2>${q.prompt}</h2>
-        <img src="${q.img}">
+       <img src="${q.img}" class="vlat-image">
         
         <ul class="answers">
             ${q.answers.map(a => `<li onclick="selectAnswer('${a}', ${qIndex})">${a}</li>`).join("")}
