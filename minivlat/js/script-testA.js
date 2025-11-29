@@ -103,8 +103,8 @@ function startTimer(qIndex) {
             <svg>
                 <defs>
                     <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#7b6dff"/>
-                        <stop offset="100%" stop-color="#5a48e8"/>
+                        <stop offset="0%" stop-color="#2f9e44"/>
+                        <stop offset="100%" stop-color="#54d26a"/>
                     </linearGradient>
                 </defs>
 
