@@ -102,9 +102,9 @@ function startTimer(qIndex) {
         <div id="circle-timer">
             <svg>
                 <defs>
-                    <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#2f9e44"/>
-                        <stop offset="100%" stop-color="#54d26a"/>
+                    <linearGradient id="timerGradientBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#3b6ff5"/>
+                        <stop offset="100%" stop-color="#2457d6"/>
                     </linearGradient>
                 </defs>
 

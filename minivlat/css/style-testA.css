@@ -1,0 +1,35 @@
+/* ======================================
+   TEST A — ZEITDRUCK
+====================================== */
+
+/* --------------------------------------
+   TIMER – Fortschrittsring (blau)
+--------------------------------------- */
+
+/* Fortschrittskreis */
+#timer-progress {
+    stroke: url(#timerGradientBlue) !important; /* blauer Verlauf */
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.25s linear !important; /* smooth animation */
+}
+
+/* Hintergrundring */
+#timer-bg {
+    stroke: #d6e4ff !important;   /* leichtes Hellblau */
+    stroke-width: 6 !important;
+}
+
+/* --------------------------------------
+   PROGRESSBAR UNTEN
+--------------------------------------- */
+#progress {
+    background: linear-gradient(90deg, #3b6ff5, #2457d6) !important;
+    transition: width 0.3s linear !important;  /* smooth bar animation */
+}
+
+/* --------------------------------------
+   ANTWORTOPTIONEN (neutral, keine Farbänderung)
+--------------------------------------- */
+.answers li {
+    /* keine speziellen Änderungen für Test A */
+}
