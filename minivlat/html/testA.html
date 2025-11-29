@@ -9,22 +9,46 @@
 
 <body class="test-page">
 
-<div id="app">
+<div id="testA-intro" class="test-intro-screen">
 
-    <!-- Fragezähler + Timer -->
-    <div class="question-header">
-        <div id="question-counter">Frage 1 von 12</div>
-        <div id="timer-box">⏱ <span id="t">30</span>s</div>
-    </div>
+    <h2>Welcome to the Visualization Literacy Test</h2>
 
-    <!-- Progressbar (jetzt korrekt platziert) -->
-    <div id="progressbar">
-        <div id="progress"></div>
-    </div>
+    <p>
+        Since this is your first time participating in this study, you will now see
+        <strong>12 short questions</strong> designed to measure your ability to read and interpret charts.
+    </p>
 
-    <!-- Inhalt wird per JS eingefügt -->
+    <p>
+        You have a maximum of ⏳ <strong>30 seconds</strong> to answer each question.
+    </p>
+
+    <p>
+        Only <strong>one answer</strong> will be correct for each question.
+    </p>
+
+    <p>
+        You'll earn <strong>+1 point</strong> for every correct answer.
+        There are <strong>no penalties</strong> for incorrect answers.
+    </p>
+
+    <p>
+        If you are unsure of an answer, you can simply skip it — the test will automatically move on when the time expires.
+    </p>
+
+    <p class="final-note">
+        This full quiz will take at most <strong>5 minutes</strong> to complete.
+    </p>
+
+    <button id="startTestA" class="start-btn">Start Test A</button>
+
 </div>
 
+
+<div id="app" style="display:none;">
+    <div id="progressbar"><div id="progress"></div></div>
+</div>
+
+<!-- ❗ Wichtig: Das Skript muss AUSSERHALB des Intro-Divs stehen  -->
 <script src="../js/script-testA.js"></script>
 
 </body>

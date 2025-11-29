@@ -1,5 +1,5 @@
 // =====================================================
-// MINI-VLAT — Test A (Zeitdruck) – FINAL VERSION
+// MINI-VLAT — Test A (Zeitdruck) – STABLE FINAL VERSION
 // =====================================================
 
 // ------------------------------
@@ -21,6 +21,7 @@ const questions = [
     { id:"scatter", prompt:"Negative relationship between height & weight?", img:"https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/scatterplot.png", answers:["True","False"], correct:"False" }
 ];
 
+
 // ------------------------------
 // STATE
 // ------------------------------
@@ -29,14 +30,51 @@ let score = 0;
 let timer = null;
 let timeLeft = 30;
 
-// ------------------------------
-// PREVENT BACK NAVIGATION (WICHTIG!)
-// ------------------------------
 
-history.pushState(null, "", location.href);
-window.onpopstate = function () {
-    history.pushState(null, "", location.href);
-};
+// ------------------------------------------------------
+// SINGLE CLEAN DOMContentLoaded HANDLER
+// ------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const params = new URLSearchParams(location.search);
+    const intro = document.getElementById("testA-intro");
+    const app   = document.getElementById("app");
+    const start = document.getElementById("startTestA");
+
+    // ⭐ Wenn done=true → Result Screen anzeigen
+    if (params.get("done") === "true") {
+        intro.style.display = "none";
+        app.style.display = "block";
+        showResult();
+        return;
+    }
+
+    // ⭐ Intro NUR anzeigen, wenn KEIN q und NICHT done
+    if (!params.get("q")) {
+        intro.style.display = "block";
+        app.style.display = "none";
+    } else {
+        intro.style.display = "none";
+        app.style.display = "block";
+    }
+
+    // ⭐ Startbutton → Test starten
+    start.addEventListener("click", () => {
+        history.pushState(null, "", "?q=treemap");
+        intro.style.display = "none";
+        app.style.display = "block";
+        render(0);
+    });
+
+    // ⭐ Wenn q vorhanden → Frage anzeigen
+    if (params.get("q")) {
+        const qIndex = getQuestionIndex();
+        if (qIndex !== null) render(qIndex);
+    }
+
+});
+
 
 
 // ------------------------------
@@ -44,16 +82,7 @@ window.onpopstate = function () {
 // ------------------------------
 
 function getQuestionIndex() {
-    const params = new URLSearchParams(location.search);
-
-    if (params.get("done") === "true") {
-        showResult();
-        return null;
-    }
-
-    const id = params.get("q");
-    if (!id) return 0;
-
+    const id = new URLSearchParams(location.search).get("q");
     return questions.findIndex(q => q.id === id);
 }
 
@@ -88,10 +117,11 @@ function render(qIndex) {
 
 
 // ------------------------------
-// CIRCULAR TIMER
+// TIMER
 // ------------------------------
 
 function startTimer(qIndex) {
+
     clearInterval(timer);
     timeLeft = 30;
 
@@ -126,7 +156,6 @@ function startTimer(qIndex) {
     timer = setInterval(() => {
         timeLeft--;
         timeText.textContent = timeLeft;
-
         progress.style.strokeDashoffset = offsetStep * (30 - timeLeft);
 
         if (timeLeft <= 0) {
@@ -138,7 +167,7 @@ function startTimer(qIndex) {
 
 
 // ------------------------------
-// ANSWER SELECT → auto next
+// ANSWER
 // ------------------------------
 
 function selectAnswer(answer, qIndex) {
@@ -152,36 +181,36 @@ function selectAnswer(answer, qIndex) {
 // ------------------------------
 
 function autoNext(qIndex) {
+
     if (qIndex + 1 >= questions.length) {
         location.href = "testA.html?done=true";
-    } else {
-        const nextId = questions[qIndex + 1].id;
-        location.href = `testA.html?q=${nextId}`;
+        return;
     }
+
+    location.href = `testA.html?q=${questions[qIndex + 1].id}`;
 }
 
 
 // ------------------------------
-// PROGRESSBAR
+// PROGRESS BAR
 // ------------------------------
 
 function updateProgress(i) {
-    const percent = Math.round((i / questions.length) * 100);
-    document.getElementById("progress").style.width = percent + "%";
+    document.getElementById("progress").style.width =
+        (100 * i / questions.length) + "%";
 }
 
 
 // ------------------------------
-// RESULT SCREEN
+// RESULT
 // ------------------------------
 
 function showResult() {
+
     document.getElementById("app").innerHTML = `
         <div id="result-box">
             <h2>Test abgeschlossen</h2>
-
             <p>Du hast <strong>${score}</strong> von ${questions.length} Fragen richtig beantwortet.</p>
-
             <button class="back-home-btn" onclick="location.href='index.html'">
                 Zurück zur Startseite
             </button>
@@ -190,11 +219,3 @@ function showResult() {
 
     document.getElementById("progress").style.width = "100%";
 }
-
-
-// ------------------------------
-// START
-// ------------------------------
-
-const qIndex = getQuestionIndex();
-if (qIndex !== null) render(qIndex);

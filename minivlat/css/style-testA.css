@@ -10,7 +10,7 @@
 #timer-progress {
     stroke: url(#timerGradientBlue) !important; /* blauer Verlauf */
     stroke-linecap: round;
-    transition: stroke-dashoffset 0.25s linear !important; /* smooth animation */
+    transition: stroke-dashoffset 1s linear !important; /* smooth animation */
 }
 
 /* Hintergrundring */
