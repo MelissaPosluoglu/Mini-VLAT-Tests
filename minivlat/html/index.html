@@ -14,6 +14,11 @@
 </header>
 
 <div class="main-container">
+    <script>
+        localStorage.removeItem("username");
+        localStorage.removeItem("scoreA");
+    </script>
+
     <div class="cards">
 
         <div class="card" onclick="location.href='testA.html'">
@@ -41,6 +46,10 @@
         </div>
 
     </div>
+    <button class="results-btn" onclick="location.href='results.html'">
+        Ergebnisse ansehen
+    </button>
+
 </div>
 
 <footer>

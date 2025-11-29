@@ -345,3 +345,54 @@ body.test-page #app {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(0,0,0,0.18);
 }
+
+/* =====================================================
+   RESULTS
+===================================================== */
+
+.results-title {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 32px;
+  color: #2e3a8c;
+}
+
+.results-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 50px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.results-table th {
+  background: #3b6ff5;
+  color: white;
+  padding: 12px;
+  text-align: left;
+}
+
+.results-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.results-btn {
+  margin: 40px auto;
+  display: block;
+  padding: 15px 40px;
+  font-size: 20px;
+  background: #3b6ff5;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  border: none;
+}

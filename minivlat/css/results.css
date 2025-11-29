@@ -1,0 +1,156 @@
+/* ===========================================================
+   GLOBAL PAGE STYLING
+=========================================================== */
+
+body {
+    background: #f2f4ff; /* Hell-Lavendel wie Startseite */
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #1d2a5b;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 38px;
+    color: #2646d6;
+    font-weight: 700;
+}
+
+.section-title {
+    margin: 50px auto 10px;
+    width: 80%;
+    font-size: 28px;
+    font-weight: 600;
+    color: #1d2a5b;
+}
+
+
+/* ===========================================================
+   TABLE WRAPPER (CARD STYLE)
+=========================================================== */
+
+.results-card {
+    width: 80%;
+    margin: 20px auto 60px;
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border: 1px solid #d7e1ff;
+}
+
+
+/* ===========================================================
+   TABLE HEADER
+=========================================================== */
+
+.results-table thead {
+    background: linear-gradient(90deg, #3b6ff5, #2457d6);
+    color: white;
+}
+
+.results-table th {
+    padding: 16px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+}
+
+
+/* ===========================================================
+   TABLE BODY
+=========================================================== */
+
+.results-table td {
+    padding: 14px 20px;
+    vertical-align: top;
+    font-size: 15px;
+    color: #1d2a5b;
+    border-bottom: 1px solid #e7ecff;
+}
+
+.results-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Name column spacing */
+.results-table td:first-child {
+    width: 120px;
+    font-weight: 600;
+    color: #1d2a5b;
+}
+
+
+/* ===========================================================
+   QUESTION LIST
+=========================================================== */
+
+.question-list {
+    line-height: 1.55;
+    font-size: 15px;
+}
+
+.question-list .correct {
+    color: #2ecc71; /* green check */
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+.question-list .wrong {
+    color: #e74c3c; /* red X */
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+
+/* ===========================================================
+   SCORE AND TOTAL TIME
+=========================================================== */
+
+.score-cell {
+    text-align: center;
+    font-weight: 700;
+    color: #1d2a5b;
+}
+
+.time-cell {
+    text-align: center;
+    font-weight: 600;
+    color: #1d2a5b;
+}
+
+
+/* ===========================================================
+   EMPTY SECTION PLACEHOLDERS
+=========================================================== */
+
+.empty-row {
+    text-align: center;
+    padding: 20px;
+    color: #8890c2;
+    font-style: italic;
+}
+
+
+/* ===========================================================
+   RESPONSIVE DESIGN
+=========================================================== */
+
+@media (max-width: 900px) {
+
+    .results-card,
+    .section-title {
+        width: 92%;
+    }
+
+    .results-table th,
+    .results-table td {
+        font-size: 14px;
+    }
+
+    .question-list {
+        font-size: 14px;
+    }
+}
