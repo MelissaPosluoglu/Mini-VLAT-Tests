@@ -26,11 +26,11 @@ const questions = [
         prompt: "Which country has the lowest proportion of Gold medals?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/100stackedbar.png",
         answers: ["U.S.A.", "Great Britain", "Japan", "Australia"],
-        correct: "Japan"
+        correct: "Great Britain"
     },
     {
         id: "map",
-        prompt: "In 2020, Washington (WA) had a higher unemployment rate than Wisconsin (WI). True or false?",
+        prompt: "In 2020, the unemployment rate for Washington (WA) was higher than that of Wisconsin (WI). True or false?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/map.png",
         answers: ["True", "False"],
         correct: "True"
@@ -40,7 +40,7 @@ const questions = [
         prompt: "What is the approximate global smartphone market share of Samsung?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/pie.png",
         answers: ["10.9%", "17.6%", "25.3%", "35.2%"],
-        correct: "25.3%"
+        correct: "17.6%"
     },
     {
         id: "bubble",
@@ -75,18 +75,18 @@ const questions = [
         prompt: "What was the average price of a pound of coffee in October 2019?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/area.png",
         answers: ["$0.71", "$0.63", "$0.80", "$0.90"],
-        correct: "$0.80"
+        correct: "$0.71"
     },
     {
         id: "stackedarea",
-        prompt: "What was the ratio of girls named 'Isla' to girls named 'Amelia' in 2012?",
+        prompt: "What was the ratio of girls named 'Isla' to girls named 'Amelia' in 2012 in the UK?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedarea.png",
         answers: ["1 to 1", "1 to 2", "1 to 3", "1 to 4"],
-        correct: "1 to 4"
+        correct: "1 to 2"
     },
     {
         id: "scatter",
-        prompt: "There is a negative relationship between height and weight. True or false?",
+        prompt: "There is a negative relationship between height and weight of the 85 males. True or false?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/scatterplot.png",
         answers: ["True", "False"],
         correct: "False"
