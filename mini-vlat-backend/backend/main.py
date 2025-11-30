@@ -63,17 +63,31 @@ async def save_answer(request: AnswerRequest):
 @app.post("/finish")
 async def finish_test(request: FinishRequest):
 
+    # Test laden
+    test = await tests_collection.find_one({"_id": ObjectId(request.test_id)})
+
+    if not test:
+        return {"status": "error", "message": "test not found"}
+
+    # Score korrekt berechnen
+    correct_answers = sum(1 for ans in test["answers"] if ans.get("is_correct") is True)
+
+    # DB updaten
     await tests_collection.update_one(
         {"_id": ObjectId(request.test_id)},
         {
             "$set": {
                 "total_time": request.total_time,
-                "score": request.score
+                "score": correct_answers
             }
         }
     )
 
-    return {"status": "finished"}
+    return {
+        "status": "finished",
+        "score": correct_answers
+    }
+
 
 
 # GET RESULTS FOR A TEST TYPE ----------------------------------------
