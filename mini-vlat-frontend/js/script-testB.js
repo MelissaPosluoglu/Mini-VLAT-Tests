@@ -27,116 +27,268 @@ let selectedAnswer = null;
 // ------------------------------
 // URL HANDLING
 // ------------------------------
+// ------------------------------
+// SCREEN LOGIC
+// ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
 
-function getQuestionIndex() {
+    const nameScreen = document.getElementById("name-input-screen");
+    const intro = document.getElementById("testB-intro");
+    const app = document.getElementById("app");
+
     const params = new URLSearchParams(location.search);
 
+    // ---------- 1) Ergebnis? ----------
     if (params.get("done") === "true") {
+        nameScreen.style.display = "none";
+        intro.style.display = "none";
+        app.style.display = "block";
         showResult();
-        return null;
+        return;
     }
 
-    const id = params.get("q");
-    if (!id) return 0;
+    // ---------- 2) Kein Name gespeichert → Name Screen anzeigen ----------
+    if (!localStorage.getItem("username")) {
+        nameScreen.style.display = "block";
+        intro.style.display = "none";
+        app.style.display = "none";
+        return;
+    }
 
+    // ---------- 3) Name existiert, aber keine Frage → Intro anzeigen ----------
+    if (!params.get("q")) {
+        nameScreen.style.display = "none";
+        intro.style.display = "block";
+        app.style.display = "none";
+        return;
+    }
+
+    // ---------- 4) Frage-Modus ----------
+    nameScreen.style.display = "none";
+    intro.style.display = "none";
+    app.style.display = "block";
+
+    const qIndex = getQuestionIndex();
+    if (qIndex !== -1) render(qIndex);
+});
+
+
+
+// ------------------------------
+// NAME SUBMIT
+// ------------------------------
+document.getElementById("startNameBtn").addEventListener("click", () => {
+
+    const name = document.getElementById("username").value.trim();
+    if (name.length < 2) return alert("Please enter a valid name.");
+
+    localStorage.setItem("username", name);
+
+    document.getElementById("name-input-screen").style.display = "none";
+    document.getElementById("testB-intro").style.display = "block";
+});
+
+// ------------------------------
+// INTRO: NEXT BUTTON
+// ------------------------------
+document.getElementById("startTestB").addEventListener("click", async () => {
+
+    score = 0;
+
+    const response = await fetch("http://localhost:8000/start", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: localStorage.getItem("username"),   // <-- HIER FIX
+            test_type: "B"
+        })
+    });
+
+    const data = await response.json();
+    localStorage.setItem("test_id_B", data.test_id);
+
+    history.pushState(null, "", "?q=treemap");
+
+    document.getElementById("testB-intro").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    render(0);
+});
+
+
+
+
+// ------------------------------
+// GET QUESTION INDEX
+// ------------------------------
+function getQuestionIndex() {
+    const id = new URLSearchParams(location.search).get("q");
     return questions.findIndex(q => q.id === id);
 }
 
 // ------------------------------
 // RENDER QUESTION
 // ------------------------------
-
 function render(qIndex) {
+
     const q = questions[qIndex];
     selectedAnswer = null;
 
     updateProgress(qIndex);
 
     document.getElementById("app").innerHTML = `
+        <div id="question-counter">Frage ${qIndex + 1} von ${questions.length}</div>
+
         <h2>${q.prompt}</h2>
-       <img src="${q.img}" class="vlat-image">
-        
+        <img src="${q.img}" class="vlat-image">
+
         <ul class="answers">
             ${q.answers.map(a => `<li onclick="selectAnswer('${a}', ${qIndex})">${a}</li>`).join("")}
         </ul>
 
         <div id="feedback" style="font-size:20px; margin-top:15px;"></div>
 
-        <button id="nextBtn" disabled>Next</button>
+        <button id="nextBtn" class="next-btn" disabled>Next</button>
     `;
 
     document.getElementById("nextBtn").onclick = () => next(qIndex);
 }
 
 // ------------------------------
-// SELECT ANSWER + FEEDBACK
+// ANSWER + FEEDBACK
 // ------------------------------
+async function selectAnswer(answer, qIndex) {
 
-function selectAnswer(answer, qIndex) {
     selectedAnswer = answer;
+    const correct = questions[qIndex].correct;
 
-    document.querySelectorAll(".answers li").forEach(li => {
-        li.classList.toggle("selected", li.innerText === answer);
+
+    // ---------- BACKEND SPEICHERN ----------
+    await fetch("http://localhost:8000/answer", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            test_id: localStorage.getItem("test_id_B"),
+            question_id: questions[qIndex].id,
+            selected_answer: answer,
+            correct_answer: questions[qIndex].correct,
+            is_correct: (answer === questions[qIndex].correct),
+            time_taken: 0
+        })
     });
 
-    const correct = questions[qIndex].correct;
-    const fb = document.getElementById("feedback");
 
+    const lis = document.querySelectorAll(".answers li");
+
+    // Reset
+    lis.forEach(li => {
+        li.classList.remove("selected", "answer-correct", "answer-wrong", "answer-selected");
+    });
+
+    // Richtig beantwortet
     if (answer === correct) {
-        fb.innerHTML = "✅ Correct!";
+
+        lis.forEach(li => {
+            if (li.innerText === correct) {
+                li.classList.add("answer-correct", "answer-selected"); // deine Antwort hervorheben
+            }
+        });
+
     } else {
-        fb.innerHTML = `❌ Incorrect<br>Correct answer: <strong>${correct}</strong>`;
+        // Falsch → ALLE falschen rot
+        lis.forEach(li => {
+            if (li.innerText !== correct) {
+                li.classList.add("answer-wrong");
+            }
+        });
+
+        // richtige Antwort grün
+        lis.forEach(li => {
+            if (li.innerText === correct) {
+                li.classList.add("answer-correct");
+            }
+        });
+
+        // deine angeklickte zusätzlich hervorheben
+        lis.forEach(li => {
+            if (li.innerText === answer) {
+                li.classList.add("answer-selected");
+            }
+        });
+    }
+
+    // Feedback
+    const fb = document.getElementById("feedback");
+    if (answer === correct) {
+        fb.className = "correct";
+        fb.innerHTML = "✔ Correct!";
+    } else {
+        fb.className = "incorrect";
+        fb.innerHTML = `✖ Incorrect<br>Correct answer: <strong>${correct}</strong>`;
     }
 
     document.getElementById("nextBtn").disabled = false;
 }
 
+
+
+
 // ------------------------------
 // NEXT QUESTION
 // ------------------------------
+async function next(qIndex) {
 
-function next(qIndex) {
-    if (selectedAnswer === questions[qIndex].correct) score++;
 
     const nextIndex = qIndex + 1;
 
     if (nextIndex >= questions.length) {
+
+        await fetch("http://localhost:8000/finish", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                test_id: localStorage.getItem("test_id_B"),
+                total_time: 0,
+                score: score
+            })
+        });
+
         location.href = "testB.html?done=true";
-    } else {
-        const nextId = questions[nextIndex].id;
-        location.href = `testB.html?q=${nextId}`;
+        return;
     }
+
+    location.href = `testB.html?q=${questions[nextIndex].id}`;
 }
+
+
 
 // ------------------------------
 // PROGRESS BAR
 // ------------------------------
-function updateProgress(qIndex) {
-    const percent = Math.round((qIndex / questions.length) * 100);
+function updateProgress(i) {
     const bar = document.getElementById("progress");
-    bar.style.width = percent + "%";
+    if (!bar) return;  // <- absolut notwendig!
 
-    document.getElementById("question-counter").textContent =
-        `Frage ${qIndex + 1} von ${questions.length}`;
+    bar.style.width = (100 * i / questions.length) + "%";
 }
 
 
 // ------------------------------
 // RESULT PAGE
 // ------------------------------
+async function showResult() {
 
-function showResult() {
+    const res = await fetch(`http://localhost:8000/results/B`);
+    const all = await res.json();
+
+    const testId = localStorage.getItem("test_id_B");
+    const my = all.find(x => x._id === testId);
+
+    const finalScore = my?.score ?? 0;
+
     document.getElementById("app").innerHTML = `
         <h2>Finished!</h2>
-        <p>You got <strong>${score}</strong> out of <strong>${questions.length}</strong> correct.</p>
+        <p>You got <strong>${finalScore}</strong> out of <strong>${questions.length}</strong> correct.</p>
+        <button class="back-home-btn" onclick="location.href='index.html'">Back to Start</button>
     `;
-    document.getElementById("progress").style.width = "100%";
-    document.getElementById("progress").textContent = "100%";
 }
-
-// ------------------------------
-// INITIALIZE
-// ------------------------------
-
-const qIndex = getQuestionIndex();
-if (qIndex !== null) render(qIndex);

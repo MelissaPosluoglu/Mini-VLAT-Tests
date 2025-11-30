@@ -1,0 +1,140 @@
+/* ======================================
+   TEST B — INTERAKTIV (Feedback-Version)
+====================================== */
+
+/* --------------------------------------
+   PROGRESSBAR – gleiche Farben wie Test A
+--------------------------------------- */
+#progress {
+    background: linear-gradient(90deg, #3b6ff5, #2457d6) !important;
+    transition: width 0.3s linear !important;
+}
+
+/* --------------------------------------
+   ANTWORTAUSWAHL (mit Feedback)
+--------------------------------------- */
+.answers li.selected {
+    background: #e0e5ff;
+    border-color: #3b6ff5;
+    transform: scale(1.02);
+}
+
+/* Feedback */
+#feedback {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-top: 18px;
+    font-weight: 700;
+}
+
+/* Grün / Rot wie bei Quiz */
+#feedback.correct {
+    color: #1e9b45;
+}
+
+#feedback.incorrect {
+    color: #d43131;
+}
+
+/* --------------------------------------
+   NEXT BUTTON
+--------------------------------------- */
+#nextBtn {
+    display: block;
+    margin: 30px auto 0 auto !important;  /* immer sauber zentriert */
+    padding: 12px 26px;
+    background: linear-gradient(90deg, #3b6ff5, #2457d6);
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.25s ease;
+    width: 160px; /* optional - saubere Größe */
+}
+
+
+
+#nextBtn:disabled {
+    background: #aac3ff;
+    cursor: default;
+}
+
+#nextBtn:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+
+/* --------------------------------------
+   NAME INPUT SCREEN (falls Test B auch Namen braucht)
+--------------------------------------- */
+
+#name-input-screen {
+    max-width: 650px;
+    margin: 80px auto;
+    padding: 40px;
+    background: #eef3ff;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+}
+
+#name-input-screen h2 {
+    color: #1e3fa3;
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+#username {
+    padding: 12px 18px;
+    width: 80%;
+    font-size: 18px;
+    border-radius: 12px;
+    border: 1px solid #c9d6ff;
+    margin-bottom: 25px;
+    outline: none;
+}
+
+/* Start button (wie Test A) */
+.start-btn {
+    padding: 12px 26px;
+    background: #3b6ff5;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.start-btn:hover {
+    background: #2e5dde;
+}
+
+/* Fade */
+.card-screen {
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* richtige Antwort */
+.answer-correct {
+    background-color: #d4f8d4 !important;
+    border-color: #4caf50 !important;
+}
+
+/* falsche Antworten */
+.answer-wrong {
+    background-color: #f8d4d4 !important;
+    border-color: #d9534f !important;
+}
+
+/* geklickte Antwort (stärker markiert) */
+.answer-selected {
+    border-width: 3px !important;
+    transform: scale(1.02);
+}
