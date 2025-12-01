@@ -11,7 +11,7 @@ class AnswerEntry(BaseModel):
 
 
 class StartTestRequest(BaseModel):
-    participantNumber: str
+    username: str
     test_type: str  # "A", "B", "C"
 
 
@@ -35,7 +35,7 @@ class FinishRequest(BaseModel):
 
 
 class TestDocument(BaseModel):
-    participantNumber: str
+    username: str
     test_type: str
     answers: List[AnswerEntry]
     total_time: Optional[float] = None

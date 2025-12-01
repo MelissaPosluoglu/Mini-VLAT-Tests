@@ -11,15 +11,14 @@ services:
       - mongo_data:/data/db
 
   backend:
-    build: .
-    container_name: vlat-backend
+    build: ./mini-vlat-backend
     restart: always
     ports:
       - "8000:8000"
     depends_on:
       - mongo
     volumes:
-      - .:/app
+      - ./mini-vlat-backend:/app
 
 volumes:
   mongo_data:

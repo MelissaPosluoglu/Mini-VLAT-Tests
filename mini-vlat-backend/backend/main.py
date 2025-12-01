@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from bson import ObjectId
-
-from app.backend.models import (
+from backend.database import tests_collection
+from backend.models import (
     StartTestRequest, StartTestResponse,
-    AnswerRequest, FinishRequest,
-    FeedbackRequest
+    AnswerRequest, FinishRequest
 )
-from app.backend.database import tests_collection, feedback_collection
+
+from backend.database import tests_collection, feedback_collection
+from backend.models import FeedbackRequest
 
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,7 +29,7 @@ app.add_middleware(
 async def start_test(request: StartTestRequest):
 
     new_test = {
-        "participantNumber": request.participantNumber,
+        "username": request.username,
         "test_type": request.test_type,
         "answers": [],
         "total_time": None,
@@ -110,7 +111,7 @@ async def get_results(test_type: str):
 @app.post("/feedback")
 async def save_feedback(request: FeedbackRequest):
 
-    entry = request.model_dump()
+    entry = request.dict()
     result = await feedback_collection.insert_one(entry)
 
     return {"status": "saved", "id": str(result.inserted_id)}
