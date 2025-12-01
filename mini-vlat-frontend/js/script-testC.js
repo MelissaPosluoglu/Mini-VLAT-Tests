@@ -92,74 +92,139 @@ const questions = [
 // ------------------------------
 // STATE
 // ------------------------------
-
 let score = 0;
 let selectedAnswer = null;
 
 // ------------------------------
-// URL → Frage & Modus bestimmen
+// SCREEN LOGIC
 // ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
 
-function getStateFromURL() {
+    const numberScreen = document.getElementById("number-input-screen");
+    const intro = document.getElementById("testC-intro");
+    const app = document.getElementById("app");
+
     const params = new URLSearchParams(location.search);
 
+    // ---------- 1) RESULT ----------
     if (params.get("done") === "true") {
+        numberScreen.style.display = "none";
+        intro.style.display = "none";
+        app.style.display = "block";
         showResult();
-        return null;
+        return;
     }
 
-    const id = params.get("q");
-    const mode = params.get("mode") || "view";
+    // ---------- 2) PARTICIPANT NUMBER REQUIRED ----------
+    if (!localStorage.getItem("participantNumber")) {
+        numberScreen.style.display = "block";
+        intro.style.display = "none";
+        app.style.display = "none";
+        return;
+    }
 
-    const index = questions.findIndex(q => q.id === id);
+    // ---------- 3) INTRO ----------
+    if (!params.get("q")) {
+        numberScreen.style.display = "none";
+        intro.style.display = "block";
+        app.style.display = "none";
+        return;
+    }
 
-    return { index: index === -1 ? 0 : index, mode };
-}
+    // ---------- 4) QUESTION MODE ----------
+    numberScreen.style.display = "none";
+    intro.style.display = "none";
+    app.style.display = "block";
+
+    const qIndex = questions.findIndex(q => q.id === params.get("q"));
+    const mode = params.get("mode");
+
+    if (mode === "answer") renderAnswerMode(qIndex);
+    else renderViewMode(qIndex);
+});
 
 // ------------------------------
-// RENDER VIEW MODE (nur Grafik + Frage)
+// NUMBER SUBMIT
 // ------------------------------
+document.getElementById("startNumberBtn").addEventListener("click", () => {
 
-function renderViewMode(qIndex) {
-    const q = questions[qIndex];
+    const number = document.getElementById("participantNumber").value.trim();
+    if (number.length < 1) return alert("Please enter a Participant Number.");
 
-    updateProgress(qIndex);
+    localStorage.setItem("participantNumber", number);
+
+    document.getElementById("number-input-screen").style.display = "none";
+    document.getElementById("testC-intro").style.display = "block";
+});
+
+// ------------------------------
+// START TEST
+// ------------------------------
+document.getElementById("startTestC").addEventListener("click", async () => {
+
+    score = 0;
+
+    const response = await fetch("http://localhost:8000/start", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            participantNumber: localStorage.getItem("participantNumber"),
+            test_type: "C"
+        })
+    });
+
+    const data = await response.json();
+    localStorage.setItem("test_id", data.test_id);
+
+    location.href = "?q=treemap&mode=view";
+});
+
+// ------------------------------
+// VIEW MODE
+// ------------------------------
+function renderViewMode(index) {
+
+    const q = questions[index];
+
+    updateProgress(index);
 
     document.getElementById("app").innerHTML = `
         <h2>${q.prompt}</h2>
         <img src="${q.img}" class="vlat-image">
-        <button onclick="goToAnswerMode('${q.id}')">Weiter</button>
+
+        <button class="start-btn" onclick="location.href='?q=${q.id}&mode=answer'">
+            Weiter
+        </button>
     `;
 }
 
 // ------------------------------
-// RENDER ANSWER MODE (Antwortoptionen)
+// ANSWER MODE
 // ------------------------------
+function renderAnswerMode(index) {
 
-function renderAnswerMode(qIndex) {
-    const q = questions[qIndex];
+    const q = questions[index];
     selectedAnswer = null;
 
-    updateProgress(qIndex);
+    updateProgress(index);
 
     document.getElementById("app").innerHTML = `
-        <h2>${q.prompt}</h2>
+      <h2>${q.prompt}</h2>
 
-        <ul class="answers">
-            ${q.answers.map(a => `<li onclick="selectAnswer('${a}')">${a}</li>`).join("")}
-        </ul>
+      <ul class="answers">
+         ${q.answers.map(a => `<li onclick="selectAnswer('${a}')">${a}</li>`).join("")}
+      </ul>
 
-        <button onclick="goBackToView('${q.id}')">Zurück zur Grafik</button>
-        <button id="nextBtn" disabled>Weiter</button>
-    `;
+      <button class="nav-btn back-btn" onclick="location.href='?q=${q.id}&mode=view'">Zurück</button>
+      <button class="nav-btn next-btn" id="nextBtn" disabled>Next</button>
+      `;
 
-    document.getElementById("nextBtn").onclick = () => nextQuestion(qIndex);
+    document.getElementById("nextBtn").onclick = () => finishQuestion(index);
 }
 
 // ------------------------------
 // SELECT ANSWER
 // ------------------------------
-
 function selectAnswer(answer) {
     selectedAnswer = answer;
 
@@ -171,66 +236,70 @@ function selectAnswer(answer) {
 }
 
 // ------------------------------
-// NAVIGATION
+// FINISH ONE QUESTION
 // ------------------------------
+async function finishQuestion(index) {
 
-function goToAnswerMode(id) {
-    location.href = `testC.html?q=${id}&mode=answer`;
-}
+    const q = questions[index];
+    const correct = (selectedAnswer === q.correct);
 
-function goBackToView(id) {
-    location.href = `testC.html?q=${id}&mode=view`;
-}
+    score += correct ? 1 : 0;
 
-// ------------------------------
-// NEXT QUESTION
-// ------------------------------
+    await fetch("http://localhost:8000/answer", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            test_id: localStorage.getItem("test_id"),
+            question_id: q.id,
+            selected_answer: selectedAnswer,
+            correct_answer: q.correct,
+            is_correct: correct
+        })
+    });
 
-function nextQuestion(qIndex) {
-    if (selectedAnswer === questions[qIndex].correct) score++;
+    const next = index + 1;
 
-    const nextIndex = qIndex + 1;
-
-    if (nextIndex >= questions.length) {
-        location.href = "testC.html?done=true";
+    if (next >= questions.length) {
+        location.href = "?done=true";
     } else {
-        location.href = `testC.html?q=${questions[nextIndex].id}&mode=view`;
+        location.href = `?q=${questions[next].id}&mode=view`;
     }
 }
 
 // ------------------------------
 // PROGRESS BAR
 // ------------------------------
-
-function updateProgress(qIndex) {
-    const percent = Math.round((qIndex / questions.length) * 100);
+function updateProgress(i) {
     const bar = document.getElementById("progress");
-    bar.style.width = percent + "%";
+    if (!bar) return;  // <- absolut notwendig!
 
-    document.getElementById("question-counter").textContent =
-        `Frage ${qIndex + 1} von ${questions.length}`;
+    bar.style.width = (100 * i / questions.length) + "%";
 }
 
 
 // ------------------------------
 // RESULT PAGE
 // ------------------------------
+async function showResult() {
 
-function showResult() {
+    await fetch("http://localhost:8000/finish", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            test_id: localStorage.getItem("test_id"),
+            score: score
+        })
+    });
+
     document.getElementById("app").innerHTML = `
-        <h2>Finished!</h2>
-        <p>You got <strong>${score}</strong> out of <strong>${questions.length}</strong> correct.</p>
+        <div id="result-box">
+            <h2>Test C abgeschlossen</h2>
+            <p>Du hast <strong>${score}</strong> von ${questions.length} Fragen richtig beantwortet.</p>
+
+            <button class="back-home-btn"
+                onclick="location.href='feedback.html?test=C&tid=${localStorage.getItem("test_id")}'">
+                Weiter zum Feedback
+            </button>
+        </div>
     `;
-    document.getElementById("progress").style.width = "100%";
-    document.getElementById("progress").textContent = "100%";
-}
-
-// ------------------------------
-// INIT
-// ------------------------------
-
-const state = getStateFromURL();
-if (state !== null) {
-    if (state.mode === "view") renderViewMode(state.index);
-    else renderAnswerMode(state.index);
 }
