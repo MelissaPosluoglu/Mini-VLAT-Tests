@@ -38,7 +38,7 @@
    NAME INPUT SCREEN DESIGN
 ================================= */
 
-#name-input-screen {
+#number-input-screen {
     max-width: 650px;
     margin: 80px auto;
     padding: 40px;
@@ -48,13 +48,13 @@
     box-shadow: 0 6px 30px rgba(0,0,0,0.08);
 }
 
-#name-input-screen h2 {
+#number-input-screen h2 {
     color: #1e3fa3;
     font-size: 30px;
     margin-bottom: 25px;
 }
 
-#username {
+#participantNumber {
     padding: 12px 18px;
     width: 80%;
     font-size: 18px;

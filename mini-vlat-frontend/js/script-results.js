@@ -6,7 +6,7 @@ async function loadResults(testType, tableId) {
 
     table.innerHTML = `
         <tr>
-            <th>Name</th>
+            <th>Nummer</th>
             <th>Fragen (Dauer / Richtig?)</th>
             <th>Gesamtdauer</th>
             <th>Score</th>
@@ -21,7 +21,7 @@ async function loadResults(testType, tableId) {
 
         table.innerHTML += `
             <tr>
-                <td>${entry.username}</td>
+                <td>${entry.participantNumber}</td>
                 <td>${answersFormatted}</td>
                 <td>${entry.total_time ?? "-"}</td>
                 <td>${entry.score ?? "-"}</td>

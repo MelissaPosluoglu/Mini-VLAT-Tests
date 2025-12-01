@@ -3,42 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Test B – Feedback</title>
+
+    <!-- Global & Test spezifisches CSS -->
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/style-testB.css">
 </head>
+
 <body class="test-page">
 
 <!-- 1) NAME-SCREEN -->
-<div id="name-input-screen" class="card-screen" style="display:none;">
-    <h2>Please enter your name</h2>
-    <input type="text" id="username" placeholder="Your name">
-    <button id="startNameBtn" class="start-btn">Continue</button>
+<div id="number-input-screen" class="card-screen" style="display:none;">
+    <h2>Please enter your Participant Number</h2>
+    <input type="text" id="participantNumber" placeholder="Your Number">
+    <button id="startNumberBtn" class="start-btn">Continue</button>
 </div>
 
+<!-- 2) INTRO-SCREEN -->
+<div id="testB-intro" class="test-intro-screen" style="display:none;">
+    <h2>Welcome to the Visualization Literacy Test</h2>
 
-<div id="testB-intro" class="test-intro-screen">
-
-    <h2>Welcome to the Interactive VLAT</h2>
-
-    <p>In this version, there is <strong>no time limit</strong>.</p>
-
-    <p>After each answer, you will receive <strong>instant feedback</strong>.</p>
-
-    <p>You can manually continue by clicking the <strong>Next</strong> button.</p>
-
-    <p>At the end, you will see your <strong>total number of correct answers</strong>.</p>
+    <p>You will now see <strong>12 short questions</strong> designed to measure your ability to read and interpret charts.</p>
+    <p>You have a maximum of ⏳ <strong>30 seconds</strong> to answer each question.</p>
+    <p>Only <strong>one answer</strong> will be correct for each question.</p>
+    <p>You’ll earn <strong>+1 point</strong> for every correct answer. There are <strong>no penalties</strong> for incorrect answers.</p>
+    <p>If you are unsure of an answer, you can simply skip it — the test will automatically move on when the time expires.</p>
+    <p class="final-note">This quiz takes at most <strong>5 minutes</strong> to complete.</p>
 
     <button id="startTestB" class="start-btn">Start Test B</button>
-
 </div>
-
 
 <!-- 3) TEST-AREA (Fragen kommen per JS) -->
 <div id="app" style="display:none;">
     <div id="progressbar"><div id="progress"></div></div>
 </div>
 
-
+<!-- Main Script -->
 <script src="../js/script-testB.js"></script>
+
 </body>
 </html>

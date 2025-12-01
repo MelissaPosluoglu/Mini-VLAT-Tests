@@ -29,7 +29,7 @@ app.add_middleware(
 async def start_test(request: StartTestRequest):
 
     new_test = {
-        "username": request.username,
+        "participantNumber": request.participantNumber,
         "test_type": request.test_type,
         "answers": [],
         "total_time": None,
