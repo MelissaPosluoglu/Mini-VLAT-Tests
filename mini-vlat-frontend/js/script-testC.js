@@ -5,87 +5,87 @@
 const questions = [
     {
         id: "treemap",
-        prompt: "eBay is nested in the Software category. True or false?",
+        prompt: "eBay ist in der Kategorie Software eingeteilt. Wahr oder falsch?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/treemap.png",
-        answers: ["True", "False"],
-        correct: "False"
+        answers: ["Wahr", "Falsch"],
+        correct: "Falsch"
     },
     {
         id: "histogram",
-        prompt: "What distance have customers traveled the most?",
+        prompt: "Welche Distanz haben die Kunden am meisten zurückgelegt?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/histogram.png",
         answers: ["20–30 km", "50–60 km", "60–70 km", "30–40 km"],
         correct: "30–40 km"
     },
     {
         id: "100stacked",
-        prompt: "Which country has the lowest proportion of Gold medals?",
+        prompt: "Welches Land hat den geringsten Anteil an Goldmedaillen?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/100stackedbar.png",
-        answers: ["U.S.A.", "Great Britain", "Japan", "Australia"],
-        correct: "Great Britain"
+        answers: ["USA", "Großbritannien", "Japan", "Australien"],
+        correct: "Großbritannien"
     },
     {
         id: "map",
-        prompt: "In 2020, the unemployment rate for Washington (WA) was higher than that of Wisconsin (WI). True or false?",
+        prompt: "Im Jahr 2020 war die Arbeitslosenquote in Washington (WA) höher als in Wisconsin (WI). Wahr oder falsch?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/map.png",
-        answers: ["True", "False"],
-        correct: "True"
+        answers: ["Wahr", "Falsch"],
+        correct: "Wahr"
     },
     {
         id: "pie",
-        prompt: "What is the approximate global smartphone market share of Samsung?",
+        prompt: "Wie hoch ist der weltweite Marktanteil von Samsung bei Smartphones?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/pie.png",
-        answers: ["10.9%", "17.6%", "25.3%", "35.2%"],
-        correct: "17.6%"
+        answers: ["10,9%", "17,6%", "25,3%", "35,2%"],
+        correct: "17,6%"
     },
     {
         id: "bubble",
-        prompt: "Which has the largest number of metro stations?",
+        prompt: "Welche Stadt hat die meisten U-Bahn-Stationen?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/bubble.png",
-        answers: ["Beijing", "Shanghai", "London", "Seoul"],
+        answers: ["Peking", "Shanghai", "London", "Seoul"],
         correct: "Shanghai"
     },
     {
         id: "stackedbar",
-        prompt: "What is the cost of peanuts in Seoul?",
+        prompt: "Was kostet eine Tüte Erdnüsse in Seoul?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedbar.png",
-        answers: ["$7.5", "$6.1", "$5.2", "$4.5"],
-        correct: "$6.1"
+        answers: ["7,5$", "6,1$", "5,2$", "4,5$"],
+        correct: "6,1$"
     },
     {
         id: "line",
-        prompt: "What was the price of a barrel of oil in February 2020?",
+        prompt: "Wie hoch war der Preis für ein Barrel Öl im Februar 2020?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/line.png",
-        answers: ["$50.54", "$42.34", "$47.02", "$43.48"],
-        correct: "$50.54"
+        answers: ["50,54$", "42,34$", "47,02$", "43,48$"],
+        correct: "50,54$"
     },
     {
         id: "bar",
-        prompt: "What is the average internet speed in Japan?",
+        prompt: "Wie hoch ist die durchschnittliche Internetgeschwindigkeit in Japan?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/bar.png",
-        answers: ["40.51 Mbps", "16.16 Mbps", "35.25 Mbps", "42.30 Mbps"],
-        correct: "40.51 Mbps"
+        answers: ["40,51 Mbps", "16,16 Mbps", "35,25 Mbps", "42,30 Mbps"],
+        correct: "40,51 Mbps"
     },
     {
         id: "area",
-        prompt: "What was the average price of a pound of coffee in October 2019?",
+        prompt: "Wie hoch war der durchschnittliche Preis für ein Pfund Kaffee im Oktober 2019?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/area.png",
-        answers: ["$0.71", "$0.63", "$0.80", "$0.90"],
-        correct: "$0.71"
+        answers: ["0,71$", "0,63$", "0,80$", "0,90$"],
+        correct: "0,71$"
     },
     {
         id: "stackedarea",
-        prompt: "What was the ratio of girls named 'Isla' to girls named 'Amelia' in 2012 in the UK?",
+        prompt: "Wie war das Verhältnis der Mädchen namens 'Isla' zu den Mädchen namens 'Amelia' im Jahr 2012 im Vereinigten Königreich?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedarea.png",
-        answers: ["1 to 1", "1 to 2", "1 to 3", "1 to 4"],
-        correct: "1 to 2"
+        answers: ["1 zu 1", "1 zu 2", "1 zu 3", "1 zu 4"],
+        correct: "1 zu 2"
     },
     {
         id: "scatter",
-        prompt: "There is a negative relationship between height and weight of the 85 males. True or false?",
+        prompt: "Es gibt eine negative Beziehung zwischen der Körpergröße und dem Gewicht der 85 Männer. Wahr oder falsch?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/scatterplot.png",
-        answers: ["True", "False"],
-        correct: "False"
+        answers: ["Wahr", "Falsch"],
+        correct: "Falsch"
     }
 ];
 
@@ -150,7 +150,7 @@ function renderAnswerMode(qIndex) {
         </ul>
 
         <button onclick="goBackToView('${q.id}')">Zurück zur Grafik</button>
-        <button id="nextBtn" disabled>Next</button>
+        <button id="nextBtn" disabled>Weiter</button>
     `;
 
     document.getElementById("nextBtn").onclick = () => nextQuestion(qIndex);
