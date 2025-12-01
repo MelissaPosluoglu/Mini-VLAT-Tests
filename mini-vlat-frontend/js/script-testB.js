@@ -361,6 +361,10 @@ async function showResult() {
     document.getElementById("app").innerHTML = `
         <h2>Finished!</h2>
         <p>You got <strong>${finalScore}</strong> out of <strong>${questions.length}</strong> correct.</p>
-        <button class="back-home-btn" onclick="location.href='index.html'">Back to Start</button>
+       <button class="back-home-btn"
+            onclick="location.href='feedback.html?test=B&tid=${localStorage.getItem("test_id_B")}'">
+            Weiter zum Feedback
+        </button>
+
     `;
 }

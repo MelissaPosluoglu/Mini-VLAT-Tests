@@ -6,6 +6,10 @@ from backend.models import (
     AnswerRequest, FinishRequest
 )
 
+from backend.database import tests_collection, feedback_collection
+from backend.models import FeedbackRequest
+
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -103,3 +107,11 @@ async def get_results(test_type: str):
         results.append(doc)
 
     return results
+
+@app.post("/feedback")
+async def save_feedback(request: FeedbackRequest):
+
+    entry = request.dict()
+    result = await feedback_collection.insert_one(entry)
+
+    return {"status": "saved", "id": str(result.inserted_id)}

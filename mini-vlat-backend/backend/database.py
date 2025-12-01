@@ -7,3 +7,5 @@ client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 
 tests_collection = db["tests"]
+
+feedback_collection = db["feedback"]

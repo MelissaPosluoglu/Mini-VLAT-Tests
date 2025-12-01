@@ -343,7 +343,12 @@ async function showResult() {
         <div id="result-box">
             <h2>Test abgeschlossen</h2>
             <p>Du hast <strong>${finalScore}</strong> von ${questions.length} Fragen richtig beantwortet.</p>
-            <button class="back-home-btn" onclick="location.href='index.html'">Zurück zur Startseite</button>
+           
+            <button class="back-home-btn"
+            onclick="location.href='feedback.html?test=A&tid=${localStorage.getItem("test_id")}'">
+            Weiter zum Feedback
+            </button>
+        
         </div>
     `;
 
