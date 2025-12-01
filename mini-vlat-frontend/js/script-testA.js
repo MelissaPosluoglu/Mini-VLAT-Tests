@@ -1,6 +1,6 @@
-// =====================================================
-// MINI-VLAT — Test A (Zeitdruck) – STABLE FINAL VERSION
-// =====================================================
+// ===============================
+// MINI-VLAT — Test A (Zeitdruck)
+// ================================
 
 // ------------------------------
 // QUESTIONS
@@ -107,7 +107,7 @@ let timeLeft = 30;
 // ------------------------------
 document.addEventListener("DOMContentLoaded", () => {
 
-    const nameScreen = document.getElementById("name-input-screen");
+    const numberScreen = document.getElementById("number-input-screen");
     const intro = document.getElementById("testA-intro");
     const app = document.getElementById("app");
 
@@ -115,31 +115,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ---------- 1) Ergebnis? ----------
     if (params.get("done") === "true") {
-        nameScreen.style.display = "none";
+        numberScreen.style.display = "none";
         intro.style.display = "none";
         app.style.display = "block";
         showResult();
         return;
     }
 
-    // ---------- 2) Kein Name gespeichert → Name Screen anzeigen ----------
-    if (!localStorage.getItem("username")) {
-        nameScreen.style.display = "block";
+    // ---------- 2) Keine Nummer gespeichert → Nummer Screen anzeigen ----------
+    if (!localStorage.getItem("participantNumber")) {
+        numberScreen.style.display = "block";
         intro.style.display = "none";
         app.style.display = "none";
         return;
     }
 
-    // ---------- 3) Name existiert, aber keine Frage → Intro anzeigen ----------
+    // ---------- 3) Nummer existiert, aber keine Frage → Intro anzeigen ----------
     if (!params.get("q")) {
-        nameScreen.style.display = "none";
+        numberScreen.style.display = "none";
         intro.style.display = "block";
         app.style.display = "none";
         return;
     }
 
     // ---------- 4) Frage-Modus ----------
-    nameScreen.style.display = "none";
+    numberScreen.style.display = "none";
     intro.style.display = "none";
     app.style.display = "block";
 
@@ -148,16 +148,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ------------------------------
-// NAME SUBMIT
+// NUMMER SUBMIT
 // ------------------------------
-document.getElementById("startNameBtn").addEventListener("click", () => {
+document.getElementById("startNumberBtn").addEventListener("click", () => {
 
-    const name = document.getElementById("username").value.trim();
-    if (name.length < 2) return alert("Please enter a valid name.");
+    const number = document.getElementById("participantNumber").value.trim();
+    if (number.length < 1) return alert("Please enter a valid number.");
 
-    localStorage.setItem("username", name);
+    localStorage.setItem("participantNumber", number);
 
-    document.getElementById("name-input-screen").style.display = "none";
+    document.getElementById("number-input-screen").style.display = "none";
     document.getElementById("testA-intro").style.display = "block";
 });
 
@@ -170,7 +170,7 @@ document.getElementById("startTestA").addEventListener("click", async () => {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            username: localStorage.getItem("username"),
+            participantNumber: localStorage.getItem("participantNumber"),
             test_type: "A"
         })
     });
