@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.getElementById("startNumberBtn").addEventListener("click", () => {
 
     const number = document.getElementById("participantNumber").value.trim();
-    if (number.length < 2) return alert("Bitte geben Sie einen gültigen Nummer ein !");
+    if (number.length < 1) return alert("Bitte geben Sie einen gültigen Nummer ein !");
 
     localStorage.setItem("participantNumber", number);
 

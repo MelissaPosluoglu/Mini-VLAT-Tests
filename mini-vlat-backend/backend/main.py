@@ -1,3 +1,5 @@
+from http.client import HTTPException
+
 from fastapi import FastAPI
 from bson import ObjectId
 from backend.database import tests_collection
@@ -110,8 +112,56 @@ async def get_results(test_type: str):
 
 @app.post("/feedback")
 async def save_feedback(request: FeedbackRequest):
-
     entry = request.dict()
-    result = await feedback_collection.insert_one(entry)
 
+    # Test aus Testsammlung holen, um Teilnehmernummer zu verknüpfen
+    test = await tests_collection.find_one({"_id": ObjectId(request.test_id)})
+    if test:
+        entry["participantNumber"] = test.get("participantNumber")
+
+    result = await feedback_collection.insert_one(entry)
     return {"status": "saved", "id": str(result.inserted_id)}
+
+
+
+@app.get("/feedback/{participant_number}")
+async def get_feedback(participant_number: str):
+    """
+    Holt das Feedback eines bestimmten Teilnehmers anhand der participantNumber.
+    """
+    cursor = feedback_collection.find({"participantNumber": participant_number})
+    feedbacks = []
+    async for doc in cursor:
+        doc["_id"] = str(doc["_id"])
+        feedbacks.append(doc)
+
+    if not feedbacks:
+        return {"status": "error", "message": "Kein Feedback gefunden"}
+
+    return {"status": "ok", "feedback": feedbacks}
+
+
+
+# DELETE PARTICIPANT -------------------------------------------------------
+
+@app.delete("/delete/{participant_number}")
+async def delete_participant(participant_number: str):
+    """
+    Löscht alle Testdaten (und optional Feedback) eines Teilnehmenden.
+    """
+
+    # Tests löschen
+    delete_result = await tests_collection.delete_many({"participantNumber": participant_number})
+
+    # Optional: dazugehöriges Feedback löschen
+    feedback_result = await feedback_collection.delete_many({"test_id": {"$regex": participant_number}})
+
+    if delete_result.deleted_count == 0 and feedback_result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Teilnehmer nicht gefunden")
+
+    return {
+        "status": "deleted",
+        "participantNumber": participant_number,
+        "deleted_tests": delete_result.deleted_count,
+        "deleted_feedback": feedback_result.deleted_count
+    }

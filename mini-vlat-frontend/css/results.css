@@ -154,3 +154,92 @@ h1 {
         font-size: 14px;
     }
 }
+
+
+/* ---------------- DELETE SECTION ---------------- */
+
+.delete-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    width: 50%;
+    margin: 30px auto;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.delete-section:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.delete-section h3 {
+    color: #1c2b6a;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.delete-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.delete-controls input {
+    border: 2px solid #1c2b6a;
+    border-radius: 8px;
+    padding: 10px 14px;
+    width: 60%;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.delete-controls input:focus {
+    border-color: #3b5fe0;
+}
+
+.delete-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.delete-btn:hover {
+    background-color: #b52b27;
+    transform: scale(1.05);
+}
+
+.feedback-btn {
+    background: linear-gradient(90deg, #3b6ff5, #2457d6);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 4px auto;
+    display: block;
+}
+
+.feedback-btn:hover {
+    background: linear-gradient(90deg, #2457d6, #1e45b6);
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(36, 87, 214, 0.3);
+}
+
+.feedback-btn:active {
+    transform: scale(0.97);
+    background: linear-gradient(90deg, #1e45b6, #16358f);
+}

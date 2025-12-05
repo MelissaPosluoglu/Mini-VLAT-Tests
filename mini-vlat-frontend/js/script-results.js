@@ -25,6 +25,11 @@ async function loadResults(testType, tableId) {
                 <td>${answersFormatted}</td>
                 <td>${entry.total_time ?? "-"}</td>
                 <td>${entry.score ?? "-"}</td>
+                <td>
+                    <button class="feedback-btn" onclick="viewFeedback('${entry.participantNumber}')">
+                        Feedback ansehen
+                    </button>
+                </td>
             </tr>
         `;
     });
@@ -33,3 +38,38 @@ async function loadResults(testType, tableId) {
 loadResults("A", "tableA");
 loadResults("B", "tableB");
 loadResults("C", "tableC");
+
+
+async function deleteParticipant() {
+    const participantNumber = document.getElementById("deleteInput").value.trim();
+
+    if (!participantNumber) {
+        alert("Bitte eine Teilnehmernummer eingeben!");
+        return;
+    }
+
+    const confirmDelete = confirm(`Soll der Teilnehmer ${participantNumber} wirklich gelöscht werden?`);
+    if (!confirmDelete) return;
+
+    try {
+        const response = await fetch(`http://localhost:8000/delete/${participantNumber}`, {
+            method: "DELETE"
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            alert(`Teilnehmer ${participantNumber} erfolgreich gelöscht.`);
+            location.reload(); // Seite neu laden, um Tabellen zu aktualisieren
+        } else {
+            const error = await response.json();
+            alert(`Fehler: ${error.detail || "Löschen nicht möglich"}`);
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Serverfehler beim Löschen.");
+    }
+}
+
+function viewFeedback(participantNumber) {
+    window.location.href = `feedback-view.html?participant=${participantNumber}`;
+}

@@ -231,9 +231,9 @@ function render(qIndex) {
 function startTimer(qIndex) {
 
     clearInterval(timer);
-    timeLeft = 30;
+    timeLeft = 25;
 
-    const radius = 30;
+    const radius = 25;
     const circumference = 2 * Math.PI * radius;
 
     document.getElementById("timer-box").innerHTML = `
@@ -259,12 +259,12 @@ function startTimer(qIndex) {
     const progress = document.getElementById("timer-progress");
     const timeText = document.getElementById("time-text");
 
-    const offsetStep = circumference / 30;
+    const offsetStep = circumference / 25;
 
     timer = setInterval(() => {
         timeLeft--;
         timeText.textContent = timeLeft;
-        progress.style.strokeDashoffset = offsetStep * (30 - timeLeft);
+        progress.style.strokeDashoffset = offsetStep * (25 - timeLeft);
 
         if (timeLeft <= 0) {
             clearInterval(timer);
