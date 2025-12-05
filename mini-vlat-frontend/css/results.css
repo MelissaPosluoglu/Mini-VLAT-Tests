@@ -1,9 +1,10 @@
 /* ===========================================================
-   GLOBAL PAGE STYLING
+   🎨 GLOBAL PAGE STYLING
+   General page layout, base colors, and typography
 =========================================================== */
 
 body {
-    background: #f2f4ff; /* Hell-Lavendel wie Startseite */
+    background: #f2f4ff; /* Light lavender background, same as homepage */
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
@@ -28,7 +29,8 @@ h1 {
 
 
 /* ===========================================================
-   TABLE WRAPPER (CARD STYLE)
+   📊 TABLE WRAPPER (CARD DESIGN)
+   Container styling for result tables
 =========================================================== */
 
 .results-card {
@@ -43,7 +45,8 @@ h1 {
 
 
 /* ===========================================================
-   TABLE HEADER
+   🧾 TABLE HEADER
+   Header row styling – gradient background, text alignment, font
 =========================================================== */
 
 .results-table thead {
@@ -60,7 +63,8 @@ h1 {
 
 
 /* ===========================================================
-   TABLE BODY
+   📋 TABLE BODY
+   Row spacing, cell layout, and text formatting
 =========================================================== */
 
 .results-table td {
@@ -75,7 +79,7 @@ h1 {
     border-bottom: none;
 }
 
-/* Name column spacing */
+/* First column (participant number) */
 .results-table td:first-child {
     width: 120px;
     font-weight: 600;
@@ -84,7 +88,8 @@ h1 {
 
 
 /* ===========================================================
-   QUESTION LIST
+   ✅ QUESTION LIST
+   Display of each question with correct/incorrect indicator
 =========================================================== */
 
 .question-list {
@@ -93,20 +98,21 @@ h1 {
 }
 
 .question-list .correct {
-    color: #2ecc71; /* green check */
+    color: #2ecc71; /* Green for correct answers */
     font-weight: 700;
     margin-left: 5px;
 }
 
 .question-list .wrong {
-    color: #e74c3c; /* red X */
+    color: #e74c3c; /* Red for incorrect answers */
     font-weight: 700;
     margin-left: 5px;
 }
 
 
 /* ===========================================================
-   SCORE AND TOTAL TIME
+   ⏱️ SCORE & TOTAL TIME
+   Formatting for score and total duration columns
 =========================================================== */
 
 .score-cell {
@@ -123,7 +129,8 @@ h1 {
 
 
 /* ===========================================================
-   EMPTY SECTION PLACEHOLDERS
+   🕳️ EMPTY STATE
+   Style for placeholders when no data is available
 =========================================================== */
 
 .empty-row {
@@ -135,7 +142,8 @@ h1 {
 
 
 /* ===========================================================
-   RESPONSIVE DESIGN
+   📱 RESPONSIVE DESIGN
+   Adjustments for smaller screens (mobile/tablet)
 =========================================================== */
 
 @media (max-width: 900px) {
@@ -156,7 +164,10 @@ h1 {
 }
 
 
-/* ---------------- DELETE SECTION ---------------- */
+/* ===========================================================
+   ❌ DELETE SECTION
+   Input field & button styling for deleting a participant
+=========================================================== */
 
 .delete-section {
     background: white;
@@ -217,6 +228,12 @@ h1 {
     background-color: #b52b27;
     transform: scale(1.05);
 }
+
+
+/* ===========================================================
+   💬 FEEDBACK BUTTON
+   Styling for the "View Feedback" button in result tables
+=========================================================== */
 
 .feedback-btn {
     background: linear-gradient(90deg, #3b6ff5, #2457d6);

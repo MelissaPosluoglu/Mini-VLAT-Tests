@@ -1,3 +1,8 @@
+/* ===========================================================
+   FEEDBACK FORM PAGE LAYOUT
+   General styling for the feedback form container
+=========================================================== */
+
 .feedback-card {
     max-width: 900px;
     margin: 40px auto;
@@ -8,6 +13,7 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
+/* Feedback form main title */
 .feedback-card h1 {
     text-align: center;
     font-size: 36px;
@@ -15,6 +21,7 @@
     margin-bottom: 10px;
 }
 
+/* Subtitle text below the main heading */
 .subtitle {
     text-align: center;
     margin-bottom: 30px;
@@ -22,10 +29,22 @@
     font-size: 18px;
 }
 
+
+/* ===========================================================
+   SECTION HEADINGS
+   Headings for each question group section
+=========================================================== */
+
 h2 {
     color: #1e3fa3;
     margin-top: 35px;
 }
+
+
+/* ===========================================================
+   QUESTION GROUPS
+   Wrapper for each question block with background and padding
+=========================================================== */
 
 .question-group {
     margin: 20px 0;
@@ -35,11 +54,23 @@ h2 {
     border: 1px solid #d7e1ff;
 }
 
+
+/* ===========================================================
+   LIKERT SCALE
+   Styling for radio button rating rows
+=========================================================== */
+
 .likert {
     display: flex;
     justify-content: space-between;
     margin: 10px 0 20px;
 }
+
+
+/* ===========================================================
+   TEXTAREA FIELD
+   Open feedback input box styling
+=========================================================== */
 
 textarea {
     width: 100%;
@@ -51,6 +82,12 @@ textarea {
     font-size: 15px;
 }
 
+
+/* ===========================================================
+   SUBMIT BUTTON
+   Styling for the "Submit" button at the end of the form
+=========================================================== */
+
 .submit-btn {
     display: block;
     margin: 30px auto;
@@ -61,6 +98,7 @@ textarea {
     border-radius: 12px;
     cursor: pointer;
     border: none;
+    transition: all 0.2s ease-in-out;
 }
 
 .submit-btn:hover {
@@ -68,6 +106,11 @@ textarea {
     box-shadow: 0 6px 20px rgba(0,0,0,0.18);
 }
 
+
+/* ===========================================================
+   FEEDBACK DISPLAY PAGE
+   Styling for the read-only feedback view (feedback-view.html)
+=========================================================== */
 
 .feedback-container {
     max-width: 800px;
@@ -78,11 +121,18 @@ textarea {
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
+/* Title on feedback summary view */
 .feedback-container h1 {
     color: #1c2b6a;
     text-align: center;
     margin-bottom: 20px;
 }
+
+
+/* ===========================================================
+   INDIVIDUAL FEEDBACK CARD
+   Box for each stored feedback entry
+=========================================================== */
 
 .feedback-card {
     border: 2px solid #e3e6ff;
@@ -97,10 +147,17 @@ textarea {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Text formatting inside feedback entries */
 .feedback-card p {
     margin: 6px 0;
     font-size: 16px;
 }
+
+
+/* ===========================================================
+   BACK BUTTON
+   "Back" button at the bottom of the feedback view
+=========================================================== */
 
 .back-btn {
     background-color: #4a6cf7;
@@ -121,4 +178,3 @@ textarea {
     background-color: #3854c8;
     transform: scale(1.05);
 }
-
