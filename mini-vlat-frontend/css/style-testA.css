@@ -1,42 +1,53 @@
-/* ======================================
-   TEST A — ZEITDRUCK
-====================================== */
+/* ===========================================================
+   TEST A — TIME PRESSURE (ZEITDRUCK)
+   Visual design and behavior for the timed test version
+=========================================================== */
 
-/* --------------------------------------
-   TIMER – Fortschrittsring (blau)
---------------------------------------- */
 
-/* Fortschrittskreis */
+/* ===========================================================
+   TIMER – Circular Progress Ring (Blue Theme)
+   Main timer element shown as an animated circle
+=========================================================== */
+
+/* Foreground circle (progress ring) */
 #timer-progress {
-    stroke: url(#timerGradientBlue) !important; /* blauer Verlauf */
+    stroke: url(#timerGradientBlue) !important; /* blue gradient fill */
     stroke-linecap: round;
-    transition: stroke-dashoffset 1s linear !important; /* smooth animation */
+    transition: stroke-dashoffset 1s linear !important; /* smooth countdown animation */
 }
 
-/* Hintergrundring */
+/* Background circle (track ring) */
 #timer-bg {
-    stroke: #d6e4ff !important;   /* leichtes Hellblau */
+    stroke: #d6e4ff !important;  /* light pastel blue */
     stroke-width: 6 !important;
 }
 
-/* --------------------------------------
-   PROGRESSBAR UNTEN
---------------------------------------- */
+
+/* ===========================================================
+   PROGRESS BAR (Bottom Indicator)
+   Horizontal bar showing remaining progress per question
+=========================================================== */
+
 #progress {
     background: linear-gradient(90deg, #3b6ff5, #2457d6) !important;
-    transition: width 0.3s linear !important;  /* smooth bar animation */
+    transition: width 0.3s linear !important;  /* smooth width animation */
 }
 
-/* --------------------------------------
-   ANTWORTOPTIONEN (neutral, keine Farbänderung)
---------------------------------------- */
+
+/* ===========================================================
+   ANSWER OPTIONS
+   Neutral appearance – no special state colors for Test A
+=========================================================== */
+
 .answers li {
-    /* keine speziellen Änderungen für Test A */
+    /* No specific color modifications for this test version */
 }
 
-/* ================================
-   NAME INPUT SCREEN DESIGN
-================================= */
+
+/* ===========================================================
+   PARTICIPANT NUMBER SCREEN
+   Input screen for entering participant number before the test
+=========================================================== */
 
 #number-input-screen {
     max-width: 650px;
@@ -48,12 +59,14 @@
     box-shadow: 0 6px 30px rgba(0,0,0,0.08);
 }
 
+/* Title on the name/number input screen */
 #number-input-screen h2 {
     color: #1e3fa3;
     font-size: 30px;
     margin-bottom: 25px;
 }
 
+/* Input field for participant number */
 #participantNumber {
     padding: 12px 18px;
     width: 80%;
@@ -64,7 +77,12 @@
     outline: none;
 }
 
-/* Buttons */
+
+/* ===========================================================
+   START BUTTON
+   Styling for the “Start Test” button
+=========================================================== */
+
 .start-btn {
     padding: 12px 26px;
     background: #3b6ff5;
@@ -73,14 +91,20 @@
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.2s ease-in-out;
 }
 
 .start-btn:hover {
     background: #2e5dde;
+    transform: scale(1.05);
 }
 
-/* Fade-in animation */
+
+/* ===========================================================
+   ANIMATIONS
+   Fade-in transition for card screen elements
+=========================================================== */
+
 .card-screen {
     animation: fadeIn 0.4s ease;
 }
@@ -89,5 +113,3 @@
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-
-

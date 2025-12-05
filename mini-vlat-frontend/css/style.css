@@ -64,8 +64,10 @@ footer {
 .main-container {
   padding: 55px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
+
 
 .cards {
   display: flex;
@@ -78,11 +80,11 @@ footer {
 .card {
   width: 320px;
   height: 270px;
-  background: #b9cbf7;           /* etwas dunkleres Hellblau */
+  background: #b9cbf7;
   border-radius: 22px;
   padding: 30px;
 
-  border: 3px solid #8aa4e8;      /* dicker + kräftiger Rand */
+  border: 3px solid #8aa4e8;
   box-shadow: 0 12px 40px rgba(60, 90, 180, 0.18);
 
   cursor: pointer;
@@ -96,9 +98,9 @@ footer {
 
 .card:hover {
   transform: translateY(-10px) scale(1.03);
-  background: #a6bdf7;            /* dunkleres Hover */
+  background: #a6bdf7;
   box-shadow: 0 22px 55px rgba(50, 75, 150, 0.33);
-  border-color: #6e89db;          /* kräftigeres Hover-Blau */
+  border-color: #6e89db;
 }
 
 .card h3 {
@@ -302,9 +304,9 @@ body.test-page #app {
   max-width: 900px;
   margin: 40px auto;
   padding: 40px;
-  background: #e8f0ff;           /* sanftes Hellblau */
+  background: #e8f0ff;
   border-radius: 18px;
-  border: 2px solid #b9ccf7;     /* feiner blauer Rand */
+  border: 2px solid #b9ccf7;
   box-shadow: 0 6px 18px rgba(80, 120, 200, 0.15);
   text-align: left;
   font-size: 1.2rem;
@@ -349,7 +351,6 @@ body.test-page #app {
 /* =====================================================
    RESULTS
 ===================================================== */
-
 .results-title {
   text-align: center;
   margin-top: 40px;
@@ -380,19 +381,33 @@ body.test-page #app {
   text-align: left;
 }
 
+
 .results-table td {
   padding: 12px;
   border-bottom: 1px solid #eee;
 }
 
 .results-btn {
-  margin: 40px auto;
-  display: block;
-  padding: 15px 40px;
-  font-size: 20px;
-  background: #3b6ff5;
-  color: white;
-  border-radius: 12px;
-  cursor: pointer;
+  margin-top: 45px;
+  width: 320px;        /* gleiche Breite wie die Karten */
+  padding: 16px 0;
+  text-align: center;
+
+  background: linear-gradient(135deg, #3e6bff, #6d8dff);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  border-radius: 20px;
   border: none;
+  cursor: pointer;
+
+  box-shadow: 0 10px 30px rgba(62, 107, 255, 0.28);
+  transition: 0.25s ease;
 }
+
+.results-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 45px rgba(62, 107, 255, 0.4);
+}
+
