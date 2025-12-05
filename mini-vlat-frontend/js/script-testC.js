@@ -96,6 +96,13 @@ let score = 0;
 let selectedAnswer = null;
 
 // ------------------------------
+// HIDDEN TIMERS
+// ------------------------------
+
+let testStartTime = null;
+let questionStartTime = null;
+
+// ------------------------------
 // SCREEN LOGIC
 // ------------------------------
 document.addEventListener("DOMContentLoaded", () => {
@@ -164,6 +171,8 @@ document.getElementById("startTestC").addEventListener("click", async () => {
 
     score = 0;
 
+    testStartTime = Date.now();
+
     const response = await fetch("http://localhost:8000/start", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -202,6 +211,8 @@ function renderViewMode(index) {
 // ANSWER MODE
 // ------------------------------
 function renderAnswerMode(index) {
+
+    questionStartTime = Date.now();
 
     const q = questions[index];
     selectedAnswer = null;

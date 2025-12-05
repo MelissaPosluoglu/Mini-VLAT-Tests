@@ -97,6 +97,13 @@ let score = 0;
 let selectedAnswer = null;
 
 // ------------------------------
+// HIDDEN TIMERS
+// ------------------------------
+
+let testStartTime = null;
+let questionStartTime = null;
+
+// ------------------------------
 // URL HANDLING
 // ------------------------------
 // ------------------------------
@@ -167,6 +174,9 @@ document.getElementById("startTestB").addEventListener("click", async () => {
 
     score = 0;
 
+    testStartTime = Date.now();
+    localStorage.setItem("testB_start", testStartTime);
+
     const response = await fetch("http://localhost:8000/start", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -206,6 +216,8 @@ function render(qIndex) {
     const q = questions[qIndex];
     selectedAnswer = null;
 
+    questionStartTime = Date.now();
+
     updateProgress(qIndex);
 
     document.getElementById("app").innerHTML = `
@@ -234,6 +246,8 @@ async function selectAnswer(answer, qIndex) {
     selectedAnswer = answer;
     const correct = questions[qIndex].correct;
 
+    // --- ZEIT PRO FRAGE BERECHNEN ---
+    const timeTaken = (Date.now() - questionStartTime) / 1000;
 
     // ---------- BACKEND SPEICHERN ----------
     await fetch("http://localhost:8000/answer", {
@@ -245,9 +259,10 @@ async function selectAnswer(answer, qIndex) {
             selected_answer: answer,
             correct_answer: questions[qIndex].correct,
             is_correct: (answer === questions[qIndex].correct),
-            time_taken: 0
+            time_taken: timeTaken          // <---- HIER!!
         })
     });
+
 
 
     const lis = document.querySelectorAll(".answers li");
@@ -310,20 +325,23 @@ async function selectAnswer(answer, qIndex) {
 // ------------------------------
 async function next(qIndex) {
 
-
     const nextIndex = qIndex + 1;
 
     if (nextIndex >= questions.length) {
 
-        await fetch("http://localhost:8000/finish", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                test_id: localStorage.getItem("test_id_B"),
-                total_time: 0,
-                score: score
-            })
-        });
+         // --- GESAMTZEIT KORREKT BERECHNEN ---
+         const start = Number(localStorage.getItem("testB_start"));
+         const totalTime = start ? (Date.now() - start) / 1000 : 0;
+
+    await fetch("http://localhost:8000/finish", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            test_id: localStorage.getItem("test_id_B"),
+            total_time: totalTime,
+            score: score
+        })
+    });
 
         location.href = "testB.html?done=true";
         return;
@@ -331,7 +349,6 @@ async function next(qIndex) {
 
     location.href = `testB.html?q=${questions[nextIndex].id}`;
 }
-
 
 
 // ------------------------------

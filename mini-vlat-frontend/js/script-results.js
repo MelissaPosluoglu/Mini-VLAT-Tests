@@ -3,27 +3,26 @@ async function loadResults(testType, tableId) {
     const data = await response.json();
 
     const table = document.getElementById(tableId);
+    const tbody = table.querySelector("tbody");
 
-    table.innerHTML = `
-        <tr>
-            <th>Nummer</th>
-            <th>Fragen (Dauer / Richtig?)</th>
-            <th>Gesamtdauer</th>
-            <th>Score</th>
-        </tr>
-    `;
+    // Tabelle leeren
+    tbody.innerHTML = "";
 
     data.forEach(entry => {
+        const answersFormatted = entry.answers
+            .map(a => `${a.question_id}: ${a.time_taken.toFixed(2)}s — ${a.is_correct ? "✔" : "❌"}`)
+            .join("<br>");
 
-        const answersFormatted = entry.answers.map(a =>
-            `${a.question_id}: ${a.time_taken}s — ${a.is_correct ? "✔" : "❌"}`
-        ).join("<br>");
+        const totalTimeFormatted =
+            entry.total_time != null
+                ? Number(entry.total_time).toFixed(2) + "s"
+                : "-";
 
-        table.innerHTML += `
+        tbody.innerHTML += `
             <tr>
                 <td>${entry.participantNumber}</td>
                 <td>${answersFormatted}</td>
-                <td>${entry.total_time ?? "-"}</td>
+                <td>${totalTimeFormatted}</td>
                 <td>${entry.score ?? "-"}</td>
                 <td>
                     <button class="feedback-btn" onclick="viewFeedback('${entry.participantNumber}')">
@@ -40,6 +39,7 @@ loadResults("B", "tableB");
 loadResults("C", "tableC");
 
 
+// Teilnehmer löschen
 async function deleteParticipant() {
     const participantNumber = document.getElementById("deleteInput").value.trim();
 
@@ -57,9 +57,8 @@ async function deleteParticipant() {
         });
 
         if (response.ok) {
-            const result = await response.json();
             alert(`Teilnehmer ${participantNumber} erfolgreich gelöscht.`);
-            location.reload(); // Seite neu laden, um Tabellen zu aktualisieren
+            location.reload();
         } else {
             const error = await response.json();
             alert(`Fehler: ${error.detail || "Löschen nicht möglich"}`);
@@ -70,6 +69,8 @@ async function deleteParticipant() {
     }
 }
 
+
+// Feedback ansehen
 function viewFeedback(participantNumber) {
     window.location.href = `feedback-view.html?participant=${participantNumber}`;
 }
