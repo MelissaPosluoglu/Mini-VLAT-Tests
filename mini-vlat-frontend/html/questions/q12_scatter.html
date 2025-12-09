@@ -2,44 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Question 12 – Scatterplot</title>
+    <title>Scatter</title>
 
+    <!-- Global Base Style -->
     <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/style-testA.css">
+
+    <!-- Test-spezifisches CSS wird dynamisch geladen -->
+    <script src="../../js/test-loader.js"></script>
 </head>
 
 <body class="test-page">
 
-<!-- STATIC CONTENT (Tobii needs this visible DOM) -->
-<div class="testA-question-screen">
-    <h2 class="question-title">Question 12</h2>
-
-    <p class="question-text">
-        There is a negative relationship between height and weight of the 85 males. True or false?
-    </p>
-
-    <div class="question-image-container">
-        <img src="https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/scatterplot.png"
-             alt="Scatterplot" class="question-image">
-    </div>
-
-    <div class="answer-buttons">
-        <button class="answer-btn">True</button>
-        <button class="answer-btn">False</button>
-        <button class="answer-btn no-answer">No Answer</button>
-    </div>
-
-    <button class="next-btn"
-            onclick="location.href='../../html/feedback.html?test=A&tid='+localStorage.getItem('test_id')">
-        Finish
-    </button>
+<!-- Haupt-Container -->
+<div id="app">
+    <div id="progressbar"><div id="progress"></div></div>
 </div>
 
-<!-- DYNAMIC LOGIC -->
-<div id="app"></div>
+<!-- Fragen-Daten -->
+<script src="../../js/core-questions.js"></script>
 
+<!-- Core Rendering (Router + Basis-Funktionen) -->
 <script src="../../js/core-render.js"></script>
+
 <script>
+    // Startet das Rendern dieser Frage
     renderQuestion("scatter");
 </script>
 
