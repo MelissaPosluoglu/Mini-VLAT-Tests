@@ -188,7 +188,7 @@ function autoNextTestA(qIndex) {
 
     // Letzte Frage → Feedback
     if (qIndex + 1 >= questions.length) {
-        location.href = "../feedback.html?test=A&tid=" + localStorage.getItem("test_id");
+        showResultTestA();
         return;
     }
 
@@ -233,7 +233,7 @@ async function showResultTestA() {
             <p>Du hast <strong>${finalScore}</strong> von ${questions.length} Fragen richtig beantwortet.</p>
 
             <button class="back-home-btn"
-                onclick="location.href='feedback.html?test=A&tid=${localStorage.getItem("test_id")}'">
+                onclick="location.href='../feedback.html?test=A&tid=${localStorage.getItem("test_id")}'">
                 Weiter zum Feedback
             </button>
         </div>
