@@ -158,6 +158,8 @@ async function selectAnswerTestA(answer, qIndex) {
     const q = questions[qIndex];
     const correct = (answer === q.correct);
 
+    let currentScore = Number(localStorage.getItem("scoreA")) || 0;
+
     await fetch("http://localhost:8000/answer", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -172,8 +174,8 @@ async function selectAnswerTestA(answer, qIndex) {
     });
 
     if (correct) {
-        score++;
-        localStorage.setItem("scoreA", score);
+        currentScore++;
+        localStorage.setItem("scoreA", currentScore);
     }
 
     autoNextTestA(qIndex);
