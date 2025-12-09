@@ -6,7 +6,7 @@ body {
     font-family: Inter, sans-serif;
     margin: 0;
     padding: 30px;
-    color: #1d2a5b;
+    color:  #2f3a6e;
 }
 
 .results-title {
@@ -14,7 +14,7 @@ body {
     font-size: 32px;
     margin-bottom: 25px;
     font-weight: 700;
-    color: #2446d3;
+    color: #5c6fbf;
 }
 
 /* ===========================
@@ -65,7 +65,7 @@ body {
 }
 
 .result-table thead {
-    background: #3454e8;
+    background: #444f8c;
     color: white;
 }
 
@@ -82,7 +82,7 @@ body {
 
 /* Score Badge */
 .score-badge {
-    background: #3454e8;
+    background:  #2f3a6e;
     color: white;
     padding: 4px 10px;
     border-radius: 8px;
@@ -92,7 +92,7 @@ body {
 /* Antworten */
 .answers-btn {
     cursor: pointer;
-    color: #3454e8;
+    color:  #2f3a6e;
     font-weight: 600;
     font-size: 13px;
 }
@@ -106,7 +106,7 @@ body {
 
 /* Feedback Button */
 .feedback-btn {
-    background: #3454e8;
+    background: #2f3a6e;
     padding: 6px 12px;
     color: white;
     border-radius: 8px;
