@@ -111,40 +111,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const intro = document.getElementById("testA-intro");
     const app = document.getElementById("app");
 
-    const params = new URLSearchParams(location.search);
-
-    // ---------- 1) Ergebnis? ----------
-    if (params.get("done") === "true") {
-        numberScreen.style.display = "none";
-        intro.style.display = "none";
-        app.style.display = "block";
-        showResult();
-        return;
-    }
-
-    // ---------- 2) Kein Nummer gespeichert → Nummer Screen anzeigen ----------
+    // Wenn keine Nummer → Name-Screen anzeigen
     if (!localStorage.getItem("participantNumber")) {
         numberScreen.style.display = "block";
-        intro.style.display = "none";
-        app.style.display = "none";
         return;
     }
 
-    // ---------- 3) Nummer existiert, aber keine Frage → Intro anzeigen ----------
-    if (!params.get("q")) {
-        numberScreen.style.display = "none";
+    // Wenn wir in testA.html sind → Intro anzeigen
+    if (location.pathname.endsWith("testA.html")) {
         intro.style.display = "block";
-        app.style.display = "none";
         return;
     }
 
-    // ---------- 4) Frage-Modus ----------
-    numberScreen.style.display = "none";
-    intro.style.display = "none";
-    app.style.display = "block";
-
-    const qIndex = getQuestionIndex();
-    if (qIndex !== -1) render(qIndex);
+    // Wenn wir in einer Frage-Seite sind → app ist automatisch sichtbar
 });
 
 // ------------------------------
@@ -180,22 +159,17 @@ document.getElementById("startTestA").addEventListener("click", async () => {
 
     localStorage.setItem("scoreA", 0);
 
-    history.pushState(null, "", "?q=treemap");
+    location.href = "./questions/q1_treemap.html";
 
     document.getElementById("testA-intro").style.display = "none";
     document.getElementById("app").style.display = "block";
 
-    render(0);
 });
 
 
-
-// ------------------------------
-// GET QUESTION INDEX
-// ------------------------------
-function getQuestionIndex() {
-    const id = new URLSearchParams(location.search).get("q");
-    return questions.findIndex(q => q.id === id);
+function renderQuestion(questionId) {
+    const index = questions.findIndex(q => q.id === questionId);
+    render(index);
 }
 
 // ------------------------------
@@ -307,12 +281,20 @@ async function selectAnswer(answer, qIndex) {
 // AUTO NEXT
 // ------------------------------
 function autoNext(qIndex) {
+
+    // Wenn letzte Frage → Ergebnis
     if (qIndex + 1 >= questions.length) {
-        location.href = "testA.html?done=true";
+        location.href = "../feedback.html?test=A&tid=" + localStorage.getItem("test_id");
         return;
     }
-    location.href = `testA.html?q=${questions[qIndex + 1].id}`;
+
+    // Nächste Frage definieren
+    const nextId = questions[qIndex + 1].id;
+    const nextNumber = qIndex + 2;
+
+    location.href = `q${nextNumber}_${nextId}.html`;
 }
+
 
 // ------------------------------
 // PROGRESS BAR
