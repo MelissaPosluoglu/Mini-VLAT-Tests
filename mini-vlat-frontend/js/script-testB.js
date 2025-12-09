@@ -1,283 +1,181 @@
-// ------------------------------
-// MINI-VLAT QUESTIONS
-// ------------------------------
+// =====================================================
+// MINI-VLAT — Test B (Feedback-Version) – FINAL STABLE
+// =====================================================
 
-const questions = [
-    {
-        id: "treemap",
-        prompt: "eBay ist in der Kategorie Software eingeteilt. Wahr oder falsch?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/treemap.png",
-        answers: ["Wahr", "Falsch", "No Answer"],
-        correct: "Falsch"
-    },
-    {
-        id: "histogram",
-        prompt: "Welche Distanz haben die Kunden am meisten zurückgelegt?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/histogram.png",
-        answers: ["20–30 km", "50–60 km", "60–70 km", "30–40 km", "No Answer"],
-        correct: "30–40 km"
-    },
-    {
-        id: "100stacked",
-        prompt: "Welches Land hat den geringsten Anteil an Goldmedaillen?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/100stackedbar.png",
-        answers: ["USA", "Großbritannien", "Japan", "Australien", "No Answer"],
-        correct: "Großbritannien"
-    },
-    {
-        id: "map",
-        prompt: "Im Jahr 2020 war die Arbeitslosenquote in Washington (WA) höher als in Wisconsin (WI). Wahr oder falsch?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/map.png",
-        answers: ["Wahr", "Falsch", "No Answer"],
-        correct: "Wahr"
-    },
-    {
-        id: "pie",
-        prompt: "Wie hoch ist der weltweite Marktanteil von Samsung bei Smartphones?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/pie.png",
-        answers: ["10,9%", "17,6%", "25,3%", "35,2%" , "No Answer"],
-        correct: "17,6%"
-    },
-    {
-        id: "bubble",
-        prompt: "Welche Stadt hat die meisten U-Bahn-Stationen?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/bubble.png",
-        answers: ["Peking", "Shanghai", "London", "Seoul", "No Answer"],
-        correct: "Shanghai"
-    },
-    {
-        id: "stackedbar",
-        prompt: "Was kostet eine Tüte Erdnüsse in Seoul?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedbar.png",
-        answers: ["7,5$", "6,1$", "5,2$", "4,5$", "No Answer"],
-        correct: "6,1$"
-    },
-    {
-        id: "line",
-        prompt: "Wie hoch war der Preis für ein Barrel Öl im Februar 2020?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/line.png",
-        answers: ["50,54$", "42,34$", "47,02$", "43,48$", "No Answer"],
-        correct: "50,54$"
-    },
-    {
-        id: "bar",
-        prompt: "Wie hoch ist die durchschnittliche Internetgeschwindigkeit in Japan?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/bar.png",
-        answers: ["40,51 Mbps", "16,16 Mbps", "35,25 Mbps", "42,30 Mbps", "No Answer"],
-        correct: "40,51 Mbps"
-    },
-    {
-        id: "area",
-        prompt: "Wie hoch war der durchschnittliche Preis für ein Pfund Kaffee im Oktober 2019?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/area.png",
-        answers: ["0,71$", "0,63$", "0,80$", "0,90$", "No Answer"],
-        correct: "0,71$"
-    },
-    {
-        id: "stackedarea",
-        prompt: "Wie war das Verhältnis der Mädchen namens 'Isla' zu den Mädchen namens 'Amelia' im Jahr 2012 im Vereinigten Königreich?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedarea.png",
-        answers: ["1 zu 1", "1 zu 2", "1 zu 3", "1 zu 4", "No Answer"],
-        correct: "1 zu 2"
-    },
-    {
-        id: "scatter",
-        prompt: "Es gibt eine negative Beziehung zwischen der Körpergröße und dem Gewicht der 85 Männer. Wahr oder falsch?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/scatterplot.png",
-        answers: ["Wahr", "Falsch", "No Answer"],
-        correct: "Falsch"
-    }
-];
-
-// ------------------------------
+// -----------------------------------------------------
 // STATE
-// ------------------------------
+// -----------------------------------------------------
+let scoreB = 0;
+let selectedAnswerB = "No Answer";
 
-let score = 0;
-let selectedAnswer = null;
 
-// ------------------------------
-// URL HANDLING
-// ------------------------------
-// ------------------------------
-// SCREEN LOGIC
-// ------------------------------
-document.addEventListener("DOMContentLoaded", () => {
+// -----------------------------------------------------
+// 1) STARTSCREEN LOGIK — läuft NUR in testB.html
+// -----------------------------------------------------
+if (location.pathname.endsWith("testB.html")) {
 
-    const numberScreen = document.getElementById("number-input-screen");
-    const intro = document.getElementById("testB-intro");
-    const app = document.getElementById("app");
+    document.addEventListener("DOMContentLoaded", () => {
 
-    const params = new URLSearchParams(location.search);
+        const numberScreen = document.getElementById("number-input-screen");
+        const intro = document.getElementById("testB-intro");
 
-    // ---------- 1) Ergebnis? ----------
-    if (params.get("done") === "true") {
-        numberScreen.style.display = "none";
-        intro.style.display = "none";
-        app.style.display = "block";
-        showResult();
-        return;
-    }
+        // Keine Nummer → Eingabe
+        if (!localStorage.getItem("participantNumber")) {
+            numberScreen.style.display = "block";
+            return;
+        }
 
-    // ---------- 2) Kein Nummer gespeichert → Nummer Screen anzeigen ----------
-    if (!localStorage.getItem("participantNumber")) {
-        numberScreen.style.display = "block";
-        intro.style.display = "none";
-        app.style.display = "none";
-        return;
-    }
-
-    // ---------- 3) Nummer existiert, aber keine Frage → Intro anzeigen ----------
-    if (!params.get("q")) {
-        numberScreen.style.display = "none";
+        // Nummer existiert → Intro
         intro.style.display = "block";
-        app.style.display = "none";
-        return;
-    }
-
-    // ---------- 4) Frage-Modus ----------
-    numberScreen.style.display = "none";
-    intro.style.display = "none";
-    app.style.display = "block";
-
-    const qIndex = getQuestionIndex();
-    if (qIndex !== -1) render(qIndex);
-});
-
-
-
-// ------------------------------
-// NUMBER SUBMIT
-// ------------------------------
-document.getElementById("startNumberBtn").addEventListener("click", () => {
-
-    const number = document.getElementById("participantNumber").value.trim();
-    if (number.length < 1) return alert("Bitte geben Sie einen gültigen Nummer ein !");
-
-    localStorage.setItem("participantNumber", number);
-
-    document.getElementById("number-input-screen").style.display = "none";
-    document.getElementById("testB-intro").style.display = "block";
-});
-
-// ------------------------------
-// INTRO: NEXT BUTTON
-// ------------------------------
-document.getElementById("startTestB").addEventListener("click", async () => {
-
-    score = 0;
-
-    const response = await fetch("http://localhost:8000/start", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            participantNumber: localStorage.getItem("participantNumber"),   // <-- HIER FIX
-            test_type: "B"
-        })
     });
 
-    const data = await response.json();
-    localStorage.setItem("test_id_B", data.test_id);
+    // Nummer speichern
+    document.getElementById("startNumberBtn")?.addEventListener("click", () => {
+        const num = document.getElementById("participantNumber").value.trim();
+        if (!num) return alert("Bitte gültige Nummer eingeben!");
 
-    history.pushState(null, "", "?q=treemap");
+        localStorage.setItem("participantNumber", num);
 
-    document.getElementById("testB-intro").style.display = "none";
-    document.getElementById("app").style.display = "block";
+        document.getElementById("number-input-screen").style.display = "none";
+        document.getElementById("testB-intro").style.display = "block";
+    });
 
-    render(0);
-});
+    // Test B starten
+    document.getElementById("startTestB")?.addEventListener("click", async () => {
 
+        scoreB = 0;
 
+        const response = await fetch("http://localhost:8000/start", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                participantNumber: localStorage.getItem("participantNumber"),
+                test_type: "B"
+            })
+        });
 
+        const data = await response.json();
+        localStorage.setItem("test_id_B", data.test_id);
 
-// ------------------------------
-// GET QUESTION INDEX
-// ------------------------------
-function getQuestionIndex() {
-    const id = new URLSearchParams(location.search).get("q");
-    return questions.findIndex(q => q.id === id);
+        // zur ersten Frage
+        location.href = "./questions/q1_treemap.html";
+    });
 }
 
-// ------------------------------
-// RENDER QUESTION
-// ------------------------------
-function render(qIndex) {
+
+
+// -----------------------------------------------------
+// 2) FRAGE-RENDERING — läuft nur auf question-Seiten
+// -----------------------------------------------------
+function renderTestB(qIndex) {
 
     const q = questions[qIndex];
-    selectedAnswer = "No Answer";
+    selectedAnswerB = "No Answer";
 
-    updateProgress(qIndex);
+    updateProgressB(qIndex);
 
     document.getElementById("app").innerHTML = `
-        <div id="question-counter">Frage ${qIndex + 1} von ${questions.length}</div>
+        <div class="question-header">
+            <div id="question-counter">Frage ${qIndex + 1} von ${questions.length}</div>
+        </div>
 
-        <h2>${q.prompt}</h2>
+        <h2 class="prompt-text">${q.prompt}</h2>
+
         <img src="${q.img}" class="vlat-image">
 
         <ul class="answers">
             ${q.answers
-                .map(a => `
-                    <li class="${a === 'No Answer' ? 'selected' : ''}"
-                        onclick="selectAnswer('${a}', ${qIndex})">${a}</li>
-                `)
-                .join("")}
+        .map(a => `
+                    <li onclick="selectAnswerB('${a}', ${qIndex})"
+                        class="${a === 'No Answer' ? 'selected' : ''}">
+                        ${a}
+                    </li>
+            `).join("")}
         </ul>
 
-        <div id="feedback" style="font-size:20px; margin-top:15px;"></div>
+        <div id="feedback" class="feedback-box"></div>
 
-        <button id="nextBtn" class="next-btn" disabled>Weiter</button>
+        <button id="nextBtnB" class="next-btn" disabled>Weiter</button>
     `;
 
-    document.getElementById("nextBtn").onclick = () => next(qIndex);
+    document.getElementById("nextBtnB").onclick = () => nextQuestionB(qIndex);
 }
 
 
-// ------------------------------
-// ANSWER + FEEDBACK
-// ------------------------------
-// ------------------------------
-// ANSWER + FEEDBACK
-// ------------------------------
-async function selectAnswer(answer, qIndex) {
+
+// -----------------------------------------------------
+// 3) AUF ANTWORT KLICK
+// -----------------------------------------------------
+async function selectAnswerB(answer, qIndex) {
 
     const correct = questions[qIndex].correct;
+    const lis = document.querySelectorAll(".answers li");
 
-    // ----------------------------------------
-    // NO ANSWER – immer falsch
-    // ----------------------------------------
+    // alles resetten
+    lis.forEach(li => li.classList.remove(
+        "selected", "answer-correct", "answer-wrong", "answer-selected"
+    ));
+
+    selectedAnswerB = answer;
+
+    // ----------- No Answer (immer falsch) -----------
     if (answer === "No Answer") {
 
-        selectedAnswer = "No Answer";
+        document.querySelector(".answers li:last-child").classList.add("selected");
 
-        const lis = document.querySelectorAll(".answers li");
-
-        lis.forEach(li => {
-            li.classList.remove("selected", "answer-correct", "answer-wrong", "answer-selected");
-            if (li.innerText === "No Answer") li.classList.add("selected");
-        });
-
-        // Backend speichern
-        await fetch("http://localhost:8000/answer", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                test_id: localStorage.getItem("test_id_B"),
-                question_id: questions[qIndex].id,
-                selected_answer: "No Answer",
-                correct_answer: correct,
-                is_correct: false, // immer falsch
-                time_taken: 0
-            })
-        });
+        await logAnswerB(qIndex, "No Answer", correct, false);
 
         document.getElementById("feedback").innerHTML = "Keine Antwort ausgewählt.";
-        document.getElementById("nextBtn").disabled = false;
+        document.getElementById("feedback").className = "feedback-box neutral";
+
+        document.getElementById("nextBtnB").disabled = false;
         return;
     }
 
-    // ----------------------------------------
-    // normale Antwort speichern
-    // ----------------------------------------
+    // ----------- reguläre Antwort speichern -----------
+    const isCorrect = (answer === correct);
+    if (isCorrect) scoreB++;
+
+    await logAnswerB(qIndex, answer, correct, isCorrect);
+
+    // ----------- visuelles Feedback -----------
+    lis.forEach(li => {
+        if (li.innerText === answer) li.classList.add("answer-selected");
+    });
+
+    if (isCorrect) {
+
+        lis.forEach(li => {
+            if (li.innerText === correct) li.classList.add("answer-correct");
+        });
+
+        document.getElementById("feedback").innerHTML = "✔ Correct!";
+        document.getElementById("feedback").className = "feedback-box correct";
+
+    } else {
+
+        lis.forEach(li => {
+            if (li.innerText !== correct) li.classList.add("answer-wrong");
+        });
+        lis.forEach(li => {
+            if (li.innerText === correct) li.classList.add("answer-correct");
+        });
+
+        document.getElementById("feedback").innerHTML =
+            `✖ Incorrect<br>Correct answer: <strong>${correct}</strong>`;
+        document.getElementById("feedback").className = "feedback-box incorrect";
+    }
+
+    document.getElementById("nextBtnB").disabled = false;
+}
+
+
+
+// -----------------------------------------------------
+// 4) BACKEND LOGGING
+// -----------------------------------------------------
+async function logAnswerB(qIndex, answer, correct, isCorrect) {
+
     await fetch("http://localhost:8000/answer", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -286,52 +184,22 @@ async function selectAnswer(answer, qIndex) {
             question_id: questions[qIndex].id,
             selected_answer: answer,
             correct_answer: correct,
-            is_correct: (answer === correct),
+            is_correct: isCorrect,
             time_taken: 0
         })
     });
-
-    const lis = document.querySelectorAll(".answers li");
-    lis.forEach(li => li.classList.remove("selected", "answer-correct", "answer-wrong", "answer-selected"));
-
-    if (answer === correct) {
-        lis.forEach(li => {
-            if (li.innerText === correct) li.classList.add("answer-correct", "answer-selected");
-        });
-
-        document.getElementById("feedback").className = "correct";
-        document.getElementById("feedback").innerHTML = "✔ Correct!";
-
-    } else {
-
-        lis.forEach(li => {
-            if (li.innerText !== correct) li.classList.add("answer-wrong");
-        });
-
-        lis.forEach(li => {
-            if (li.innerText === correct) li.classList.add("answer-correct");
-        });
-
-        lis.forEach(li => {
-            if (li.innerText === answer) li.classList.add("answer-selected");
-        });
-
-        document.getElementById("feedback").className = "incorrect";
-        document.getElementById("feedback").innerHTML = 
-            `✖ Incorrect<br>Correct answer: <strong>${correct}</strong>`;
-    }
-
-    document.getElementById("nextBtn").disabled = false;
 }
 
-// ------------------------------
-// NEXT QUESTION
-// ------------------------------
-async function next(qIndex) {
 
-    const nextIndex = qIndex + 1;
 
-    if (nextIndex >= questions.length) {
+// -----------------------------------------------------
+// 5) NÄCHSTE FRAGE
+// -----------------------------------------------------
+async function nextQuestionB(qIndex) {
+
+    const next = qIndex + 1;
+
+    if (next >= questions.length) {
 
         await fetch("http://localhost:8000/finish", {
             method: "POST",
@@ -339,48 +207,51 @@ async function next(qIndex) {
             body: JSON.stringify({
                 test_id: localStorage.getItem("test_id_B"),
                 total_time: 0,
-                score: score
+                score: scoreB
             })
         });
 
-        location.href = "testB.html?done=true";
+        location.href = "../feedback.html?test=B&tid=" + localStorage.getItem("test_id_B");
         return;
     }
 
-    location.href = `testB.html?q=${questions[nextIndex].id}`;
+    const nextId = questions[next].id;
+    const nextNumber = next + 1;
+
+    location.href = `q${nextNumber}_${nextId}.html`;
 }
 
-// ------------------------------
-// PROGRESS BAR
-// ------------------------------
-function updateProgress(i) {
+
+
+// -----------------------------------------------------
+// 6) PROGRESSBAR
+// -----------------------------------------------------
+function updateProgressB(i) {
     const bar = document.getElementById("progress");
-    if (!bar) return;
-
-    bar.style.width = (100 * i / questions.length) + "%";
+    if (bar) bar.style.width = (100 * i / questions.length) + "%";
 }
 
 
-// ------------------------------
-// RESULT PAGE
-// ------------------------------
-async function showResult() {
 
+// -----------------------------------------------------
+// 7) OPTIONAL – RESULT SCREEN VIA ?done=true
+// -----------------------------------------------------
+async function showResultB() {
+
+    const id = localStorage.getItem("test_id_B");
     const res = await fetch(`http://localhost:8000/results/B`);
-    const all = await res.json();
+    const list = await res.json();
 
-    const testId = localStorage.getItem("test_id_B");
-    const my = all.find(x => x._id === testId);
-
+    const my = list.find(x => x._id === id);
     const finalScore = my?.score ?? 0;
 
     document.getElementById("app").innerHTML = `
         <h2>Finished!</h2>
-        <p>You got <strong>${finalScore}</strong> out of <strong>${questions.length}</strong> correct.</p>
-       <button class="back-home-btn"
-            onclick="location.href='feedback.html?test=B&tid=${localStorage.getItem("test_id_B")}'">
+        <p>You got <strong>${finalScore}</strong> out of ${questions.length} correct.</p>
+
+        <button class="back-home-btn"
+            onclick="location.href='../feedback.html?test=B&tid=${id}'">
             Weiter zum Feedback
         </button>
-
     `;
 }

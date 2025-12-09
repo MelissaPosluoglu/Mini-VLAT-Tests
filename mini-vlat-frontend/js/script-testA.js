@@ -1,181 +1,74 @@
 // =====================================================
-// MINI-VLAT — Test A (Zeitdruck) – STABLE FINAL VERSION
+// MINI-VLAT — Test A (Zeitdruck) – FINAL STABLE VERSION
 // =====================================================
 
-// ------------------------------
-// QUESTIONS
-// ------------------------------
-
-const questions = [
-    {
-        id: "treemap",
-        prompt: "eBay is nested in the Software category. True or false?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/treemap.png",
-        answers: ["True", "False","No Answer"],
-        correct: "False"
-    },
-    {
-        id: "histogram",
-        prompt: "What distance have customers traveled the most?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/histogram.png",
-        answers: ["20–30 km", "50–60 km", "60–70 km", "30–40 km","No Answer"],
-        correct: "30–40 km"
-    },
-    {
-        id: "100stacked",
-        prompt: "Which country has the lowest proportion of Gold medals?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/100stackedbar.png",
-        answers: ["U.S.A.", "Great Britain", "Japan", "Australia","No Answer"],
-        correct: "Great Britain"
-    },
-    {
-        id: "map",
-        prompt: "In 2020, the unemployment rate for Washington (WA) was higher than that of Wisconsin (WI). True or false?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/map.png",
-        answers: ["True", "False","No Answer"],
-        correct: "True"
-    },
-    {
-        id: "pie",
-        prompt: "What is the approximate global smartphone market share of Samsung?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/pie.png",
-        answers: ["10.9%", "17.6%", "25.3%", "35.2%","No Answer"],
-        correct: "17.6%"
-    },
-    {
-        id: "bubble",
-        prompt: "Which has the largest number of metro stations?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/bubble.png",
-        answers: ["Beijing", "Shanghai", "London", "Seoul","No Answer"],
-        correct: "Shanghai"
-    },
-    {
-        id: "stackedbar",
-        prompt: "What is the cost of peanuts in Seoul?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedbar.png",
-        answers: ["$7.5", "$6.1", "$5.2", "$4.5","No Answer"],
-        correct: "$6.1"
-    },
-    {
-        id: "line",
-        prompt: "What was the price of a barrel of oil in February 2020?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/line.png",
-        answers: ["$50.54", "$42.34", "$47.02", "$43.48","No Answer"],
-        correct: "$50.54"
-    },
-    {
-        id: "bar",
-        prompt: "What is the average internet speed in Japan?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/bar.png",
-        answers: ["40.51 Mbps", "16.16 Mbps", "35.25 Mbps", "42.30 Mbps","No Answer"],
-        correct: "40.51 Mbps"
-    },
-    {
-        id: "area",
-        prompt: "What was the average price of a pound of coffee in October 2019?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/area.png",
-        answers: ["$0.71", "$0.63", "$0.80", "$0.90","No Answer"],
-        correct: "$0.71"
-    },
-    {
-        id: "stackedarea",
-        prompt: "What was the ratio of girls named 'Isla' to girls named 'Amelia' in 2012 in the UK?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedarea.png",
-        answers: ["1 to 1", "1 to 2", "1 to 3", "1 to 4","No Answer"],
-        correct: "1 to 2"
-    },
-    {
-        id: "scatter",
-        prompt: "There is a negative relationship between height and weight of the 85 males. True or false?",
-        img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/scatterplot.png",
-        answers: ["True", "False","No Answer"],
-        correct: "False"
-    }
-];
-
-
-// ------------------------------
-// STATE
-// ------------------------------
-
+// -----------------------------------------------------
+// STATE (für Fragen-Seiten)
+// -----------------------------------------------------
 let score = 0;
 let timer = null;
 let timeLeft = 30;
 
-// ------------------------------
-// SCREEN LOGIC
-// ------------------------------
-document.addEventListener("DOMContentLoaded", () => {
+// -----------------------------------------------------
+// 1) STARTSCREEN LOGIK — läuft NUR in testA.html
+// -----------------------------------------------------
+if (location.pathname.endsWith("testA.html")) {
 
-    const numberScreen = document.getElementById("number-input-screen");
-    const intro = document.getElementById("testA-intro");
-    const app = document.getElementById("app");
+    document.addEventListener("DOMContentLoaded", () => {
 
-    // Wenn keine Nummer → Name-Screen anzeigen
-    if (!localStorage.getItem("participantNumber")) {
-        numberScreen.style.display = "block";
-        return;
-    }
+        const numberScreen = document.getElementById("number-input-screen");
+        const intro = document.getElementById("testA-intro");
 
-    // Wenn wir in testA.html sind → Intro anzeigen
-    if (location.pathname.endsWith("testA.html")) {
+        // Wenn noch keine Nummer → Eingabe anzeigen
+        if (!localStorage.getItem("participantNumber")) {
+            numberScreen.style.display = "block";
+            return;
+        }
+
+        // Wenn Nummer existiert → Intro anzeigen
         intro.style.display = "block";
-        return;
-    }
-
-    // Wenn wir in einer Frage-Seite sind → app ist automatisch sichtbar
-});
-
-// ------------------------------
-// NUMBER SUBMIT
-// ------------------------------
-document.getElementById("startNumberBtn").addEventListener("click", () => {
-
-    const number = document.getElementById("participantNumber").value.trim();
-    if (number.length < 1) return alert("Please enter a valid number.");
-
-    localStorage.setItem("participantNumber", number);
-
-    document.getElementById("number-input-screen").style.display = "none";
-    document.getElementById("testA-intro").style.display = "block";
-});
-
-document.getElementById("startTestA").addEventListener("click", async () => {
-
-    score = 0;
-
-    // BACKEND: Test starten
-    const response = await fetch("http://localhost:8000/start", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            participantNumber: localStorage.getItem("participantNumber"),
-            test_type: "A"
-        })
     });
 
-    const data = await response.json();
-    localStorage.setItem("test_id", data.test_id);
+    // Nummer speichern
+    document.getElementById("startNumberBtn")?.addEventListener("click", () => {
+        const number = document.getElementById("participantNumber").value.trim();
+        if (!number) return alert("Bitte gültige Nummer eingeben.");
 
-    localStorage.setItem("scoreA", 0);
+        localStorage.setItem("participantNumber", number);
 
-    location.href = "./questions/q1_treemap.html";
+        document.getElementById("number-input-screen").style.display = "none";
+        document.getElementById("testA-intro").style.display = "block";
+    });
 
-    document.getElementById("testA-intro").style.display = "none";
-    document.getElementById("app").style.display = "block";
+    // Test starten
+    document.getElementById("startTestA")?.addEventListener("click", async () => {
 
-});
+        score = 0;
 
+        const response = await fetch("http://localhost:8000/start", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                participantNumber: localStorage.getItem("participantNumber"),
+                test_type: "A"
+            })
+        });
 
-function renderQuestion(questionId) {
-    const index = questions.findIndex(q => q.id === questionId);
-    render(index);
+        const data = await response.json();
+        localStorage.setItem("test_id", data.test_id);
+        localStorage.setItem("scoreA", 0);
+
+        // zur ersten Frage gehen
+        location.href = "./questions/q1_treemap.html";
+    });
 }
 
-// ------------------------------
-// RENDER QUESTION
-// ------------------------------
-function render(qIndex) {
+
+
+// -----------------------------------------------------
+// 2) FRAGE-RENDERING (läuft auf question-Seiten)
+// -----------------------------------------------------
+function renderTestA(qIndex) {
 
     const q = questions[qIndex];
     timeLeft = 30;
@@ -189,20 +82,27 @@ function render(qIndex) {
         </div>
 
         <h2 class="prompt-text">${q.prompt}</h2>
-        <img src="${q.img}" class="vlat-image">
+
+        <div class="image-wrapper">
+            <img src="${q.img}" class="vlat-image">
+        </div>
 
         <ul class="answers">
-            ${q.answers.map(a => `<li onclick="selectAnswer('${a}', ${qIndex})">${a}</li>`).join("")}
+            ${q.answers.map(a =>
+        `<li class="answer-option" onclick="selectAnswerTestA('${a}', ${qIndex})">${a}</li>`
+    ).join("")}
         </ul>
     `;
 
-    startTimer(qIndex);
+    startTimerTestA(qIndex);
 }
 
-// ------------------------------
-// TIMER — ORIGINAL FIX
-// ------------------------------
-function startTimer(qIndex) {
+
+
+// -----------------------------------------------------
+// 3) TIMER
+// -----------------------------------------------------
+function startTimerTestA(qIndex) {
 
     clearInterval(timer);
     timeLeft = 25;
@@ -226,43 +126,46 @@ function startTimer(qIndex) {
                     style="stroke-dasharray:${circumference}; stroke-dashoffset:0;">
                 </circle>
             </svg>
+
             <span id="time-text">${timeLeft}</span>
         </div>
     `;
 
     const progress = document.getElementById("timer-progress");
     const timeText = document.getElementById("time-text");
-
     const offsetStep = circumference / 25;
 
     timer = setInterval(() => {
         timeLeft--;
         timeText.textContent = timeLeft;
+
         progress.style.strokeDashoffset = offsetStep * (25 - timeLeft);
 
         if (timeLeft <= 0) {
             clearInterval(timer);
-            autoNext(qIndex);
+            autoNextTestA(qIndex);
         }
     }, 1000);
 }
 
-// ------------------------------
-// ANSWER
-// ------------------------------
-async function selectAnswer(answer, qIndex) {
 
-    const correct = (answer === questions[qIndex].correct);
 
-    // BACKEND: Antwort speichern
+// -----------------------------------------------------
+// 4) ANSWER SPEICHERN
+// -----------------------------------------------------
+async function selectAnswerTestA(answer, qIndex) {
+
+    const q = questions[qIndex];
+    const correct = (answer === q.correct);
+
     await fetch("http://localhost:8000/answer", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             test_id: localStorage.getItem("test_id"),
-            question_id: questions[qIndex].id,
+            question_id: q.id,
             selected_answer: answer,
-            correct_answer: questions[qIndex].correct,
+            correct_answer: q.correct,
             time_taken: 30 - timeLeft,
             is_correct: correct
         })
@@ -273,22 +176,22 @@ async function selectAnswer(answer, qIndex) {
         localStorage.setItem("scoreA", score);
     }
 
-    autoNext(qIndex);
+    autoNextTestA(qIndex);
 }
 
 
-// ------------------------------
-// AUTO NEXT
-// ------------------------------
-function autoNext(qIndex) {
 
-    // Wenn letzte Frage → Ergebnis
+// -----------------------------------------------------
+// 5) AUTO NEXT
+// -----------------------------------------------------
+function autoNextTestA(qIndex) {
+
+    // Letzte Frage → Feedback
     if (qIndex + 1 >= questions.length) {
         location.href = "../feedback.html?test=A&tid=" + localStorage.getItem("test_id");
         return;
     }
 
-    // Nächste Frage definieren
     const nextId = questions[qIndex + 1].id;
     const nextNumber = qIndex + 2;
 
@@ -296,18 +199,21 @@ function autoNext(qIndex) {
 }
 
 
-// ------------------------------
-// PROGRESS BAR
-// ------------------------------
+
+// -----------------------------------------------------
+// 6) PROGRESS BAR
+// -----------------------------------------------------
 function updateProgress(i) {
     document.getElementById("progress").style.width =
         (100 * i / questions.length) + "%";
 }
 
-// ------------------------------
-// RESULT
-// ------------------------------
-async function showResult() {
+
+
+// -----------------------------------------------------
+// 7) RESULT PAGE
+// -----------------------------------------------------
+async function showResultTestA() {
 
     const finalScore = Number(localStorage.getItem("scoreA")) || 0;
 
@@ -316,7 +222,7 @@ async function showResult() {
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             test_id: localStorage.getItem("test_id"),
-            total_time: 12 * 30,  // später Timer summieren
+            total_time: 12 * 30,
             score: finalScore
         })
     });
@@ -325,15 +231,13 @@ async function showResult() {
         <div id="result-box">
             <h2>Test abgeschlossen</h2>
             <p>Du hast <strong>${finalScore}</strong> von ${questions.length} Fragen richtig beantwortet.</p>
-           
+
             <button class="back-home-btn"
-            onclick="location.href='feedback.html?test=A&tid=${localStorage.getItem("test_id")}'">
-            Weiter zum Feedback
+                onclick="location.href='feedback.html?test=A&tid=${localStorage.getItem("test_id")}'">
+                Weiter zum Feedback
             </button>
-        
         </div>
     `;
 
     localStorage.removeItem("scoreA");
 }
-

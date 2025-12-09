@@ -3,50 +3,175 @@
    Visual design and behavior for the timed test version
 =========================================================== */
 
-
-/* ===========================================================
-   TIMER – Circular Progress Ring (Blue Theme)
-   Main timer element shown as an animated circle
-=========================================================== */
-
-/* Foreground circle (progress ring) */
-#timer-progress {
-    stroke: url(#timerGradientBlue) !important; /* blue gradient fill */
-    stroke-linecap: round;
-    transition: stroke-dashoffset 1s linear !important; /* smooth countdown animation */
+/* Base layout for test pages */
+body.test-page {
+    font-family: "Inter", sans-serif;
+    background: #f7f9ff;
+    margin: 0;
+    padding: 0;
 }
 
-/* Background circle (track ring) */
+/* APP WRAPPER */
+#app {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+}
+
+/* ===========================================================
+   QUESTION HEADER
+=========================================================== */
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #1e3fa3;
+}
+
+/* ===========================================================
+   TIMER (Circular Blue Timer)
+=========================================================== */
+
+#circle-timer {
+    width: 70px;
+    height: 70px;
+    position: relative;
+}
+
+#circle-timer svg {
+    width: 70px;
+    height: 70px;
+    transform: rotate(-90deg);
+}
+
+/* Background circle */
 #timer-bg {
-    stroke: #d6e4ff !important;  /* light pastel blue */
-    stroke-width: 6 !important;
+    stroke: #d6e4ff !important;
+    stroke-width: 6;
+    fill: none;
 }
 
+/* Foreground animated progress bar */
+#timer-progress {
+    stroke: url(#timerGradientBlue) !important;
+    stroke-width: 6;
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear !important;
+}
+
+/* Timer number */
+#time-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: 600;
+    color: #2457d6;
+}
 
 /* ===========================================================
-   PROGRESS BAR (Bottom Indicator)
-   Horizontal bar showing remaining progress per question
+   PROGRESS BAR (Bottom Blue Bar)
 =========================================================== */
+
+#progressbar {
+    width: 100%;
+    height: 6px;
+    background: #e4ebff;
+    border-radius: 3px;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
 
 #progress {
-    background: linear-gradient(90deg, #3b6ff5, #2457d6) !important;
-    transition: width 0.3s linear !important;  /* smooth width animation */
+    height: 6px;
+    background: linear-gradient(90deg, #3b6ff5, #2457d6);
+    width: 0%;
+    transition: width 0.3s linear;
 }
-
 
 /* ===========================================================
-   ANSWER OPTIONS
-   Neutral appearance – no special state colors for Test A
+   QUESTION TEXT
 =========================================================== */
 
-.answers li {
-    /* No specific color modifications for this test version */
+.prompt-text {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a2f6b;
+    margin-bottom: 20px;
+    line-height: 1.4;
 }
 
+/* ===========================================================
+   IMAGE DISPLAY
+=========================================================== */
+
+.vlat-image {
+    width: 100%;
+    max-height: 350px;
+    object-fit: contain;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+/* ===========================================================
+   ANSWER OPTIONS LIST
+=========================================================== */
+
+.answers {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.answers li {
+    background: #f2f5ff;
+    margin: 10px 0;
+    padding: 14px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s ease;
+    border: 1px solid #d1ddff;
+}
+
+.answers li:hover {
+    background: #e3ebff;
+    transform: scale(1.02);
+}
+
+/* No special correct/wrong styling for Test A (auto-next) */
+
+/* ===========================================================
+   START / NEXT BUTTONS
+=========================================================== */
+
+.start-btn {
+    padding: 12px 26px;
+    background: #3b6ff5;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.start-btn:hover {
+    background: #2e5dde;
+    transform: scale(1.05);
+}
 
 /* ===========================================================
    PARTICIPANT NUMBER SCREEN
-   Input screen for entering participant number before the test
 =========================================================== */
 
 #number-input-screen {
@@ -59,14 +184,12 @@
     box-shadow: 0 6px 30px rgba(0,0,0,0.08);
 }
 
-/* Title on the name/number input screen */
 #number-input-screen h2 {
     color: #1e3fa3;
     font-size: 30px;
     margin-bottom: 25px;
 }
 
-/* Input field for participant number */
 #participantNumber {
     padding: 12px 18px;
     width: 80%;
@@ -77,32 +200,8 @@
     outline: none;
 }
 
-
-/* ===========================================================
-   START BUTTON
-   Styling for the “Start Test” button
-=========================================================== */
-
-.start-btn {
-    padding: 12px 26px;
-    background: #3b6ff5;
-    color: white;
-    font-size: 18px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-
-.start-btn:hover {
-    background: #2e5dde;
-    transform: scale(1.05);
-}
-
-
 /* ===========================================================
    ANIMATIONS
-   Fade-in transition for card screen elements
 =========================================================== */
 
 .card-screen {

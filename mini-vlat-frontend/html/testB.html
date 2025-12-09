@@ -11,6 +11,12 @@
 
 <body class="test-page">
 
+<script>
+    // Signal an test-loader.js → wir sind im Test A
+    localStorage.setItem("currentTest", "B");
+</script>
+
+
 <!-- 1) NAME-SCREEN -->
 <div id="number-input-screen" class="card-screen" style="display:none;">
     <h2>Please enter your Participant Number</h2>
