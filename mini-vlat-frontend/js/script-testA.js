@@ -7,7 +7,9 @@
 // -----------------------------------------------------
 let score = 0;
 let timer = null;
-let timeLeft = 30;
+let timeLeft = 25;
+
+let totalTimeA = Number(localStorage.getItem("totalTimeA")) || 0;
 
 // -----------------------------------------------------
 // 1) STARTSCREEN LOGIK — läuft NUR in testA.html
@@ -71,7 +73,7 @@ if (location.pathname.endsWith("testA.html")) {
 function renderTestA(qIndex) {
 
     const q = questions[qIndex];
-    timeLeft = 30;
+    timeLeft = 25;
 
     updateProgress(qIndex);
 
@@ -168,10 +170,13 @@ async function selectAnswerTestA(answer, qIndex) {
             question_id: q.id,
             selected_answer: answer,
             correct_answer: q.correct,
-            time_taken: 30 - timeLeft,
+            time_taken: 25 - timeLeft,
             is_correct: correct
         })
     });
+
+    totalTimeA += (25 - timeLeft);
+    localStorage.setItem("totalTimeA", totalTimeA);
 
     if (correct) {
         currentScore++;
@@ -218,13 +223,14 @@ function updateProgress(i) {
 async function showResultTestA() {
 
     const finalScore = Number(localStorage.getItem("scoreA")) || 0;
+    const finalTime = Number(localStorage.getItem("totalTimeA")) || 0;
 
     await fetch("http://localhost:8000/finish", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             test_id: localStorage.getItem("test_id"),
-            total_time: 12 * 30,
+            total_time: finalTime,
             score: finalScore
         })
     });
@@ -242,4 +248,6 @@ async function showResultTestA() {
     `;
 
     localStorage.removeItem("scoreA");
+    localStorage.removeItem("totalTimeA");
+
 }
