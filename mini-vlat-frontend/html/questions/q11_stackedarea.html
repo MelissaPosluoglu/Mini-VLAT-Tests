@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Question 11 – Stacked Area</title>
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/style-testA.css">
+</head>
+
+<body class="test-page">
+
+<!-- STATIC CONTENT (Tobii needs this visible DOM) -->
+<div class="testA-question-screen">
+    <h2 class="question-title">Question 11</h2>
+
+    <p class="question-text">
+        What was the ratio of girls named 'Isla' to girls named 'Amelia' in 2012 in the UK?
+    </p>
+
+    <div class="question-image-container">
+        <img src="https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedarea.png"
+             alt="Stacked Area Chart" class="question-image">
+    </div>
+
+    <div class="answer-buttons">
+        <button class="answer-btn">1 to 1</button>
+        <button class="answer-btn">1 to 2</button>
+        <button class="answer-btn">1 to 3</button>
+        <button class="answer-btn">1 to 4</button>
+        <button class="answer-btn no-answer">No Answer</button>
+    </div>
+
+    <button class="next-btn" onclick="location.href='q12_scatter.html'">Next</button>
+</div>
+
+<!-- DYNAMIC LOGIC -->
+<div id="app"></div>
+
+<script src="../../js/core-render.js"></script>
+<script>
+    renderQuestion("stackedarea");
+</script>
+
+</body>
+</html>

@@ -4,30 +4,41 @@
     <meta charset="UTF-8">
     <title>Question 1 – Treemap</title>
 
-    <!-- Global Base Style -->
     <link rel="stylesheet" href="../../css/style.css">
-
-    <!-- Test-spezifisches CSS wird dynamisch geladen -->
-    <script src="../../js/test-loader.js"></script>
+    <link rel="stylesheet" href="../../css/style-testA.css">
 </head>
 
 <body class="test-page">
 
-<!-- Haupt-Container -->
-<div id="app">
-    <div id="progressbar"><div id="progress"></div></div>
-</div>
+    <!-- STATIC CONTENT (Tobii needs this visible DOM) -->
+    <div class="testA-question-screen">
+        <h2 class="question-title">Question 1</h2>
 
-<!-- Fragen-Daten -->
-<script src="../../js/core-questions.js"></script>
+        <p class="question-text">
+            eBay is categorized under Software. True or false?
+        </p>
 
-<!-- Core Rendering (Router + Basis-Funktionen) -->
-<script src="../../js/core-render.js"></script>
+        <div class="question-image-container">
+            <img src="https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/treemap.png"
+                 alt="Treemap Visualization" class="question-image">
+        </div>
 
-<script>
-    // Startet das Rendern dieser Frage
-    renderQuestion("treemap");
-</script>
+        <div class="answer-buttons">
+            <button class="answer-btn">True</button>
+            <button class="answer-btn">False</button>
+            <button class="answer-btn no-answer">No Answer</button>
+        </div>
+
+        <button class="next-btn" onclick="location.href='q2_histogram.html'">Next</button>
+    </div>
+
+    <!-- DYNAMIC LOGIC -->
+    <div id="app"></div>
+
+    <script src="../../js/core-render.js"></script>
+    <script>
+        renderQuestion("treemap");
+    </script>
 
 </body>
 </html>
