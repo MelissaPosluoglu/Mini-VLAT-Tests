@@ -2,45 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Question 2 – Histogram</title>
+    <title>histogram</title>
 
+    <!-- Global Base Style -->
     <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/style-testA.css">
+
+    <!-- Test-spezifisches CSS wird dynamisch geladen -->
+    <script src="../../js/test-loader.js"></script>
 </head>
 
 <body class="test-page">
 
-    <!-- STATIC CONTENT (Visible for Tobii) -->
-    <div class="testA-question-screen">
-        <h2 class="question-title">Question 2</h2>
+<!-- Haupt-Container -->
+<div id="app">
+    <div id="progressbar"><div id="progress"></div></div>
+</div>
 
-        <p class="question-text">
-            What distance have customers traveled the most?
-        </p>
+<!-- Fragen-Daten -->
+<script src="../../js/core-questions.js"></script>
 
-        <div class="question-image-container">
-            <img src="https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/histogram.png"
-                 alt="Histogram Visualization" class="question-image">
-        </div>
+<!-- Core Rendering (Router + Basis-Funktionen) -->
+<script src="../../js/core-render.js"></script>
 
-        <div class="answer-buttons">
-            <button class="answer-btn">20–30 km</button>
-            <button class="answer-btn">50–60 km</button>
-            <button class="answer-btn">60–70 km</button>
-            <button class="answer-btn">30–40 km</button>
-            <button class="answer-btn no-answer">No Answer</button>
-        </div>
-
-        <button class="next-btn" onclick="location.href='q3_100stacked.html'">Next</button>
-    </div>
-
-    <!-- DYNAMIC LOGIC -->
-    <div id="app"></div>
-
-    <script src="../../js/core-render.js"></script>
-    <script>
-        renderQuestion("histogram");
-    </script>
+<script>
+    // Startet das Rendern dieser Frage
+    renderQuestion("histogram");
+</script>
 
 </body>
 </html>
