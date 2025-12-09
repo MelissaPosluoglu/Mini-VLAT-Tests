@@ -47,7 +47,7 @@ body.test-page {
 
 
 /* -----------------------------------------------------------
-   QUESTION TEXT + IMAGE
+   QUESTION TEXT
 ----------------------------------------------------------- */
 
 .prompt-text, #app h2 {
@@ -57,11 +57,28 @@ body.test-page {
     margin-bottom: 20px;
 }
 
-.vlat-image {
+/* -----------------------------------------------------------
+   IMAGE DISPLAY
+----------------------------------------------------------- */
+
+.image-wrapper,
+.question-image-container {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.image-wrapper img,
+.question-image-container img,
+.vlat-image {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    height: auto;
     max-height: 350px;
     object-fit: contain;
-    margin: 20px 0;
     border-radius: 8px;
 }
 
