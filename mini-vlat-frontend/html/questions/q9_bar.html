@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bar</title>
+
+    <!-- Global Base Style -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Test-spezifisches CSS wird dynamisch geladen -->
+    <script src="../../js/test-loader.js"></script>
+</head>
+
+<body class="test-page">
+
+<!-- Haupt-Container -->
+<div id="app">
+    <div id="progressbar"><div id="progress"></div></div>
+</div>
+
+<!-- Fragen-Daten -->
+<script src="../../js/core-questions.js"></script>
+
+<!-- Core Rendering (Router + Basis-Funktionen) -->
+<script src="../../js/core-render.js"></script>
+
+<script>
+    // Startet das Rendern dieser Frage
+    renderQuestion("bar");
+</script>
+
+</body>
+</html>
