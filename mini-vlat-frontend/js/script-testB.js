@@ -7,84 +7,84 @@ const questions = [
         id: "treemap",
         prompt: "eBay ist in der Kategorie Software eingeteilt. Wahr oder falsch?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/treemap.png",
-        answers: ["Wahr", "Falsch"],
+        answers: ["Wahr", "Falsch", "No Answer"],
         correct: "Falsch"
     },
     {
         id: "histogram",
         prompt: "Welche Distanz haben die Kunden am meisten zurückgelegt?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/histogram.png",
-        answers: ["20–30 km", "50–60 km", "60–70 km", "30–40 km"],
+        answers: ["20–30 km", "50–60 km", "60–70 km", "30–40 km", "No Answer"],
         correct: "30–40 km"
     },
     {
         id: "100stacked",
         prompt: "Welches Land hat den geringsten Anteil an Goldmedaillen?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/100stackedbar.png",
-        answers: ["USA", "Großbritannien", "Japan", "Australien"],
+        answers: ["USA", "Großbritannien", "Japan", "Australien", "No Answer"],
         correct: "Großbritannien"
     },
     {
         id: "map",
         prompt: "Im Jahr 2020 war die Arbeitslosenquote in Washington (WA) höher als in Wisconsin (WI). Wahr oder falsch?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/map.png",
-        answers: ["Wahr", "Falsch"],
+        answers: ["Wahr", "Falsch", "No Answer"],
         correct: "Wahr"
     },
     {
         id: "pie",
         prompt: "Wie hoch ist der weltweite Marktanteil von Samsung bei Smartphones?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/pie.png",
-        answers: ["10,9%", "17,6%", "25,3%", "35,2%"],
+        answers: ["10,9%", "17,6%", "25,3%", "35,2%" , "No Answer"],
         correct: "17,6%"
     },
     {
         id: "bubble",
         prompt: "Welche Stadt hat die meisten U-Bahn-Stationen?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/bubble.png",
-        answers: ["Peking", "Shanghai", "London", "Seoul"],
+        answers: ["Peking", "Shanghai", "London", "Seoul", "No Answer"],
         correct: "Shanghai"
     },
     {
         id: "stackedbar",
         prompt: "Was kostet eine Tüte Erdnüsse in Seoul?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedbar.png",
-        answers: ["7,5$", "6,1$", "5,2$", "4,5$"],
+        answers: ["7,5$", "6,1$", "5,2$", "4,5$", "No Answer"],
         correct: "6,1$"
     },
     {
         id: "line",
         prompt: "Wie hoch war der Preis für ein Barrel Öl im Februar 2020?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/line.png",
-        answers: ["50,54$", "42,34$", "47,02$", "43,48$"],
+        answers: ["50,54$", "42,34$", "47,02$", "43,48$", "No Answer"],
         correct: "50,54$"
     },
     {
         id: "bar",
         prompt: "Wie hoch ist die durchschnittliche Internetgeschwindigkeit in Japan?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/bar.png",
-        answers: ["40,51 Mbps", "16,16 Mbps", "35,25 Mbps", "42,30 Mbps"],
+        answers: ["40,51 Mbps", "16,16 Mbps", "35,25 Mbps", "42,30 Mbps", "No Answer"],
         correct: "40,51 Mbps"
     },
     {
         id: "area",
         prompt: "Wie hoch war der durchschnittliche Preis für ein Pfund Kaffee im Oktober 2019?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/area.png",
-        answers: ["0,71$", "0,63$", "0,80$", "0,90$"],
+        answers: ["0,71$", "0,63$", "0,80$", "0,90$", "No Answer"],
         correct: "0,71$"
     },
     {
         id: "stackedarea",
         prompt: "Wie war das Verhältnis der Mädchen namens 'Isla' zu den Mädchen namens 'Amelia' im Jahr 2012 im Vereinigten Königreich?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/stackedarea.png",
-        answers: ["1 zu 1", "1 zu 2", "1 zu 3", "1 zu 4"],
+        answers: ["1 zu 1", "1 zu 2", "1 zu 3", "1 zu 4", "No Answer"],
         correct: "1 zu 2"
     },
     {
         id: "scatter",
         prompt: "Es gibt eine negative Beziehung zwischen der Körpergröße und dem Gewicht der 85 Männer. Wahr oder falsch?",
         img: "https://aviz-studies.lisn.upsaclay.fr/readability-baseline/mini-VLAT/scatterplot.png",
-        answers: ["Wahr", "Falsch"],
+        answers: ["Wahr", "Falsch", "No Answer"],
         correct: "Falsch"
     }
 ];
@@ -204,7 +204,7 @@ function getQuestionIndex() {
 function render(qIndex) {
 
     const q = questions[qIndex];
-    selectedAnswer = null;
+    selectedAnswer = "No Answer";
 
     updateProgress(qIndex);
 
@@ -215,7 +215,12 @@ function render(qIndex) {
         <img src="${q.img}" class="vlat-image">
 
         <ul class="answers">
-            ${q.answers.map(a => `<li onclick="selectAnswer('${a}', ${qIndex})">${a}</li>`).join("")}
+            ${q.answers
+                .map(a => `
+                    <li class="${a === 'No Answer' ? 'selected' : ''}"
+                        onclick="selectAnswer('${a}', ${qIndex})">${a}</li>
+                `)
+                .join("")}
         </ul>
 
         <div id="feedback" style="font-size:20px; margin-top:15px;"></div>
@@ -226,16 +231,53 @@ function render(qIndex) {
     document.getElementById("nextBtn").onclick = () => next(qIndex);
 }
 
+
+// ------------------------------
+// ANSWER + FEEDBACK
+// ------------------------------
 // ------------------------------
 // ANSWER + FEEDBACK
 // ------------------------------
 async function selectAnswer(answer, qIndex) {
 
-    selectedAnswer = answer;
     const correct = questions[qIndex].correct;
 
+    // ----------------------------------------
+    // NO ANSWER – immer falsch
+    // ----------------------------------------
+    if (answer === "No Answer") {
 
-    // ---------- BACKEND SPEICHERN ----------
+        selectedAnswer = "No Answer";
+
+        const lis = document.querySelectorAll(".answers li");
+
+        lis.forEach(li => {
+            li.classList.remove("selected", "answer-correct", "answer-wrong", "answer-selected");
+            if (li.innerText === "No Answer") li.classList.add("selected");
+        });
+
+        // Backend speichern
+        await fetch("http://localhost:8000/answer", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                test_id: localStorage.getItem("test_id_B"),
+                question_id: questions[qIndex].id,
+                selected_answer: "No Answer",
+                correct_answer: correct,
+                is_correct: false, // immer falsch
+                time_taken: 0
+            })
+        });
+
+        document.getElementById("feedback").innerHTML = "Keine Antwort ausgewählt.";
+        document.getElementById("nextBtn").disabled = false;
+        return;
+    }
+
+    // ----------------------------------------
+    // normale Antwort speichern
+    // ----------------------------------------
     await fetch("http://localhost:8000/answer", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -243,73 +285,49 @@ async function selectAnswer(answer, qIndex) {
             test_id: localStorage.getItem("test_id_B"),
             question_id: questions[qIndex].id,
             selected_answer: answer,
-            correct_answer: questions[qIndex].correct,
-            is_correct: (answer === questions[qIndex].correct),
+            correct_answer: correct,
+            is_correct: (answer === correct),
             time_taken: 0
         })
     });
 
-
     const lis = document.querySelectorAll(".answers li");
+    lis.forEach(li => li.classList.remove("selected", "answer-correct", "answer-wrong", "answer-selected"));
 
-    // Reset
-    lis.forEach(li => {
-        li.classList.remove("selected", "answer-correct", "answer-wrong", "answer-selected");
-    });
-
-    // Richtig beantwortet
     if (answer === correct) {
-
         lis.forEach(li => {
-            if (li.innerText === correct) {
-                li.classList.add("answer-correct", "answer-selected"); // deine Antwort hervorheben
-            }
+            if (li.innerText === correct) li.classList.add("answer-correct", "answer-selected");
         });
+
+        document.getElementById("feedback").className = "correct";
+        document.getElementById("feedback").innerHTML = "✔ Correct!";
 
     } else {
-        // Falsch → ALLE falschen rot
+
         lis.forEach(li => {
-            if (li.innerText !== correct) {
-                li.classList.add("answer-wrong");
-            }
+            if (li.innerText !== correct) li.classList.add("answer-wrong");
         });
 
-        // richtige Antwort grün
         lis.forEach(li => {
-            if (li.innerText === correct) {
-                li.classList.add("answer-correct");
-            }
+            if (li.innerText === correct) li.classList.add("answer-correct");
         });
 
-        // deine angeklickte zusätzlich hervorheben
         lis.forEach(li => {
-            if (li.innerText === answer) {
-                li.classList.add("answer-selected");
-            }
+            if (li.innerText === answer) li.classList.add("answer-selected");
         });
-    }
 
-    // Feedback
-    const fb = document.getElementById("feedback");
-    if (answer === correct) {
-        fb.className = "correct";
-        fb.innerHTML = "✔ Correct!";
-    } else {
-        fb.className = "incorrect";
-        fb.innerHTML = `✖ Incorrect<br>Correct answer: <strong>${correct}</strong>`;
+        document.getElementById("feedback").className = "incorrect";
+        document.getElementById("feedback").innerHTML = 
+            `✖ Incorrect<br>Correct answer: <strong>${correct}</strong>`;
     }
 
     document.getElementById("nextBtn").disabled = false;
 }
 
-
-
-
 // ------------------------------
 // NEXT QUESTION
 // ------------------------------
 async function next(qIndex) {
-
 
     const nextIndex = qIndex + 1;
 
@@ -332,14 +350,12 @@ async function next(qIndex) {
     location.href = `testB.html?q=${questions[nextIndex].id}`;
 }
 
-
-
 // ------------------------------
 // PROGRESS BAR
 // ------------------------------
 function updateProgress(i) {
     const bar = document.getElementById("progress");
-    if (!bar) return;  // <- absolut notwendig!
+    if (!bar) return;
 
     bar.style.width = (100 * i / questions.length) + "%";
 }
