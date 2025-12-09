@@ -1,262 +1,120 @@
-/* ===========================================================
-   🎨 GLOBAL PAGE STYLING
-   General page layout, base colors, and typography
-=========================================================== */
-
+/* ===========================
+   GLOBAL CLEAN STYLE
+=========================== */
 body {
-    background: #f2f4ff; /* Light lavender background, same as homepage */
-    font-family: 'Inter', sans-serif;
+    background: #f4f6ff;
+    font-family: Inter, sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 30px;
     color: #1d2a5b;
 }
 
-h1 {
+.results-title {
     text-align: center;
-    margin-top: 40px;
-    font-size: 38px;
-    color: #2646d6;
+    font-size: 32px;
+    margin-bottom: 25px;
     font-weight: 700;
+    color: #2446d3;
 }
 
-.section-title {
-    margin: 50px auto 10px;
-    width: 80%;
-    font-size: 28px;
-    font-weight: 600;
-    color: #1d2a5b;
-}
-
-
-/* ===========================================================
-   📊 TABLE WRAPPER (CARD DESIGN)
-   Container styling for result tables
-=========================================================== */
-
-.results-card {
-    width: 80%;
-    margin: 20px auto 60px;
-    background: #ffffff;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    border: 1px solid #d7e1ff;
-}
-
-
-/* ===========================================================
-   🧾 TABLE HEADER
-   Header row styling – gradient background, text alignment, font
-=========================================================== */
-
-.results-table thead {
-    background: linear-gradient(90deg, #3b6ff5, #2457d6);
-    color: white;
-}
-
-.results-table th {
-    padding: 16px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: left;
-}
-
-
-/* ===========================================================
-   📋 TABLE BODY
-   Row spacing, cell layout, and text formatting
-=========================================================== */
-
-.results-table td {
-    padding: 14px 20px;
-    vertical-align: top;
-    font-size: 15px;
-    color: #1d2a5b;
-    border-bottom: 1px solid #e7ecff;
-}
-
-.results-table tr:last-child td {
-    border-bottom: none;
-}
-
-/* First column (participant number) */
-.results-table td:first-child {
-    width: 120px;
-    font-weight: 600;
-    color: #1d2a5b;
-}
-
-
-/* ===========================================================
-   ✅ QUESTION LIST
-   Display of each question with correct/incorrect indicator
-=========================================================== */
-
-.question-list {
-    line-height: 1.55;
-    font-size: 15px;
-}
-
-.question-list .correct {
-    color: #2ecc71; /* Green for correct answers */
-    font-weight: 700;
-    margin-left: 5px;
-}
-
-.question-list .wrong {
-    color: #e74c3c; /* Red for incorrect answers */
-    font-weight: 700;
-    margin-left: 5px;
-}
-
-
-/* ===========================================================
-   ⏱️ SCORE & TOTAL TIME
-   Formatting for score and total duration columns
-=========================================================== */
-
-.score-cell {
-    text-align: center;
-    font-weight: 700;
-    color: #1d2a5b;
-}
-
-.time-cell {
-    text-align: center;
-    font-weight: 600;
-    color: #1d2a5b;
-}
-
-
-/* ===========================================================
-   🕳️ EMPTY STATE
-   Style for placeholders when no data is available
-=========================================================== */
-
-.empty-row {
-    text-align: center;
-    padding: 20px;
-    color: #8890c2;
-    font-style: italic;
-}
-
-
-/* ===========================================================
-   📱 RESPONSIVE DESIGN
-   Adjustments for smaller screens (mobile/tablet)
-=========================================================== */
-
-@media (max-width: 900px) {
-
-    .results-card,
-    .section-title {
-        width: 92%;
-    }
-
-    .results-table th,
-    .results-table td {
-        font-size: 14px;
-    }
-
-    .question-list {
-        font-size: 14px;
-    }
-}
-
-
-/* ===========================================================
-   ❌ DELETE SECTION
-   Input field & button styling for deleting a participant
-=========================================================== */
-
+/* ===========================
+   DELETE BOX
+=========================== */
 .delete-section {
-    background: white;
+    background: #fff;
+    padding: 15px;
+    width: 320px;
+    margin: 0 auto 30px auto;
     border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-    width: 50%;
-    margin: 30px auto;
-    padding: 25px;
-    text-align: center;
-    transition: all 0.3s ease-in-out;
-}
-
-.delete-section:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-
-.delete-section h3 {
-    color: #1c2b6a;
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .delete-controls {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .delete-controls input {
-    border: 2px solid #1c2b6a;
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #c9d3fa;
     border-radius: 8px;
-    padding: 10px 14px;
-    width: 60%;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.2s ease-in-out;
-}
-
-.delete-controls input:focus {
-    border-color: #3b5fe0;
 }
 
 .delete-btn {
-    background-color: #d9534f;
+    padding: 10px 14px;
+    background: #d9534f;
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 10px 18px;
-    font-size: 16px;
-    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
 }
 
-.delete-btn:hover {
-    background-color: #b52b27;
-    transform: scale(1.05);
+/* ===========================
+   TABLE LAYOUT
+=========================== */
+.result-table {
+    width: 90%;
+    border-collapse: collapse;
+    background: white;
+    margin: 20px auto 40px auto;
+    border: 1px solid #dce3ff;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
 }
 
+.result-table thead {
+    background: #3454e8;
+    color: white;
+}
 
-/* ===========================================================
-   💬 FEEDBACK BUTTON
-   Styling for the "View Feedback" button in result tables
-=========================================================== */
+.result-table th,
+.result-table td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5e8ff;
+}
 
-.feedback-btn {
-    background: linear-gradient(90deg, #3b6ff5, #2457d6);
-    color: #fff;
-    border: none;
+.result-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Score Badge */
+.score-badge {
+    background: #3454e8;
+    color: white;
+    padding: 4px 10px;
     border-radius: 8px;
-    padding: 10px 18px;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 13px;
+}
+
+/* Antworten */
+.answers-btn {
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin: 4px auto;
-    display: block;
+    color: #3454e8;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.answer-box {
+    display: none;
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Feedback Button */
+.feedback-btn {
+    background: #3454e8;
+    padding: 6px 12px;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
 }
 
 .feedback-btn:hover {
-    background: linear-gradient(90deg, #2457d6, #1e45b6);
-    transform: scale(1.05);
-    box-shadow: 0 6px 15px rgba(36, 87, 214, 0.3);
-}
-
-.feedback-btn:active {
-    transform: scale(0.97);
-    background: linear-gradient(90deg, #1e45b6, #16358f);
+    opacity: 0.9;
 }

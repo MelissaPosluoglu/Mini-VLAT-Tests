@@ -2,37 +2,44 @@ async function loadResults(testType, tableId) {
     const response = await fetch(`http://localhost:8000/results/${testType}`);
     const data = await response.json();
 
-    const table = document.getElementById(tableId);
-
-    table.innerHTML = `
-        <tr>
-            <th>Nummer</th>
-            <th>Fragen (Dauer / Richtig?)</th>
-            <th>Gesamtdauer</th>
-            <th>Score</th>
-        </tr>
-    `;
+    const tbody = document.querySelector(`#${tableId} tbody`);
+    tbody.innerHTML = "";
 
     data.forEach(entry => {
+        const tr = document.createElement("tr");
 
-        const answersFormatted = entry.answers.map(a =>
-            `${a.question_id}: ${a.time_taken}s — ${a.is_correct ? "✔" : "❌"}`
-        ).join("<br>");
+        const answersHTML = entry.answers
+            .map(a => `${a.question_id}: ${a.time_taken}s — ${a.is_correct ? "✔" : "✖"}`)
+            .join("<br>");
 
-        table.innerHTML += `
-            <tr>
-                <td>${entry.participantNumber}</td>
-                <td>${answersFormatted}</td>
-                <td>${entry.total_time ?? "-"}</td>
-                <td>${entry.score ?? "-"}</td>
-                <td>
-                    <button class="feedback-btn" onclick="viewFeedback('${entry.participantNumber}')">
-                        Feedback ansehen
-                    </button>
-                </td>
-            </tr>
+        tr.innerHTML = `
+            <td>${entry.participantNumber}</td>
+            <td>${entry.total_time ?? "-"}</td>
+            <td><span class="score-badge">${entry.score ?? "-"}</span></td>
+
+            <td>
+                <div class="answers-btn" onclick="toggleAnswers(this)">
+                    anzeigen ▼
+                </div>
+                <div class="answer-box">${answersHTML}</div>
+            </td>
+
+            <td>
+                <button class="feedback-btn" onclick="viewFeedback('${entry.participantNumber}')">
+                    Feedback
+                </button>
+            </td>
         `;
+
+        tbody.appendChild(tr);
     });
+}
+
+function toggleAnswers(el) {
+    const box = el.nextElementSibling;
+    const visible = box.style.display === "block";
+    box.style.display = visible ? "none" : "block";
+    el.textContent = visible ? "anzeigen ▼" : "verbergen ▲";
 }
 
 loadResults("A", "tableA");
