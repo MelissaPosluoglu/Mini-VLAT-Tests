@@ -1,147 +1,122 @@
 // =====================================================
-// MINI-VLAT — Test A (Zeitdruck) – FINAL STABLE VERSION
+// MINI-VLAT — Test A (Zeitdruck) FINAL STABLE
 // =====================================================
 
 // -----------------------------------------------------
-// STATE (für Fragen-Seiten)
+// GLOBAL STATE
 // -----------------------------------------------------
-let score = 0;
 let timer = null;
 let timeLeft = 25;
 
-let totalTimeA = Number(localStorage.getItem("totalTimeA")) || 0;
+// AUTOMATISCH: localhost ODER VM
+// const API_BASE = window.location.origin;
+const API_BASE = "http://localhost:8000";
+
 
 // -----------------------------------------------------
-// 1) STARTSCREEN LOGIK — läuft NUR in testA.html
+// BACKEND START (einmalig pro Test)
 // -----------------------------------------------------
-if (location.pathname.endsWith("testA.html")) {
+async function ensureTestStarted() {
+    if (localStorage.getItem("test_id")) return;
 
-    document.addEventListener("DOMContentLoaded", () => {
-
-        const numberScreen = document.getElementById("number-input-screen");
-        const intro = document.getElementById("testA-intro");
-
-        // Wenn noch keine Nummer → Eingabe anzeigen
-        if (!localStorage.getItem("participantNumber")) {
-            numberScreen.style.display = "block";
-            return;
-        }
-
-        // Wenn Nummer existiert → Intro anzeigen
-        intro.style.display = "block";
+    const response = await fetch(`${API_BASE}/start`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            participantNumber: "auto",   // 🔥 Participant-Seite endgültig umgangen
+            test_type: "A"
+        })
     });
 
-    // Nummer speichern
-    document.getElementById("startNumberBtn")?.addEventListener("click", () => {
-        const number = document.getElementById("participantNumber").value.trim();
-        if (!number) return alert("Bitte gültige Nummer eingeben.");
+    if (!response.ok) {
+        console.error("Failed to start test");
+        return;
+    }
 
-        localStorage.setItem("participantNumber", number);
-
-        document.getElementById("number-input-screen").style.display = "none";
-        document.getElementById("testA-intro").style.display = "block";
-    });
-
-    // Test starten
-    document.getElementById("startTestA")?.addEventListener("click", async () => {
-
-        score = 0;
-
-        const response = await fetch("http://localhost:8000/start", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                participantNumber: localStorage.getItem("participantNumber"),
-                test_type: "A"
-            })
-        });
-
-        const data = await response.json();
-        localStorage.setItem("test_id", data.test_id);
-        localStorage.setItem("scoreA", 0);
-
-        // zur ersten Frage gehen
-        location.href = "./questions/q1_treemap.html";
-    });
+    const data = await response.json();
+    localStorage.setItem("test_id", data.test_id);
+    localStorage.setItem("scoreA", "0");
+    localStorage.setItem("totalTimeA", "0");
 }
 
-
-
 // -----------------------------------------------------
-// 2) FRAGE-RENDERING (läuft auf question-Seiten)
+// RENDER TEST A QUESTION
 // -----------------------------------------------------
-function renderTestA(qIndex) {
+async function renderTestA(qIndex) {
+
+    await ensureTestStarted();
 
     const q = questions[qIndex];
     timeLeft = 25;
 
-    updateProgress(qIndex);
+    const app = document.getElementById("app");
 
-    document.getElementById("app").innerHTML = `
-        <div class="question-header">
-            <div id="question-counter">Frage ${qIndex + 1} von ${questions.length}</div>
-            <div id="timer-box"></div>
-        </div>
+    app.innerHTML = `
+    <div class="question-header">
+    <div class="question-counter">
+      Frage ${qIndex + 1} von ${questions.length}
+    </div>
+
+    <div id="circle-timer">
+      <svg>
+        <defs>
+         <linearGradient id="timerGradientBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+         <stop offset="0%" stop-color="#3b6ff5"/>
+         <stop offset="100%" stop-color="#2457d6"/>
+         </linearGradient>
+        </defs>
+
+       <circle id="timer-bg" cx="35" cy="35" r="30"></circle>
+       <circle id="timer-progress" cx="35" cy="35" r="30"></circle>
+      </svg>
+
+      <div id="time-text">${timeLeft}</div>
+     </div>
+    </div>
+
 
         <h2 class="prompt-text">${q.prompt}</h2>
 
         <div class="image-wrapper">
-            <img src="${q.img}" class="vlat-image">
+            <img src="${q.img}" class="vlat-image" alt="">
         </div>
 
         <ul class="answers">
-            ${q.answers.map(a =>
-        `<li class="answer-option" onclick="selectAnswerTestA('${a}', ${qIndex})">${a}</li>`
-    ).join("")}
+            ${q.answers.map(a => `
+                <li class="answer-option"
+                    onclick="selectAnswerTestA('${a}', ${qIndex})">
+                    ${a}
+                </li>
+            `).join("")}
         </ul>
     `;
 
+    updateProgress(qIndex);
     startTimerTestA(qIndex);
 }
 
-
-
 // -----------------------------------------------------
-// 3) TIMER
+// TIMER
 // -----------------------------------------------------
 function startTimerTestA(qIndex) {
-
     clearInterval(timer);
-    timeLeft = 25;
 
-    const radius = 25;
+    const timeText = document.getElementById("time-text");
+    const progress = document.getElementById("timer-progress");
+
+    const radius = 30;
     const circumference = 2 * Math.PI * radius;
 
-    document.getElementById("timer-box").innerHTML = `
-        <div id="circle-timer">
-            <svg>
-                <defs>
-                    <linearGradient id="timerGradientBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#3b6ff5"/>
-                        <stop offset="100%" stop-color="#2457d6"/>
-                    </linearGradient>
-                </defs>
-
-                <circle id="timer-bg" cx="35" cy="35" r="${radius}"></circle>
-                <circle id="timer-progress"
-                    cx="35" cy="35" r="${radius}"
-                    style="stroke-dasharray:${circumference}; stroke-dashoffset:0;">
-                </circle>
-            </svg>
-
-            <span id="time-text">${timeLeft}</span>
-        </div>
-    `;
-
-    const progress = document.getElementById("timer-progress");
-    const timeText = document.getElementById("time-text");
-    const offsetStep = circumference / 25;
+    progress.style.strokeDasharray = circumference;
+    progress.style.strokeDashoffset = 0;
 
     timer = setInterval(() => {
         timeLeft--;
         timeText.textContent = timeLeft;
 
-        progress.style.strokeDashoffset = offsetStep * (25 - timeLeft);
+        const offset =
+            circumference - (timeLeft / 25) * circumference;
+        progress.style.strokeDashoffset = offset;
 
         if (timeLeft <= 0) {
             clearInterval(timer);
@@ -151,103 +126,100 @@ function startTimerTestA(qIndex) {
 }
 
 
-
 // -----------------------------------------------------
-// 4) ANSWER SPEICHERN
+// ANSWER HANDLING
 // -----------------------------------------------------
 async function selectAnswerTestA(answer, qIndex) {
 
+    clearInterval(timer);
+
     const q = questions[qIndex];
-    const correct = (answer === q.correct);
+    const correct = answer === q.correct;
 
-    let currentScore = Number(localStorage.getItem("scoreA")) || 0;
+    let score = Number(localStorage.getItem("scoreA")) || 0;
+    let totalTime = Number(localStorage.getItem("totalTimeA")) || 0;
 
-    await fetch("http://localhost:8000/answer", {
+    await fetch(`${API_BASE}/answer`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             test_id: localStorage.getItem("test_id"),
             question_id: q.id,
             selected_answer: answer,
             correct_answer: q.correct,
-            time_taken: 25 - timeLeft,
-            is_correct: correct
+            is_correct: correct,
+            time_taken: 25 - timeLeft
         })
     });
 
-    totalTimeA += (25 - timeLeft);
-    localStorage.setItem("totalTimeA", totalTimeA);
+    if (correct) score++;
+    totalTime += (25 - timeLeft);
 
-    if (correct) {
-        currentScore++;
-        localStorage.setItem("scoreA", currentScore);
-    }
+    localStorage.setItem("scoreA", score);
+    localStorage.setItem("totalTimeA", totalTime);
 
     autoNextTestA(qIndex);
 }
 
-
-
 // -----------------------------------------------------
-// 5) AUTO NEXT
+// NEXT QUESTION
 // -----------------------------------------------------
 function autoNextTestA(qIndex) {
 
-    // Letzte Frage → Feedback
     if (qIndex + 1 >= questions.length) {
         showResultTestA();
         return;
     }
 
-    const nextId = questions[qIndex + 1].id;
-    const nextNumber = qIndex + 2;
-
-    location.href = `q${nextNumber}_${nextId}.html`;
+    const next = questions[qIndex + 1];
+    location.href = `q${qIndex + 2}_${next.id}.html`;
 }
 
-
-
 // -----------------------------------------------------
-// 6) PROGRESS BAR
+// PROGRESS BAR
 // -----------------------------------------------------
 function updateProgress(i) {
-    document.getElementById("progress").style.width =
-        (100 * i / questions.length) + "%";
+    const progress = document.getElementById("progress");
+    if (!progress) return;
+
+    progress.style.width = `${(100 * i) / questions.length}%`;
 }
 
-
-
 // -----------------------------------------------------
-// 7) RESULT PAGE
+// FINISH TEST
 // -----------------------------------------------------
 async function showResultTestA() {
 
-    const finalScore = Number(localStorage.getItem("scoreA")) || 0;
-    const finalTime = Number(localStorage.getItem("totalTimeA")) || 0;
+    const testId = localStorage.getItem("test_id");
+    const score = Number(localStorage.getItem("scoreA"));
+    const totalTime = Number(localStorage.getItem("totalTimeA"));
 
-    await fetch("http://localhost:8000/finish", {
+    await fetch(`${API_BASE}/finish`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            test_id: localStorage.getItem("test_id"),
-            total_time: finalTime,
-            score: finalScore
+            test_id: testId,
+            total_time: totalTime,
+            score: score
         })
     });
 
     document.getElementById("app").innerHTML = `
-        <div id="result-box">
-            <h2>Test abgeschlossen</h2>
-            <p>Du hast <strong>${finalScore}</strong> von ${questions.length} Fragen richtig beantwortet.</p>
+        <div class="card-screen">
+            <h2>Test A abgeschlossen</h2>
 
-            <button class="back-home-btn"
-                onclick="location.href='../feedback.html?test=A&tid=${localStorage.getItem("test_id")}'">
-                Weiter zum Feedback
+            <p><strong>Score:</strong> ${score} / ${questions.length}</p>
+            <p><strong>Gesamtzeit:</strong> ${totalTime} Sekunden</p>
+
+            <button class="start-btn" id="feedbackBtn">
+                Zum Feedback
             </button>
         </div>
     `;
 
-    localStorage.removeItem("scoreA");
-    localStorage.removeItem("totalTimeA");
-
+    document.getElementById("feedbackBtn").addEventListener("click", () => {
+        window.location.href = `../feedback.html?test_id=${testId}&test_type=A`;
+    });
 }
+
+

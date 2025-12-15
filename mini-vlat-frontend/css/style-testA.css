@@ -183,36 +183,6 @@ body.test-page {
 }
 
 /* ===========================================================
-   PARTICIPANT NUMBER SCREEN
-=========================================================== */
-
-#number-input-screen {
-    max-width: 650px;
-    margin: 80px auto;
-    padding: 40px;
-    background: #eef3ff;
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 6px 30px rgba(0,0,0,0.08);
-}
-
-#number-input-screen h2 {
-    color: #1e3fa3;
-    font-size: 30px;
-    margin-bottom: 25px;
-}
-
-#participantNumber {
-    padding: 12px 18px;
-    width: 80%;
-    font-size: 18px;
-    border-radius: 12px;
-    border: 1px solid #c9d6ff;
-    margin-bottom: 25px;
-    outline: none;
-}
-
-/* ===========================================================
    ANIMATIONS
 =========================================================== */
 

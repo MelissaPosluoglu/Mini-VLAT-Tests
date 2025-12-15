@@ -1,55 +1,108 @@
+// =====================================================
+// MINI-VLAT — FEEDBACK SCRIPT (FINAL, STABLE)
+// =====================================================
+
+const API_BASE = window.location.origin;
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    const params = new URLSearchParams(location.search);
+    // -------------------------------------------------
+    // URL Parameter lesen
+    // Erwartet: ?test_id=XYZ&test_type=A|B|C
+    // -------------------------------------------------
+    const params = new URLSearchParams(window.location.search);
 
-    const tid = params.get("tid");
-    const t = params.get("test");
+    const testId = params.get("test_id");
+    const testType = params.get("test_type");
 
-    document.getElementById("test_id").value = tid;
-    document.getElementById("test_type").value = t;
+    if (!testId || !testType) {
+        alert("Fehlende Testinformationen. Feedback kann nicht zugeordnet werden.");
+        return;
+    }
 
-    // Feedback-Block nur bei Test B
-    if (t === "B") {
-        document.getElementById("feedback_block").style.display = "block";
+    // Hidden Inputs setzen
+    document.getElementById("test_id").value = testId;
+    document.getElementById("test_type").value = testType;
+
+    // -------------------------------------------------
+    // Optionale Blöcke je nach Testtyp
+    // -------------------------------------------------
+    const feedbackBlock = document.getElementById("feedback_block");
+    if (feedbackBlock) {
+        feedbackBlock.style.display = (testType === "B") ? "block" : "none";
     }
 });
+
+
+// =====================================================
+// FORM SUBMIT
+// =====================================================
 
 document.getElementById("feedbackForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // -------------------------------------------------
+    // Payload aufbauen (robust & backend-sicher)
+    // -------------------------------------------------
     const payload = {
         test_id: document.getElementById("test_id").value,
         test_type: document.getElementById("test_type").value,
 
-        difficulty: Number(document.querySelector("input[name='difficulty']:checked")?.value || 0),
-        mental_load: Number(document.querySelector("input[name='mental_load']:checked")?.value || 0),
-        stress: Number(document.querySelector("input[name='stress']:checked")?.value || 0),
-        confidence: Number(document.querySelector("input[name='confidence']:checked")?.value || 0),
+        difficulty: getRadioNumber("difficulty"),
+        mental_load: getRadioNumber("mental_load"),
+        stress: getRadioNumber("stress"),
+        confidence: getRadioNumber("confidence"),
 
-        strategy_change: Number(document.querySelector("input[name='strategy_change']:checked")?.value || 0),
+        strategy_change: getRadioNumber("strategy_change"),
 
-        // Fehlendes Pflichtfeld ➜ Dummy-Wert, wenn Test A oder C
-        feedback_helpful: document.querySelector("input[name='feedback_helpful']:checked")?.value
-            ? Number(document.querySelector("input[name='feedback_helpful']:checked").value)
-            : null,
+        // Optional – nur wenn vorhanden
+        feedback_helpful: getRadioNumber("feedback_helpful", true),
 
-        vision_issue: document.querySelector("input[name='vision_issue']:checked")?.value || null,
-        vision_aid: document.querySelector("input[name='vision_aid']:checked")?.value || null,
+        vision_issue: getRadioValue("vision_issue"),
+        vision_aid: getRadioValue("vision_aid"),
 
-        test_time: document.getElementById("test_time").value || null,
+        test_time: document.getElementById("test_time")?.value || null,
 
-        fatigue: Number(document.querySelector("input[name='fatigue']:checked")?.value || 0),
+        fatigue: getRadioNumber("fatigue"),
 
-        open_feedback: document.getElementById("open_feedback").value || null
+        open_feedback: document.getElementById("open_feedback")?.value || null
     };
 
+    // -------------------------------------------------
+    // Absenden
+    // -------------------------------------------------
+    try {
+        const res = await fetch(`${API_BASE}/feedback`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
 
-    await fetch("http://localhost:8000/feedback", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(payload)
-    });
+        if (!res.ok) {
+            throw new Error("Feedback konnte nicht gespeichert werden");
+        }
 
-    alert("Vielen Dank! Ihre Antworten wurden gespeichert.");
-    location.href = "index.html";
+        alert("Vielen Dank! Ihr Feedback wurde gespeichert.");
+        window.location.href = "../results.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Fehler beim Speichern des Feedbacks.");
+    }
 });
+
+
+// =====================================================
+// HILFSFUNKTIONEN
+// =====================================================
+
+function getRadioNumber(name, optional = false) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    if (!el) return optional ? null : 0;
+    return Number(el.value);
+}
+
+function getRadioValue(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : null;
+}

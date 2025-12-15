@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Eyetracking - Visualization Literacy & Gaze Patterns</title>
-    <link rel="stylesheet" href="../css/style.css">
 
+    <!-- KORREKTER PFAD -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
 <header class="header">
@@ -14,14 +16,10 @@
 </header>
 
 <div class="main-container">
-    <script>
-        localStorage.removeItem("participantNumber");
-        localStorage.removeItem("scoreA");
-    </script>
-
     <div class="cards">
 
-        <div class="card" onclick="location.href='testA.html'">
+        <!-- KORREKTE PFAD ANPASSUNG -->
+        <div class="card" onclick="location.href='html/questionsA/q1_treemap.html'">
         <h3>Test A – Zeitdruck</h3>
             <p>
                 30 Sekunden pro Frage, automatische Weiterleitung.<br><br>
@@ -29,7 +27,7 @@
             </p>
         </div>
 
-        <div class="card" onclick="location.href='testB.html?q=treemap'">
+        <div class="card" onclick="location.href='html/testB.html?q=treemap'">
             <h3>Test B – Feedback</h3>
             <p>
                 Kein Zeitlimit und sofortiges Feedback nach jeder Antwort.<br><br>
@@ -37,7 +35,7 @@
             </p>
         </div>
 
-        <div class="card" onclick="location.href='testC.html?q=treemap&mode=view'">
+        <div class="card" onclick="location.href='html/testC.html?q=treemap&mode=view'">
             <h3>Test C – Zweistufig</h3>
             <p>
                 Grafik & Frage → danach Antwortphase.<br><br>
@@ -46,7 +44,8 @@
         </div>
 
     </div>
-    <button class="results-btn" onclick="location.href='results.html'">
+
+    <button class="results-btn" onclick="location.href='html/results.html'">
         Ergebnisse ansehen
     </button>
 
@@ -55,6 +54,8 @@
 <footer>
     © 2025 Mini-VLAT Research Project – Universität Stuttgart
 </footer>
+
 <div class="bottom-lavender-bar"></div>
+
 </body>
 </html>

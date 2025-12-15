@@ -1,20 +1,34 @@
 // test-loader.js
+(function () {
+    const test = localStorage.getItem("currentTest");
 
-// Welcher Test wird ausgeführt?
-const test = localStorage.getItem("currentTest");
+    if (!test) return;
 
-// CSS dynamisch laden
-if (test === "A") {
-    document.write('<link rel="stylesheet" href="../../css/style-testA.css">');
-    document.write('<script src="../../js/script-testA.js"><\/script>');
+    if (test === "A") {
+        loadCSS("../../css/style-testA.css");
+        loadJS("../../js/script-testA.js");
+    }
+
+    if (test === "B") {
+        loadCSS("../../css/style-testB.css");
+        loadJS("../../js/script-testB.js");
+    }
+
+    if (test === "C") {
+        loadCSS("../../css/style-testC.css");
+        loadJS("../../js/script-testC.js");
+    }
+})();
+
+function loadCSS(href) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.appendChild(link);
 }
 
-if (test === "B") {
-    document.write('<link rel="stylesheet" href="../../css/style-testB.css">');
-    document.write('<script src="../../js/script-testB.js"><\/script>');
-}
-
-if (test === "C") {
-    document.write('<link rel="stylesheet" href="../../css/style-testC.css">');
-    document.write('<script src="../../js/script-testC.js"><\/script>');
+function loadJS(src) {
+    const script = document.createElement("script");
+    script.src = src;
+    document.body.appendChild(script);
 }
