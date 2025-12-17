@@ -1,3 +1,4 @@
+
 async function loadResults(testType, tableId) {
     const response = await fetch(`http://localhost:8000/results/${testType}`);
     const data = await response.json();
@@ -9,12 +10,12 @@ async function loadResults(testType, tableId) {
         const tr = document.createElement("tr");
 
         const answersHTML = entry.answers
-            .map(a => `${a.question_id}: ${a.time_taken}s — ${a.is_correct ? "✔" : "✖"}`)
+            .map(a => `${a.question_id}: ${fmt1(a.time_taken)}s — ${a.is_correct ? "✔" : "✖"}`)
             .join("<br>");
 
         tr.innerHTML = `
             <td>${entry.participantNumber}</td>
-            <td>${entry.total_time ?? "-"}</td>
+            <td>${fmt1(entry.total_time)}</td>
             <td><span class="score-badge">${entry.score ?? "-"}</span></td>
 
             <td>
@@ -34,6 +35,12 @@ async function loadResults(testType, tableId) {
         tbody.appendChild(tr);
     });
 }
+
+function fmt1(x) {
+    if (x === null || x === undefined) return "-";
+    return Number(x).toFixed(1);
+}
+
 
 function toggleAnswers(el) {
     const box = el.nextElementSibling;
