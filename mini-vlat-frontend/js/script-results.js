@@ -26,9 +26,9 @@ async function loadResults(testType, tableId) {
             </td>
 
             <td>
-                <button class="feedback-btn" onclick="viewFeedback('${entry.participantNumber}')">
-                    Feedback
-                </button>
+               <button class="feedback-btn" onclick="viewFeedback('${entry._id}')">
+                   Feedback
+               </button>
             </td>
         `;
 
@@ -84,6 +84,7 @@ async function deleteParticipant() {
     }
 }
 
-function viewFeedback(participantNumber) {
-    window.location.href = `feedback-view.html?participant=${participantNumber}`;
+function viewFeedback(testId) {
+    window.location.href = `feedback-view.html?test_id=${encodeURIComponent(testId)}`;
 }
+

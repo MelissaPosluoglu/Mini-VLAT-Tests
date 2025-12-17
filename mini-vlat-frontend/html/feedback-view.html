@@ -17,36 +17,52 @@
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const participant = urlParams.get("participant");
+    const testId = urlParams.get("test_id");
 
     async function loadFeedback() {
-        const res = await fetch(`http://localhost:8000/feedback/${participant}`);
-        const data = await res.json();
         const box = document.getElementById("feedback-content");
         const title = document.getElementById("feedback-title");
 
-        title.textContent = `Feedback für Teilnehmer ${participant}`;
-
-        if (data.status !== "ok") {
-            box.innerHTML = `<p style="text-align:center;color:#777;">Kein Feedback vorhanden.</p>`;
+        if (!testId) {
+            title.textContent = "Feedback-Details";
+            box.innerHTML = `<p style="text-align:center;color:#777;">Kein test_id übergeben.</p>`;
             return;
         }
 
-        box.innerHTML = data.feedback.map(f => `
+        try {
+            const res = await fetch(`http://localhost:8000/feedback/test/${encodeURIComponent(testId)}`);
+
+            if (!res.ok) {
+                title.textContent = "Feedback-Details";
+                box.innerHTML = `<p style="text-align:center;color:#777;">Kein Feedback vorhanden.</p>`;
+                return;
+            }
+
+            const data = await res.json();
+            const f = data.feedback; // ✅ EIN Objekt
+
+            title.textContent = `Feedback für Teilnehmer ${f.participantNumber ?? "-"}`;
+
+            box.innerHTML = `
         <div class="feedback-card">
-          <p><strong>Testtyp:</strong> ${f.test_type}</p>
-          <p><strong>Schwierigkeit:</strong> ${f.difficulty}</p>
-          <p><strong>Mentale Belastung:</strong> ${f.mental_load}</p>
-          <p><strong>Stress:</strong> ${f.stress}</p>
-          <p><strong>Selbsteinschätzung:</strong> ${f.confidence}</p>
-          <p><strong>Strategie geändert?</strong> ${f.strategy_change}</p>
+          <p><strong>Testtyp:</strong> ${f.test_type ?? "-"}</p>
+          <p><strong>Schwierigkeit:</strong> ${f.difficulty ?? "-"}</p>
+          <p><strong>Mentale Belastung:</strong> ${f.mental_load ?? "-"}</p>
+          <p><strong>Stress:</strong> ${f.stress ?? "-"}</p>
+          <p><strong>Selbsteinschätzung:</strong> ${f.confidence ?? "-"}</p>
+          <p><strong>Strategie geändert?</strong> ${f.strategy_change ?? "-"}</p>
           <p><strong>Sehschwäche:</strong> ${f.vision_issue || "-"}</p>
           <p><strong>Sehhilfe:</strong> ${f.vision_aid || "-"}</p>
           <p><strong>Testzeit:</strong> ${f.test_time || "-"}</p>
-          <p><strong>Müdigkeit:</strong> ${f.fatigue || "-"}</p>
+          <p><strong>Müdigkeit:</strong> ${f.fatigue ?? "-"}</p>
           <p><strong>Freitext:</strong> ${f.open_feedback || "-"}</p>
         </div>
-      `).join("");
+      `;
+        } catch (e) {
+            console.error(e);
+            title.textContent = "Feedback-Details";
+            box.innerHTML = `<p style="text-align:center;color:#777;">Fehler beim Laden.</p>`;
+        }
     }
 
     function goBack() {

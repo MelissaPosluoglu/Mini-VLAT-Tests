@@ -119,13 +119,28 @@ async def get_results(test_type: str):
 async def save_feedback(request: FeedbackRequest):
     entry = request.dict()
 
-    # Test aus Testsammlung holen, um Teilnehmernummer zu verknüpfen
     test = await tests_collection.find_one({"_id": ObjectId(request.test_id)})
     if test:
         entry["participantNumber"] = test.get("participantNumber")
 
-    result = await feedback_collection.insert_one(entry)
-    return {"status": "saved", "id": str(result.inserted_id)}
+    # ✅ pro test_id genau 1 Feedback: überschreiben (upsert)
+    await feedback_collection.update_one(
+        {"test_id": entry["test_id"]},
+        {"$set": entry},
+        upsert=True
+    )
+
+    return {"status": "saved"}
+
+
+@app.get("/feedback/test/{test_id}")
+async def get_feedback_by_test_id(test_id: str):
+    doc = await feedback_collection.find_one({"test_id": test_id})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Kein Feedback gefunden")
+
+    doc["_id"] = str(doc["_id"])
+    return {"status": "ok", "feedback": doc}
 
 
 
