@@ -56,6 +56,13 @@ async def save_answer(request: AnswerRequest):
         "time_taken": request.time_taken
     }
 
+    # ✅ erst alte Antwort zur selben question_id entfernen (falls Mehrfachklick)
+    await tests_collection.update_one(
+        {"_id": ObjectId(request.test_id)},
+        {"$pull": {"answers": {"question_id": request.question_id}}}
+    )
+
+    # ✅ dann neue Antwort speichern
     await tests_collection.update_one(
         {"_id": ObjectId(request.test_id)},
         {"$push": {"answers": entry}}
@@ -69,29 +76,27 @@ async def save_answer(request: AnswerRequest):
 @app.post("/finish")
 async def finish_test(request: FinishRequest):
 
-    # Test laden
     test = await tests_collection.find_one({"_id": ObjectId(request.test_id)})
-
     if not test:
         return {"status": "error", "message": "test not found"}
 
-    # Score korrekt berechnen
-    correct_answers = sum(1 for ans in test["answers"] if ans.get("is_correct") is True)
+    answers = test.get("answers", [])
 
-    # DB updaten
+    # ✅ Score korrekt aus DB
+    correct_answers = sum(1 for ans in answers if ans.get("is_correct") is True)
+
+    # ✅ Gesamtzeit korrekt aus DB
+    total_time = sum(float(ans.get("time_taken", 0) or 0) for ans in answers)
+
     await tests_collection.update_one(
         {"_id": ObjectId(request.test_id)},
-        {
-            "$set": {
-                "total_time": request.total_time,
-                "score": correct_answers
-            }
-        }
+        {"$set": {"total_time": total_time, "score": correct_answers}}
     )
 
     return {
         "status": "finished",
-        "score": correct_answers
+        "score": correct_answers,
+        "total_time": total_time
     }
 
 

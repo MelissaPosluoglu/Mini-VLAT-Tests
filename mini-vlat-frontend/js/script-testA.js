@@ -1,17 +1,15 @@
 // =====================================================
-// MINI-VLAT — Test A (Zeitdruck) FINAL STABLE
+// MINI-VLAT — Test A (Zeitdruck) FINAL STABLE (FIXED)
 // =====================================================
 
-// -----------------------------------------------------
-// GLOBAL STATE
-// -----------------------------------------------------
 let timer = null;
 let timeLeft = 25;
 
-// AUTOMATISCH: localhost ODER VM
-// const API_BASE = window.location.origin;
 const API_BASE = "http://localhost:8000";
 
+// ✅ neue states pro Seite
+let questionStartMs = 0;
+let hasAnswered = false;
 
 // -----------------------------------------------------
 // BACKEND START (einmalig pro Test)
@@ -23,7 +21,7 @@ async function ensureTestStarted() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            participantNumber: "auto",   // 🔥 Participant-Seite endgültig umgangen
+            participantNumber: "auto",
             test_type: "A"
         })
     });
@@ -35,8 +33,19 @@ async function ensureTestStarted() {
 
     const data = await response.json();
     localStorage.setItem("test_id", data.test_id);
+
+    // nur local fürs “Anzeige/Debug”, Endergebnis kommt aus Backend
     localStorage.setItem("scoreA", "0");
     localStorage.setItem("totalTimeA", "0");
+}
+
+// -----------------------------------------------------
+// TIME TAKEN (real time, not based on timeLeft ticks)
+// -----------------------------------------------------
+function getTimeTakenSeconds() {
+    const ms = Date.now() - questionStartMs;
+    const s = ms / 1000;
+    return Math.max(0, Math.min(25, s));
 }
 
 // -----------------------------------------------------
@@ -44,51 +53,56 @@ async function ensureTestStarted() {
 // -----------------------------------------------------
 async function renderTestA(qIndex) {
 
+    // ✅ WICHTIG: Wenn man wieder bei Frage 1 startet → neues Test-Dokument
+    if (qIndex === 0) {
+        localStorage.removeItem("test_id");
+        localStorage.setItem("scoreA", "0");
+        localStorage.setItem("totalTimeA", "0");
+    }
+
     await ensureTestStarted();
 
     const q = questions[qIndex];
     timeLeft = 25;
+    hasAnswered = false;
+    questionStartMs = Date.now();
 
     const app = document.getElementById("app");
 
     app.innerHTML = `
     <div class="question-header">
-    <div class="question-counter">
-      Frage ${qIndex + 1} von ${questions.length}
+      <div class="question-counter">
+        Frage ${qIndex + 1} von ${questions.length}
+      </div>
+
+      <div id="circle-timer">
+        <svg>
+          <defs>
+            <linearGradient id="timerGradientBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3b6ff5"/>
+              <stop offset="100%" stop-color="#2457d6"/>
+            </linearGradient>
+          </defs>
+          <circle id="timer-bg" cx="35" cy="35" r="30"></circle>
+          <circle id="timer-progress" cx="35" cy="35" r="30"></circle>
+        </svg>
+        <div id="time-text">${timeLeft}</div>
+      </div>
     </div>
 
-    <div id="circle-timer">
-      <svg>
-        <defs>
-         <linearGradient id="timerGradientBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-         <stop offset="0%" stop-color="#3b6ff5"/>
-         <stop offset="100%" stop-color="#2457d6"/>
-         </linearGradient>
-        </defs>
+    <h2 class="prompt-text">${q.prompt}</h2>
 
-       <circle id="timer-bg" cx="35" cy="35" r="30"></circle>
-       <circle id="timer-progress" cx="35" cy="35" r="30"></circle>
-      </svg>
-
-      <div id="time-text">${timeLeft}</div>
-     </div>
+    <div class="image-wrapper">
+      <img src="${q.img}" class="vlat-image" alt="">
     </div>
 
-
-        <h2 class="prompt-text">${q.prompt}</h2>
-
-        <div class="image-wrapper">
-            <img src="${q.img}" class="vlat-image" alt="">
-        </div>
-
-        <ul class="answers">
-            ${q.answers.map(a => `
-                <li class="answer-option"
-                    onclick="selectAnswerTestA('${a}', ${qIndex})">
-                    ${a}
-                </li>
-            `).join("")}
-        </ul>
+    <ul class="answers">
+      ${q.answers.map(a => `
+        <li class="answer-option" onclick="selectAnswerTestA('${a}', ${qIndex})">
+          ${a}
+        </li>
+      `).join("")}
+    </ul>
     `;
 
     updateProgress(qIndex);
@@ -114,30 +128,23 @@ function startTimerTestA(qIndex) {
         timeLeft--;
         timeText.textContent = timeLeft;
 
-        const offset =
-            circumference - (timeLeft / 25) * circumference;
+        const offset = circumference - (timeLeft / 25) * circumference;
         progress.style.strokeDashoffset = offset;
 
         if (timeLeft <= 0) {
             clearInterval(timer);
-            autoNextTestA(qIndex);
+            // ✅ Timeout => No Answer wird gespeichert
+            autoNextTestA(qIndex, true);
         }
     }, 1000);
 }
 
-
 // -----------------------------------------------------
-// ANSWER HANDLING
+// SAVE ANSWER (single source of truth)
 // -----------------------------------------------------
-async function selectAnswerTestA(answer, qIndex) {
-
-    clearInterval(timer);
-
+async function submitAnswerTestA(selectedAnswer, qIndex, timeTaken) {
     const q = questions[qIndex];
-    const correct = answer === q.correct;
-
-    let score = Number(localStorage.getItem("scoreA")) || 0;
-    let totalTime = Number(localStorage.getItem("totalTimeA")) || 0;
+    const correct = selectedAnswer === q.correct;
 
     await fetch(`${API_BASE}/answer`, {
         method: "POST",
@@ -145,26 +152,54 @@ async function selectAnswerTestA(answer, qIndex) {
         body: JSON.stringify({
             test_id: localStorage.getItem("test_id"),
             question_id: q.id,
-            selected_answer: answer,
+            selected_answer: selectedAnswer,
             correct_answer: q.correct,
             is_correct: correct,
-            time_taken: 25 - timeLeft
+            time_taken: timeTaken
         })
     });
 
+    // local nur “mitlaufen lassen”
+    let score = Number(localStorage.getItem("scoreA")) || 0;
+    let totalTime = Number(localStorage.getItem("totalTimeA")) || 0;
+
     if (correct) score++;
-    totalTime += (25 - timeLeft);
+    totalTime += timeTaken;
 
-    localStorage.setItem("scoreA", score);
-    localStorage.setItem("totalTimeA", totalTime);
-
-    autoNextTestA(qIndex);
+    localStorage.setItem("scoreA", String(score));
+    localStorage.setItem("totalTimeA", String(totalTime));
 }
 
 // -----------------------------------------------------
-// NEXT QUESTION
+// ANSWER HANDLING (click)
 // -----------------------------------------------------
-function autoNextTestA(qIndex) {
+async function selectAnswerTestA(answer, qIndex) {
+    if (hasAnswered) return;          // ✅ Anti-Doppelklick
+    hasAnswered = true;
+
+    clearInterval(timer);
+
+    // ✅ Optionen deaktivieren
+    document.querySelectorAll(".answer-option").forEach(li => {
+        li.style.pointerEvents = "none";
+    });
+
+    const timeTaken = getTimeTakenSeconds();
+    await submitAnswerTestA(answer, qIndex, timeTaken);
+
+    autoNextTestA(qIndex, false);
+}
+
+// -----------------------------------------------------
+// NEXT QUESTION (timeout or normal)
+// -----------------------------------------------------
+async function autoNextTestA(qIndex, isTimeout) {
+
+    // ✅ Wenn Timeout und noch keine Antwort gespeichert wurde:
+    if (isTimeout && !hasAnswered) {
+        hasAnswered = true;
+        await submitAnswerTestA("No Answer", qIndex, 25);
+    }
 
     if (qIndex + 1 >= questions.length) {
         showResultTestA();
@@ -186,30 +221,30 @@ function updateProgress(i) {
 }
 
 // -----------------------------------------------------
-// FINISH TEST
+// FINISH TEST (show backend truth)
 // -----------------------------------------------------
 async function showResultTestA() {
 
     const testId = localStorage.getItem("test_id");
-    const score = Number(localStorage.getItem("scoreA"));
-    const totalTime = Number(localStorage.getItem("totalTimeA"));
 
-    await fetch(`${API_BASE}/finish`, {
+    const response = await fetch(`${API_BASE}/finish`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            test_id: testId,
-            total_time: totalTime,
-            score: score
-        })
+        body: JSON.stringify({ test_id: testId })
     });
+
+    const data = await response.json();
+
+    // ✅ sauber runden (Sekunden)
+    const totalSeconds = Math.round(Number(data.total_time || 0));
+    const score = Number(data.score || 0);
 
     document.getElementById("app").innerHTML = `
         <div class="card-screen">
             <h2>Test A abgeschlossen</h2>
 
             <p><strong>Score:</strong> ${score} / ${questions.length}</p>
-            <p><strong>Gesamtzeit:</strong> ${totalTime} Sekunden</p>
+            <p><strong>Gesamtzeit:</strong> ${totalSeconds} Sekunden</p>
 
             <button class="start-btn" id="feedbackBtn">
                 Zum Feedback
@@ -221,5 +256,3 @@ async function showResultTestA() {
         window.location.href = `../feedback.html?test_id=${testId}&test_type=A`;
     });
 }
-
-

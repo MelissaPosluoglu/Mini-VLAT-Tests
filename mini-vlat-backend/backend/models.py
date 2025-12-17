@@ -30,9 +30,8 @@ class AnswerRequest(BaseModel):
 
 class FinishRequest(BaseModel):
     test_id: str
-    total_time: float
-    score: int
-
+    total_time: Optional[float] = None
+    score: Optional[int] = None
 
 class TestDocument(BaseModel):
     participantNumber: str
