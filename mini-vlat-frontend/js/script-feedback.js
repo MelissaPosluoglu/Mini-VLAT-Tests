@@ -2,7 +2,7 @@
 // MINI-VLAT — FEEDBACK SCRIPT (FINAL, STABLE)
 // =====================================================
 
-const API_BASE = window.location.origin;
+const API_BASE = "http://localhost:8000";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -83,7 +83,7 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
         }
 
         alert("Vielen Dank! Ihr Feedback wurde gespeichert.");
-        window.location.href = "../results.html";
+        window.location.href = "../html/results.html";
 
     } catch (err) {
         console.error(err);
