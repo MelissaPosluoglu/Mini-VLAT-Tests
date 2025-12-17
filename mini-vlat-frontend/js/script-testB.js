@@ -1,257 +1,293 @@
 // =====================================================
-// MINI-VLAT — Test B (Feedback-Version) – FINAL STABLE
+// MINI-VLAT — Test B (Zeitdruck) FINAL STABLE (RENAMED)
 // =====================================================
 
-// -----------------------------------------------------
-// STATE
-// -----------------------------------------------------
-let scoreB = 0;
-let selectedAnswerB = "No Answer";
+let timer = null;
+let timeLeft = 25;
 
+const API_BASE = "http://localhost:8000";
 
-// -----------------------------------------------------
-// 1) STARTSCREEN LOGIK — läuft NUR in testB.html
-// -----------------------------------------------------
-if (location.pathname.endsWith("testB.html")) {
-
-    document.addEventListener("DOMContentLoaded", () => {
-
-        const numberScreen = document.getElementById("number-input-screen");
-        const intro = document.getElementById("testB-intro");
-
-        // Keine Nummer → Eingabe
-        if (!localStorage.getItem("participantNumber")) {
-            numberScreen.style.display = "block";
-            return;
-        }
-
-        // Nummer existiert → Intro
-        intro.style.display = "block";
-    });
-
-    // Nummer speichern
-    document.getElementById("startNumberBtn")?.addEventListener("click", () => {
-        const num = document.getElementById("participantNumber").value.trim();
-        if (!num) return alert("Bitte gültige Nummer eingeben!");
-
-        localStorage.setItem("participantNumber", num);
-
-        document.getElementById("number-input-screen").style.display = "none";
-        document.getElementById("testB-intro").style.display = "block";
-    });
-
-    // Test B starten
-    document.getElementById("startTestB")?.addEventListener("click", async () => {
-
-        scoreB = 0;
-
-        const response = await fetch("http://localhost:8000/start", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                participantNumber: localStorage.getItem("participantNumber"),
-                test_type: "B"
-            })
-        });
-
-        const data = await response.json();
-        localStorage.setItem("test_id_B", data.test_id);
-
-        // zur ersten Frage
-        location.href = "./questions/q1_treemap.html";
-    });
-}
-
-
+// neue states pro Seite
+let questionStartMs = 0;
+let hasAnswered = false;
 
 // -----------------------------------------------------
-// 2) FRAGE-RENDERING — läuft nur auf question-Seiten
+// BACKEND START (einmalig pro Test)
 // -----------------------------------------------------
-function renderTestB(qIndex) {
+async function ensureTestStartedB() {
+    if (localStorage.getItem("test_id")) return;
 
-    const q = questions[qIndex];
-    selectedAnswerB = "No Answer";
-
-    updateProgressB(qIndex);
-
-    document.getElementById("app").innerHTML = `
-        <div class="question-header">
-            <div id="question-counter">Frage ${qIndex + 1} von ${questions.length}</div>
-        </div>
-
-        <h2 class="prompt-text">${q.prompt}</h2>
-
-        <img src="${q.img}" class="vlat-image">
-
-        <ul class="answers">
-            ${q.answers
-        .map(a => `
-                    <li onclick="selectAnswerB('${a}', ${qIndex})"
-                        class="${a === 'No Answer' ? 'selected' : ''}">
-                        ${a}
-                    </li>
-            `).join("")}
-        </ul>
-
-        <div id="feedback" class="feedback-box"></div>
-
-        <button id="nextBtnB" class="next-btn" disabled>Weiter</button>
-    `;
-
-    document.getElementById("nextBtnB").onclick = () => nextQuestionB(qIndex);
-}
-
-
-
-// -----------------------------------------------------
-// 3) AUF ANTWORT KLICK
-// -----------------------------------------------------
-async function selectAnswerB(answer, qIndex) {
-
-    const correct = questions[qIndex].correct;
-    const lis = document.querySelectorAll(".answers li");
-
-    // alles resetten
-    lis.forEach(li => li.classList.remove(
-        "selected", "answer-correct", "answer-wrong", "answer-selected"
-    ));
-
-    selectedAnswerB = answer;
-
-    // ----------- No Answer (immer falsch) -----------
-    if (answer === "No Answer") {
-
-        document.querySelector(".answers li:last-child").classList.add("selected");
-
-        await logAnswerB(qIndex, "No Answer", correct, false);
-
-        document.getElementById("feedback").innerHTML = "Keine Antwort ausgewählt.";
-        document.getElementById("feedback").className = "feedback-box neutral";
-
-        document.getElementById("nextBtnB").disabled = false;
-        return;
-    }
-
-    // ----------- reguläre Antwort speichern -----------
-    const isCorrect = (answer === correct);
-    if (isCorrect) scoreB++;
-
-    await logAnswerB(qIndex, answer, correct, isCorrect);
-
-    // ----------- visuelles Feedback -----------
-    lis.forEach(li => {
-        if (li.innerText === answer) li.classList.add("answer-selected");
-    });
-
-    if (isCorrect) {
-
-        lis.forEach(li => {
-            if (li.innerText === correct) li.classList.add("answer-correct");
-        });
-
-        document.getElementById("feedback").innerHTML = "✔ Correct!";
-        document.getElementById("feedback").className = "feedback-box correct";
-
-    } else {
-
-        lis.forEach(li => {
-            if (li.innerText !== correct) li.classList.add("answer-wrong");
-        });
-        lis.forEach(li => {
-            if (li.innerText === correct) li.classList.add("answer-correct");
-        });
-
-        document.getElementById("feedback").innerHTML =
-            `✖ Incorrect<br>Correct answer: <strong>${correct}</strong>`;
-        document.getElementById("feedback").className = "feedback-box incorrect";
-    }
-
-    document.getElementById("nextBtnB").disabled = false;
-}
-
-
-
-// -----------------------------------------------------
-// 4) BACKEND LOGGING
-// -----------------------------------------------------
-async function logAnswerB(qIndex, answer, correct, isCorrect) {
-
-    await fetch("http://localhost:8000/answer", {
+    const response = await fetch(`${API_BASE}/start`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            test_id: localStorage.getItem("test_id_B"),
-            question_id: questions[qIndex].id,
-            selected_answer: answer,
-            correct_answer: correct,
-            is_correct: isCorrect,
-            time_taken: 0
+            participantNumber: "auto",
+            test_type: "B"
         })
     });
-}
 
-
-
-// -----------------------------------------------------
-// 5) NÄCHSTE FRAGE
-// -----------------------------------------------------
-async function nextQuestionB(qIndex) {
-
-    const next = qIndex + 1;
-
-    if (next >= questions.length) {
-
-        await fetch("http://localhost:8000/finish", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                test_id: localStorage.getItem("test_id_B"),
-                total_time: 0,
-                score: scoreB
-            })
-        });
-
-        location.href = "../feedback.html?test=B&tid=" + localStorage.getItem("test_id_B");
+    if (!response.ok) {
+        console.error("Failed to start test");
         return;
     }
 
-    const nextId = questions[next].id;
-    const nextNumber = next + 1;
+    const data = await response.json();
+    localStorage.setItem("test_id", data.test_id);
 
-    location.href = `q${nextNumber}_${nextId}.html`;
+    localStorage.setItem("scoreB", "0");
+    localStorage.setItem("totalTimeB", "0");
+}
+
+// -----------------------------------------------------
+// TIME TAKEN
+// -----------------------------------------------------
+function getTimeTakenSecondsB() {
+    const ms = Date.now() - questionStartMs;
+    const s = ms / 1000;
+    return Math.max(0, Math.min(25, s));
+}
+
+// -----------------------------------------------------
+// RENDER TEST B QUESTION
+// -----------------------------------------------------
+async function renderTestB(qIndex) {
+
+    if (qIndex === 0) {
+        localStorage.removeItem("test_id");
+        localStorage.setItem("scoreB", "0");
+        localStorage.setItem("totalTimeB", "0");
+    }
+
+    await ensureTestStartedB();
+
+    const q = questions[qIndex];
+    timeLeft = 25;
+    hasAnswered = false;
+    questionStartMs = Date.now();
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+    <div class="question-header">
+      <div class="question-counter">
+        Frage ${qIndex + 1} von ${questions.length}
+      </div>
+
+      <div id="circle-timer">
+        <svg>
+          <defs>
+            <linearGradient id="timerGradientBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3b6ff5"/>
+              <stop offset="100%" stop-color="#2457d6"/>
+            </linearGradient>
+          </defs>
+          <circle id="timer-bg" cx="35" cy="35" r="30"></circle>
+          <circle id="timer-progress" cx="35" cy="35" r="30"></circle>
+        </svg>
+        <div id="time-text">${timeLeft}</div>
+      </div>
+    </div>
+
+    <h2 class="prompt-text">${q.prompt}</h2>
+
+    <div class="image-wrapper">
+      <img src="${q.img}" class="vlat-image" alt="">
+    </div>
+
+    <ul class="answers">
+      ${q.answers.map(a => `
+        <li class="answer-option" onclick="selectAnswerTestB('${a}', ${qIndex})">
+          ${a}
+        </li>
+      `).join("")}
+    </ul>
+    `;
+
+    updateProgressB(qIndex);
+    startTimerTestB(qIndex);
+}
+
+// -----------------------------------------------------
+// TIMER
+// -----------------------------------------------------
+function startTimerTestB(qIndex) {
+    clearInterval(timer);
+
+    const timeText = document.getElementById("time-text");
+    const progress = document.getElementById("timer-progress");
+
+    const radius = 30;
+    const circumference = 2 * Math.PI * radius;
+
+    progress.style.strokeDasharray = circumference;
+    progress.style.strokeDashoffset = 0;
+
+    timer = setInterval(() => {
+        timeLeft--;
+        timeText.textContent = timeLeft;
+
+        const offset = circumference - (timeLeft / 25) * circumference;
+        progress.style.strokeDashoffset = offset;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            autoNextTestB(qIndex, true);
+        }
+    }, 1000);
+}
+
+// -----------------------------------------------------
+// SAVE ANSWER
+// -----------------------------------------------------
+async function submitAnswerTestB(selectedAnswer, qIndex, timeTaken) {
+    const q = questions[qIndex];
+    const correct = selectedAnswer === q.correct;
+
+    await fetch(`${API_BASE}/answer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            test_id: localStorage.getItem("test_id"),
+            question_id: q.id,
+            selected_answer: selectedAnswer,
+            correct_answer: q.correct,
+            is_correct: correct,
+            time_taken: timeTaken
+        })
+    });
+
+    let score = Number(localStorage.getItem("scoreB")) || 0;
+    let totalTime = Number(localStorage.getItem("totalTimeB")) || 0;
+
+    if (correct) score++;
+    totalTime += timeTaken;
+
+    localStorage.setItem("scoreB", String(score));
+    localStorage.setItem("totalTimeB", String(totalTime));
+}
+
+// -----------------------------------------------------
+// ANSWER HANDLING
+// -----------------------------------------------------
+async function selectAnswerTestB(answer, qIndex) {
+    if (hasAnswered) return;
+    hasAnswered = true;
+
+    clearInterval(timer);
+
+    const q = questions[qIndex];
+    const options = document.querySelectorAll(".answer-option");
+
+    const timeTaken = getTimeTakenSecondsB();
+    await submitAnswerTestB(answer, qIndex, timeTaken);
+
+    // 1. richtige Antwort -> grün
+    options.forEach(option => {
+        const text = option.textContent.trim();
+
+        if (text === q.correct) {
+            option.classList.add("answer-correct");
+        }
+    });
+
+    // 2. Falsche Antworten -> rot (außer No Answer)
+    options.forEach(option => {
+        const text = option.textContent.trim();
+
+        if (text !== q.correct && text !== "No Answer") {
+            option.classList.add("answer-wrong");
+        }
+    });
+
+    // 3. Geklickte Antwort EXTRA-Rahmen geben
+    options.forEach(option => {
+        const text = option.textContent.trim();
+
+        if (text === answer) {
+            if (answer === q.correct) {
+                option.classList.add("answer-correct-selected");  // grüner Rahmen
+            } else if (answer !== "No Answer") {
+                option.classList.add("answer-wrong-selected");    // roter Rahmen
+            }
+        }
+    });
+
+    // 4. deaktivieren
+    options.forEach(option => {
+        option.classList.add("disabled");
+        option.style.pointerEvents = "none";
+    });
+
+    // 5. automatisch weiter
+    setTimeout(() => {
+        autoNextTestB(qIndex, false);
+    }, 1200);
 }
 
 
 
 // -----------------------------------------------------
-// 6) PROGRESSBAR
+// NEXT QUESTION
+// -----------------------------------------------------
+async function autoNextTestB(qIndex, isTimeout) {
+
+    if (isTimeout && !hasAnswered) {
+        hasAnswered = true;
+        await submitAnswerTestB("No Answer", qIndex, 25);
+    }
+
+    if (qIndex + 1 >= questions.length) {
+        showResultTestB();
+        return;
+    }
+
+    const next = questions[qIndex + 1];
+    location.href = `q${qIndex + 2}_${next.id}.html`;
+}
+
+// -----------------------------------------------------
+// PROGRESS BAR
 // -----------------------------------------------------
 function updateProgressB(i) {
-    const bar = document.getElementById("progress");
-    if (bar) bar.style.width = (100 * i / questions.length) + "%";
+    const progress = document.getElementById("progress");
+    if (!progress) return;
+
+    progress.style.width = `${(100 * i) / questions.length}%`;
 }
 
-
-
 // -----------------------------------------------------
-// 7) OPTIONAL – RESULT SCREEN VIA ?done=true
+// FINISH TEST (Backend)
 // -----------------------------------------------------
-async function showResultB() {
+async function showResultTestB() {
 
-    const id = localStorage.getItem("test_id_B");
-    const res = await fetch(`http://localhost:8000/results/B`);
-    const list = await res.json();
+    const testId = localStorage.getItem("test_id");
 
-    const my = list.find(x => x._id === id);
-    const finalScore = my?.score ?? 0;
+    const response = await fetch(`${API_BASE}/finish`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ test_id: testId })
+    });
+
+    const data = await response.json();
+
+    const totalSeconds = Math.round(Number(data.total_time || 0));
+    const score = Number(data.score || 0);
 
     document.getElementById("app").innerHTML = `
-        <h2>Finished!</h2>
-        <p>You got <strong>${finalScore}</strong> out of ${questions.length} correct.</p>
+        <div class="card-screen">
+            <h2>Test B abgeschlossen</h2>
 
-        <button class="back-home-btn"
-            onclick="location.href='../feedback.html?test=B&tid=${id}'">
-            Weiter zum Feedback
-        </button>
+            <p><strong>Score:</strong> ${score} / ${questions.length}</p>
+            <p><strong>Gesamtzeit:</strong> ${totalSeconds} Sekunden</p>
+
+            <button class="start-btn" id="feedbackBtn">
+                Zum Feedback
+            </button>
+        </div>
     `;
+
+    document.getElementById("feedbackBtn").addEventListener("click", () => {
+        window.location.href = `../feedback.html?test_id=${testId}&test_type=B`;
+
+    });
 }
