@@ -1,6 +1,5 @@
-from http.client import HTTPException
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from bson import ObjectId
 from backend.database import tests_collection
 from backend.models import (
@@ -167,21 +166,55 @@ async def get_feedback(participant_number: str):
 @app.delete("/delete/{participant_number}")
 async def delete_participant(participant_number: str):
     """
-    Löscht alle Testdaten (und optional Feedback) eines Teilnehmenden.
+    Löscht alle Testdaten eines Teilnehmenden.
+    Spezialfall: participant_number == 'undefined' oder 'null' löscht kaputte Datensätze
+    (participantNumber fehlt oder ist null).
     """
 
-    # Tests löschen
-    delete_result = await tests_collection.delete_many({"participantNumber": participant_number})
+    # ✅ Spezialfall: "undefined"/"null" => kaputte Einträge löschen
+    if participant_number in {"undefined", "null", "None"}:
+        bad_filter = {"$or": [
+            {"participantNumber": {"$exists": False}},
+            {"participantNumber": None},
+        ]}
 
-    # Optional: dazugehöriges Feedback löschen
-    feedback_result = await feedback_collection.delete_many({"test_id": {"$regex": participant_number}})
+        # betroffene Test-IDs sammeln (für Feedback-Löschung)
+        bad_tests = []
+        async for doc in tests_collection.find(bad_filter, {"_id": 1}):
+            bad_tests.append(str(doc["_id"]))
 
-    if delete_result.deleted_count == 0 and feedback_result.deleted_count == 0:
+        delete_tests = await tests_collection.delete_many(bad_filter)
+
+        delete_feedback = await feedback_collection.delete_many({
+            "test_id": {"$in": bad_tests}
+        })
+
+        return {
+            "status": "deleted",
+            "participantNumber": participant_number,
+            "deleted_tests": delete_tests.deleted_count,
+            "deleted_feedback": delete_feedback.deleted_count
+        }
+
+    # ✅ normaler Fall: participantNumber = X
+    tests_filter = {"participantNumber": participant_number}
+
+    test_ids = []
+    async for doc in tests_collection.find(tests_filter, {"_id": 1}):
+        test_ids.append(str(doc["_id"]))
+
+    delete_tests = await tests_collection.delete_many(tests_filter)
+
+    delete_feedback = await feedback_collection.delete_many({
+        "test_id": {"$in": test_ids}
+    })
+
+    if delete_tests.deleted_count == 0 and delete_feedback.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Teilnehmer nicht gefunden")
 
     return {
         "status": "deleted",
         "participantNumber": participant_number,
-        "deleted_tests": delete_result.deleted_count,
-        "deleted_feedback": feedback_result.deleted_count
+        "deleted_tests": delete_tests.deleted_count,
+        "deleted_feedback": delete_feedback.deleted_count
     }
