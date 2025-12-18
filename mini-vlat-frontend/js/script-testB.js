@@ -1,9 +1,12 @@
 // =====================================================
-// MINI-VLAT — Test B (Zeitdruck) FINAL STABLE (RENAMED)
+// MINI-VLAT — Test B (Zeitdruck) FINAL STABLE (NEXT + 2s SOLUTION)
 // =====================================================
 
 let timer = null;
 let timeLeft = 25;
+
+let selectedAnswer = null ;   // ✅ Default Auswahl
+let showingSolution = false;        // ✅ blockiert Klicks während Lösung
 
 const API_BASE = "http://localhost:8000";
 
@@ -39,7 +42,7 @@ async function ensureTestStartedB() {
 }
 
 // -----------------------------------------------------
-// TIME TAKEN
+// TIME TAKEN (nur bis NEXT-Klick / Timeout)
 // -----------------------------------------------------
 function getTimeTakenSecondsB() {
     const ms = Date.now() - questionStartMs;
@@ -61,8 +64,11 @@ async function renderTestB(qIndex) {
     await ensureTestStartedB();
 
     const q = questions[qIndex];
+
+    selectedAnswer = null ;
     timeLeft = 25;
     hasAnswered = false;
+    showingSolution = false;
     questionStartMs = Date.now();
 
     const app = document.getElementById("app");
@@ -96,15 +102,30 @@ async function renderTestB(qIndex) {
 
     <ul class="answers">
       ${q.answers.map(a => `
-        <li class="answer-option" onclick="selectAnswerTestB('${a}', ${qIndex})">
+        <li class="answer-option ${a === selectedAnswer ? "selected" : ""}"
+            onclick="selectAnswerTestB('${a}', ${qIndex})">
           ${a}
         </li>
       `).join("")}
     </ul>
+
+    <button class="next-btn" id="nextBtn">Weiter</button>
     `;
 
     updateProgressB(qIndex);
     startTimerTestB(qIndex);
+
+    document.getElementById("nextBtn").addEventListener("click", async () => {
+        if (hasAnswered || showingSolution) return;
+
+        hasAnswered = true;
+        clearInterval(timer);
+
+        const timeTaken = getTimeTakenSecondsB();
+        await submitAnswerTestB(selectedAnswer, qIndex, timeTaken);
+
+        showSolutionThenNextB(qIndex);
+    });
 }
 
 // -----------------------------------------------------
@@ -122,7 +143,7 @@ function startTimerTestB(qIndex) {
     progress.style.strokeDasharray = circumference;
     progress.style.strokeDashoffset = 0;
 
-    timer = setInterval(() => {
+    timer = setInterval(async () => {
         timeLeft--;
         timeText.textContent = timeLeft;
 
@@ -131,7 +152,14 @@ function startTimerTestB(qIndex) {
 
         if (timeLeft <= 0) {
             clearInterval(timer);
-            autoNextTestB(qIndex, true);
+
+            if (!hasAnswered) {
+                hasAnswered = true;
+
+                await submitAnswerTestB("No Answer", qIndex, 25);
+
+                showSolutionThenNextB(qIndex);
+            }
         }
     }, 1000);
 }
@@ -167,75 +195,64 @@ async function submitAnswerTestB(selectedAnswer, qIndex, timeTaken) {
 }
 
 // -----------------------------------------------------
-// ANSWER HANDLING
+// ANSWER SELECT (nur markieren, NICHT speichern!)
 // -----------------------------------------------------
-async function selectAnswerTestB(answer, qIndex) {
-    if (hasAnswered) return;
-    hasAnswered = true;
+function selectAnswerTestB(answer, qIndex) {
+    if (hasAnswered || showingSolution) return;
 
-    clearInterval(timer);
+    selectedAnswer = answer;
 
+    document.querySelectorAll(".answer-option").forEach(li => {
+        li.classList.toggle("selected", li.textContent.trim() === answer);
+    });
+}
+
+// -----------------------------------------------------
+// SHOW SOLUTION 2s THEN NEXT (zählt NICHT zur Zeit)
+// -----------------------------------------------------
+function showSolutionThenNextB(qIndex) {
     const q = questions[qIndex];
     const options = document.querySelectorAll(".answer-option");
 
-    const timeTaken = getTimeTakenSecondsB();
-    await submitAnswerTestB(answer, qIndex, timeTaken);
+    showingSolution = true;
 
-    // 1. richtige Antwort -> grün
-    options.forEach(option => {
-        const text = option.textContent.trim();
-
-        if (text === q.correct) {
-            option.classList.add("answer-correct");
-        }
-    });
-
-    // 2. Falsche Antworten -> rot (außer No Answer)
-    options.forEach(option => {
-        const text = option.textContent.trim();
-
-        if (text !== q.correct && text !== "No Answer") {
-            option.classList.add("answer-wrong");
-        }
-    });
-
-    // 3. Geklickte Antwort EXTRA-Rahmen geben
-    options.forEach(option => {
-        const text = option.textContent.trim();
-
-        if (text === answer) {
-            if (answer === q.correct) {
-                option.classList.add("answer-correct-selected");  // grüner Rahmen
-            } else if (answer !== "No Answer") {
-                option.classList.add("answer-wrong-selected");    // roter Rahmen
-            }
-        }
-    });
-
-    // 4. deaktivieren
+    // deaktivieren während Lösung
     options.forEach(option => {
         option.classList.add("disabled");
         option.style.pointerEvents = "none";
     });
 
-    // 5. automatisch weiter
+    // richtige Antwort grün
+    options.forEach(option => {
+        const text = option.textContent.trim();
+        if (text === q.correct) option.classList.add("answer-correct");
+    });
+
+    // falsche rot (außer No Answer)
+    options.forEach(option => {
+        const text = option.textContent.trim();
+        if (text !== q.correct && text !== "No Answer") option.classList.add("answer-wrong");
+    });
+
+    // ausgewählte Antwort extra Rahmen
+    options.forEach(option => {
+        const text = option.textContent.trim();
+        if (text === selectedAnswer) {
+            if (selectedAnswer === q.correct) option.classList.add("answer-correct-selected");
+            else if (selectedAnswer !== "No Answer") option.classList.add("answer-wrong-selected");
+        }
+    });
+
     setTimeout(() => {
         autoNextTestB(qIndex, false);
-    }, 1200);
+    }, 2000);
 }
-
-
 
 // -----------------------------------------------------
 // NEXT QUESTION
 // -----------------------------------------------------
 async function autoNextTestB(qIndex, isTimeout) {
-
-    if (isTimeout && !hasAnswered) {
-        hasAnswered = true;
-        await submitAnswerTestB("No Answer", qIndex, 25);
-    }
-
+    // (Timeout-Speichern passiert schon im Timer)
     if (qIndex + 1 >= questions.length) {
         showResultTestB();
         return;
@@ -288,6 +305,5 @@ async function showResultTestB() {
 
     document.getElementById("feedbackBtn").addEventListener("click", () => {
         window.location.href = `../feedback.html?test_id=${testId}&test_type=B`;
-
     });
 }

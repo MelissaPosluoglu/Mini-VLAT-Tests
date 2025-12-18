@@ -150,14 +150,14 @@ body.test-page {
    RICHTIGE Antwort
 ------------------------------ */
 .answer-correct {
-    background-color: #e4f7ea !important;      /* sanftes Grün */
-    border: 2px solid #3fa96d !important;       /* grüner Rahmen */
-    color: #222 !important;                     /* Text bleibt lesbar */
+    background-color: #e4f7ea !important;
+    border: 2px solid #3fa96d !important;
+    color: #222 !important;
 }
 
 /* Wenn die richtige Antwort angeklickt wurde → dickerer Rahmen */
 .answer-correct-selected {
-    border: 4px solid #2e8f55 !important;       /* stärkerer Grünton */
+    border: 4px solid #2e8f55 !important;
     color: #222 !important;
 }
 
@@ -165,14 +165,14 @@ body.test-page {
    FALSCHE Antwort
 ------------------------------ */
 .answer-wrong {
-    background-color: #f9e5e5 !important;       /* sanftes Rot */
-    border: 2px solid #d14f4b !important;       /* roter Rahmen */
-    color: #222 !important;                     /* Text bleibt lesbar */
+    background-color: #f9e5e5 !important;
+    border: 2px solid #d14f4b !important;
+    color: #222 !important;
 }
 
 /* Wenn die falsche Antwort angeklickt wurde → dickerer Rahmen */
 .answer-wrong-selected {
-    border: 4px solid #c43737 !important;       /* stärkerer Rotton */
+    border: 4px solid #c43737 !important;
     color: #222 !important;
 }
 
@@ -183,9 +183,9 @@ body.test-page {
 
 /* Grundstil für Antwortfelder */
 .answer-option {
-    border-radius: 12px;                        /* weiche Ecken */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);      /* dezenter Schatten */
-    background: #f2f5ff;                        /* Standard-Hintergrund */
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    background: #f2f5ff;
     margin: 10px 0;
     padding: 14px 18px;
     font-size: 18px;
