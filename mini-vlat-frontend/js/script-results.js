@@ -88,3 +88,6 @@ function viewFeedback(testId) {
     window.location.href = `feedback-view.html?test_id=${encodeURIComponent(testId)}`;
 }
 
+function goHome() {
+    window.location.href = "../index.html";
+}

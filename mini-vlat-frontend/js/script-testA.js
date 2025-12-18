@@ -4,6 +4,7 @@
 
 let timer = null;
 let timeLeft = 25;
+let selectedAnswer = "No Answer";   // ✅ Default markiert
 
 const API_BASE = "http://localhost:8000";
 
@@ -53,7 +54,6 @@ function getTimeTakenSeconds() {
 // -----------------------------------------------------
 async function renderTestA(qIndex) {
 
-    // ✅ WICHTIG: Wenn man wieder bei Frage 1 startet → neues Test-Dokument
     if (qIndex === 0) {
         localStorage.removeItem("test_id");
         localStorage.setItem("scoreA", "0");
@@ -63,6 +63,8 @@ async function renderTestA(qIndex) {
     await ensureTestStarted();
 
     const q = questions[qIndex];
+
+    selectedAnswer = "No Answer";
     timeLeft = 25;
     hasAnswered = false;
     questionStartMs = Date.now();
@@ -98,21 +100,41 @@ async function renderTestA(qIndex) {
 
     <ul class="answers">
       ${q.answers.map(a => `
-        <li class="answer-option" onclick="selectAnswerTestA('${a}', ${qIndex})">
+        <li class="answer-option ${a === "No Answer" ? "selected" : ""}"
+            onclick="selectAnswerTestA('${a}', ${qIndex})">
           ${a}
         </li>
       `).join("")}
     </ul>
+
+    <button class="start-btn" id="nextBtn">Weiter</button>
     `;
 
     updateProgress(qIndex);
     startTimerTestA(qIndex);
+
+    document.getElementById("nextBtn").addEventListener("click", async () => {
+        if (hasAnswered) return;
+        hasAnswered = true;
+
+        clearInterval(timer);
+
+        document.querySelectorAll(".answer-option").forEach(li => {
+            li.style.pointerEvents = "none";
+        });
+
+        const timeTaken = getTimeTakenSeconds();
+        await submitAnswerTestA(selectedAnswer, qIndex, timeTaken);
+
+        autoNextTestA(qIndex, false);
+    });
 }
+
 
 // -----------------------------------------------------
 // TIMER
 // -----------------------------------------------------
-function startTimerTestA(qIndex) {
+async function startTimerTestA(qIndex) {
     clearInterval(timer);
 
     const timeText = document.getElementById("time-text");
@@ -124,7 +146,7 @@ function startTimerTestA(qIndex) {
     progress.style.strokeDasharray = circumference;
     progress.style.strokeDashoffset = 0;
 
-    timer = setInterval(() => {
+    timer = setInterval(async () => {
         timeLeft--;
         timeText.textContent = timeLeft;
 
@@ -133,11 +155,22 @@ function startTimerTestA(qIndex) {
 
         if (timeLeft <= 0) {
             clearInterval(timer);
-            // ✅ Timeout => No Answer wird gespeichert
+
+            if (!hasAnswered) {
+                hasAnswered = true;
+
+                document.querySelectorAll(".answer-option").forEach(li => {
+                    li.style.pointerEvents = "none";
+                });
+
+                await submitAnswerTestA("No Answer", qIndex, 25);
+            }
+
             autoNextTestA(qIndex, true);
         }
     }, 1000);
 }
+
 
 // -----------------------------------------------------
 // SAVE ANSWER (single source of truth)
@@ -173,21 +206,14 @@ async function submitAnswerTestA(selectedAnswer, qIndex, timeTaken) {
 // -----------------------------------------------------
 // ANSWER HANDLING (click)
 // -----------------------------------------------------
-async function selectAnswerTestA(answer, qIndex) {
-    if (hasAnswered) return;          // ✅ Anti-Doppelklick
-    hasAnswered = true;
+function selectAnswerTestA(answer, qIndex) {
+    if (hasAnswered) return;
 
-    clearInterval(timer);
+    selectedAnswer = answer;
 
-    // ✅ Optionen deaktivieren
     document.querySelectorAll(".answer-option").forEach(li => {
-        li.style.pointerEvents = "none";
+        li.classList.toggle("selected", li.textContent.trim() === answer);
     });
-
-    const timeTaken = getTimeTakenSeconds();
-    await submitAnswerTestA(answer, qIndex, timeTaken);
-
-    autoNextTestA(qIndex, false);
 }
 
 // -----------------------------------------------------

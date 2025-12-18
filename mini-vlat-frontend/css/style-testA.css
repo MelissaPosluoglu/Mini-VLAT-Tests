@@ -155,10 +155,31 @@ body.test-page {
     border: 1px solid #d1ddff;
 }
 
-.answers li:hover {
+.answers li:hover:not(.selected) {
     background: #e3ebff;
     transform: scale(1.02);
 }
+
+/* No Answer beim Laden (hellblau wie Hover) */
+.answers li.preselected {
+    background: #e3ebff;
+    border-color: #b8ccff;
+}
+
+/* Klick-Auswahl (dunkelblau) */
+.answers li.selected {
+    background: #46539a;
+    border-color: #46539a;
+    color: #fff;
+}
+
+/* Hover bei selected bleibt dunkel */
+.answers li.selected:hover {
+    background: #3d498a;
+    border-color: #3d498a;
+    transform: none;
+}
+
 
 /* No special correct/wrong styling for Test A (auto-next) */
 
@@ -194,3 +215,34 @@ body.test-page {
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+
+
+/* Next-Button disabled */
+.start-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.start-btn:disabled:hover {
+    background: #3b6ff5;
+    transform: none;
+}
+
+/* ================================
+   SELECTED ANSWER (nicht grau)
+================================ */
+
+/* Falls deine Optionen <li class="answer-option"> sind */
+.answer-option.selected {
+    background: #2f3a6e;      /* passend dunkelblau */
+    border-color: #2f3a6e;
+    color: #fff;
+}
+
+/* Hover soll nicht wieder grau werden */
+.answer-option.selected:hover {
+    background: #25305f;
+    border-color: #25305f;
+    transform: none;
+}
+
