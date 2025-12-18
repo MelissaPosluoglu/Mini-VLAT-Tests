@@ -246,3 +246,9 @@ body.test-page {
     transform: none;
 }
 
+/* Next-Button rechts platzieren */
+#nextBtn{
+    display: block;
+    margin-left: auto;
+    margin-top: 20px;
+}
