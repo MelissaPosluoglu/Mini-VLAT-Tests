@@ -4,7 +4,7 @@
 
 let timer = null;
 let timeLeft = 25;
-let selectedAnswer = "No Answer";   // ✅ Default markiert
+let selectedAnswer = null ;
 
 const API_BASE = "http://localhost:8000";
 
@@ -64,7 +64,7 @@ async function renderTestA(qIndex) {
 
     const q = questions[qIndex];
 
-    selectedAnswer = "No Answer";
+    selectedAnswer = null;
     timeLeft = 25;
     hasAnswered = false;
     questionStartMs = Date.now();
@@ -100,7 +100,7 @@ async function renderTestA(qIndex) {
 
     <ul class="answers">
       ${q.answers.map(a => `
-        <li class="answer-option ${a === "No Answer" ? "selected" : ""}"
+        <li class="answer-option ${a === selectedAnswer ? "selected" : ""}"
             onclick="selectAnswerTestA('${a}', ${qIndex})">
           ${a}
         </li>
