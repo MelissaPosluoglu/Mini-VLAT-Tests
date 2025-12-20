@@ -24,6 +24,20 @@ body.test-page {
     box-shadow: 0 6px 30px rgba(0,0,0,0.08);
 }
 
+/* ===========================================================
+   QUESTION HEADER
+=========================================================== */
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #1e3fa3;
+}
+
 
 /* -----------------------------------------------------------
    PROGRESS BAR (same design as Test A for consistency)
@@ -40,11 +54,10 @@ body.test-page {
 
 #progress {
     height: 6px;
-    width: 0%;
     background: linear-gradient(90deg, #3b6ff5, #2457d6);
-    transition: width 0.3s linear !important;
+    width: 0%;
+    transition: width 0.3s linear;
 }
-
 
 /* -----------------------------------------------------------
    QUESTION TEXT

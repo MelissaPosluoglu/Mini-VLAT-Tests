@@ -234,7 +234,7 @@ body.test-page {
 
 /* Falls deine Optionen <li class="answer-option"> sind */
 .answer-option.selected {
-    background: #2f3a6e;      /* passend dunkelblau */
+    background: #2f3a6e;
     border-color: #2f3a6e;
     color: #fff;
 }

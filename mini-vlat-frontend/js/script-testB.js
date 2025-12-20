@@ -5,8 +5,8 @@
 let timer = null;
 let timeLeft = 25;
 
-let selectedAnswer = null ;   // ✅ Default Auswahl
-let showingSolution = false;        // ✅ blockiert Klicks während Lösung
+let selectedAnswer = null ;
+let showingSolution = false;
 
 const API_BASE = "http://localhost:8000";
 
