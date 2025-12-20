@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
     <title>Feedbackbogen</title>
@@ -14,18 +13,19 @@
 <div id="app" class="feedback-card">
 
     <h1>Feedbackbogen zur Studie</h1>
-    <p class="subtitle">Bitte beantworten Sie die folgenden Fragen, um uns bei der Auswertung der Testvarianten zu unterstützen.</p>
+    <p class="subtitle">
+        Bitte beantworten Sie die folgenden Fragen, um uns bei der Auswertung der Testvarianten zu unterstützen.
+    </p>
 
     <form id="feedbackForm">
 
-        <!-- Test ID + Typ -->
+        <!-- Hidden -->
         <input type="hidden" id="test_id">
         <input type="hidden" id="test_type">
 
-        <!-- Abschnitt 1 -->
+        <!-- 1. Schwierigkeit / Cognitive Load -->
         <h2>1. Schwierigkeit / Cognitive Load</h2>
         <div class="question-group">
-
             <label>Wie schwierig fanden Sie diesen Test insgesamt?</label>
             <div class="likert">
                 <label><input type="radio" name="difficulty" value="1">1</label>
@@ -52,13 +52,11 @@
                 <label><input type="radio" name="stress" value="4">4</label>
                 <label><input type="radio" name="stress" value="5">5</label>
             </div>
-
         </div>
 
-        <!-- Abschnitt 2 -->
+        <!-- 2. Verständnis & Sicherheit -->
         <h2>2. Verständnis & Sicherheit</h2>
         <div class="question-group">
-
             <label>Wie sicher waren Sie sich bei der Beantwortung der Fragen?</label>
             <div class="likert">
                 <label><input type="radio" name="confidence" value="1">1</label>
@@ -67,32 +65,24 @@
                 <label><input type="radio" name="confidence" value="4">4</label>
                 <label><input type="radio" name="confidence" value="5">5</label>
             </div>
-
         </div>
 
-        <!-- Abschnitt 3: Strategiewechsel – für alle Tests -->
-        <h2>3. Antwortstrategie / Lerneffekt</h2>
+        <!-- 3. Aufgabenverständnis -->
+        <h2>3. Aufgabenverständnis</h2>
         <div class="question-group">
-
-            <label>
-                Das Feedback oder die Struktur des Tests (z.B. Zeitdruck oder zweistufige Anzeige)
-                hat meine Antwortstrategie verändert.
-            </label>
-
+            <label>Ich habe die Aufgabenstellung jederzeit verstanden.</label>
             <div class="likert">
-                <label><input type="radio" name="strategy_change" value="1">1</label>
-                <label><input type="radio" name="strategy_change" value="2">2</label>
-                <label><input type="radio" name="strategy_change" value="3">3</label>
-                <label><input type="radio" name="strategy_change" value="4">4</label>
-                <label><input type="radio" name="strategy_change" value="5">5</label>
+                <label><input type="radio" name="task_understanding" value="1">1</label>
+                <label><input type="radio" name="task_understanding" value="2">2</label>
+                <label><input type="radio" name="task_understanding" value="3">3</label>
+                <label><input type="radio" name="task_understanding" value="4">4</label>
+                <label><input type="radio" name="task_understanding" value="5">5</label>
             </div>
-
         </div>
 
-        <!-- Abschnitt 4: Sehvermögen -->
+        <!-- 4. Sehvermögen -->
         <h2>4. Sehvermögen</h2>
         <div class="question-group">
-
             <label>Haben Sie Sehschwächen?</label>
             <div class="likert">
                 <label><input type="radio" name="vision_issue" value="yes">Ja</label>
@@ -105,32 +95,62 @@
                 <label><input type="radio" name="vision_aid" value="contacts">Kontaktlinsen</label>
                 <label><input type="radio" name="vision_aid" value="none">Keine</label>
             </div>
-
         </div>
 
-        <!-- Abschnitt 5: Uhrzeit -->
-        <h2>5. Testzeitpunkt</h2>
+        <!-- 5. Diagrammgestaltung -->
+        <h2>5. Diagrammgestaltung</h2>
         <div class="question-group">
-
-            <label>Um wie viel Uhr haben Sie den Test durchgeführt?</label>
-            <select id="test_time">
-                <option value="">Bitte auswählen</option>
-                <option>06:00 - 09:00</option>
-                <option>09:00 - 12:00</option>
-                <option>12:00 - 15:00</option>
-                <option>15:00 - 18:00</option>
-                <option>18:00 - 21:00</option>
-                <option>21:00 - 00:00</option>
-                <option>00:00 - 03:00</option>
-                <option>03:00 - 06:00</option>
-            </select>
-
+            <label>Ich fand die im Test verwendeten Diagramme gut gewählt und verständlich.</label>
+            <div class="likert">
+                <label><input type="radio" name="diagram_quality" value="1">1</label>
+                <label><input type="radio" name="diagram_quality" value="2">2</label>
+                <label><input type="radio" name="diagram_quality" value="3">3</label>
+                <label><input type="radio" name="diagram_quality" value="4">4</label>
+                <label><input type="radio" name="diagram_quality" value="5">5</label>
+            </div>
         </div>
 
-        <!-- Abschnitt 6: Müdigkeit -->
-        <h2>6. Müdigkeit</h2>
+        <!-- 6. Antwortstrategie / Lerneffekt -->
+        <h2>6. Antwortstrategie / Lerneffekt</h2>
         <div class="question-group">
+            <label>
+                Das Feedback oder die Struktur des Tests (z.B. Zeitdruck oder zweistufige Anzeige)
+                hat meine Antwortstrategie verändert.
+            </label>
+            <div class="likert">
+                <label><input type="radio" name="strategy_change" value="1">1</label>
+                <label><input type="radio" name="strategy_change" value="2">2</label>
+                <label><input type="radio" name="strategy_change" value="3">3</label>
+                <label><input type="radio" name="strategy_change" value="4">4</label>
+                <label><input type="radio" name="strategy_change" value="5">5</label>
+            </div>
+        </div>
 
+        <!-- 7. Testumgebung & Eye-Tracking -->
+        <h2>7. Testumgebung & Eye-Tracking</h2>
+        <div class="question-group">
+            <label>Ich hatte während des Tests Probleme mit der Blickerfassung.</label>
+            <div class="likert">
+                <label><input type="radio" name="eye_tracking_issue" value="1">1</label>
+                <label><input type="radio" name="eye_tracking_issue" value="2">2</label>
+                <label><input type="radio" name="eye_tracking_issue" value="3">3</label>
+                <label><input type="radio" name="eye_tracking_issue" value="4">4</label>
+                <label><input type="radio" name="eye_tracking_issue" value="5">5</label>
+            </div>
+
+            <label>Ich wurde während des Tests abgelenkt (Geräusche, Personen, Handy).</label>
+            <div class="likert">
+                <label><input type="radio" name="distraction" value="1">1</label>
+                <label><input type="radio" name="distraction" value="2">2</label>
+                <label><input type="radio" name="distraction" value="3">3</label>
+                <label><input type="radio" name="distraction" value="4">4</label>
+                <label><input type="radio" name="distraction" value="5">5</label>
+            </div>
+        </div>
+
+        <!-- 8. Müdigkeit -->
+        <h2>8. Müdigkeit</h2>
+        <div class="question-group">
             <label>Wie müde fühlen Sie sich aktuell?</label>
             <div class="likert">
                 <label><input type="radio" name="fatigue" value="1">1</label>
@@ -139,14 +159,51 @@
                 <label><input type="radio" name="fatigue" value="4">4</label>
                 <label><input type="radio" name="fatigue" value="5">5</label>
             </div>
-
         </div>
 
-        <!-- Abschnitt 7 -->
-        <h2>7. Offenes Feedback</h2>
+        <!-- 9. Testzeitpunkt -->
+        <h2>9. Testzeitpunkt</h2>
+        <div class="question-group">
+            <label>Zu welcher Tageszeit haben Sie den Test durchgeführt?</label>
+            <select id="test_time">
+                <option value="">Bitte auswählen</option>
+                <option value="morning">Morgens</option>
+                <option value="midday">Mittags</option>
+                <option value="evening">Abends</option>
+                <option value="night">Nachts</option>
+            </select>
+        </div>
+
+        <!-- 10. Vorerfahrung -->
+        <h2>10. Vorerfahrung</h2>
+        <div class="question-group">
+            <label>Ich habe regelmäßig mit Diagrammen oder Datenvisualisierungen zu tun.</label>
+            <div class="likert">
+                <label><input type="radio" name="visualization_experience" value="1">1</label>
+                <label><input type="radio" name="visualization_experience" value="2">2</label>
+                <label><input type="radio" name="visualization_experience" value="3">3</label>
+                <label><input type="radio" name="visualization_experience" value="4">4</label>
+                <label><input type="radio" name="visualization_experience" value="5">5</label>
+            </div>
+        </div>
+
+        <div class="question-group">
+            <label>Ich habe bereits ähnliche Tests oder Aufgaben zu Datenvisualisierungen bearbeitet.</label>
+            <div class="likert">
+                <label><input type="radio" name="viz_test_experience" value="1">1</label>
+                <label><input type="radio" name="viz_test_experience" value="2">2</label>
+                <label><input type="radio" name="viz_test_experience" value="3">3</label>
+                <label><input type="radio" name="viz_test_experience" value="4">4</label>
+                <label><input type="radio" name="viz_test_experience" value="5">5</label>
+            </div>
+        </div>
+
+        <!-- 11. Offenes Feedback -->
+        <h2>11. Offenes Feedback</h2>
         <textarea id="open_feedback" placeholder="Gibt es etwas, das Sie uns mitteilen möchten?"></textarea>
 
         <button type="submit" class="submit-btn">Absenden</button>
+
     </form>
 </div>
 

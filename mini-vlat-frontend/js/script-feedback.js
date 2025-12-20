@@ -52,11 +52,15 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
         mental_load: getRadioNumber("mental_load"),
         stress: getRadioNumber("stress"),
         confidence: getRadioNumber("confidence"),
-
         strategy_change: getRadioNumber("strategy_change"),
 
         // Optional – nur wenn vorhanden
         feedback_helpful: getRadioNumber("feedback_helpful", true),
+
+        task_understanding: getRadioNumber("task_understanding"),
+        eye_tracking_issue: getRadioNumber("eye_tracking_issue"),
+        distraction: getRadioNumber("distraction"),
+        visualization_experience: getRadioNumber("visualization_experience"),
 
         vision_issue: getRadioValue("vision_issue"),
         vision_aid: getRadioValue("vision_aid"),
@@ -64,6 +68,7 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
         test_time: document.getElementById("test_time")?.value || null,
 
         fatigue: getRadioNumber("fatigue"),
+        viz_test_experience: getRadioNumber("viz_test_experience"),
 
         open_feedback: document.getElementById("open_feedback")?.value || null
     };
@@ -106,3 +111,4 @@ function getRadioValue(name) {
     const el = document.querySelector(`input[name="${name}"]:checked`);
     return el ? el.value : null;
 }
+
