@@ -187,7 +187,7 @@ body.test-page {
    START / NEXT BUTTONS
 =========================================================== */
 
-.start-btn {
+.next-btn {
     padding: 12px 26px;
     background: #3b6ff5;
     color: white;
@@ -198,10 +198,16 @@ body.test-page {
     transition: 0.2s;
 }
 
-.start-btn:hover {
+.next-btn:hover:not(:disabled) {
     background: #2e5dde;
     transform: scale(1.05);
 }
+
+.next-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 
 /* ===========================================================
    ANIMATIONS
@@ -246,9 +252,9 @@ body.test-page {
     transform: none;
 }
 
-/* Next-Button rechts platzieren */
-#nextBtn{
+/* Next Button – einheitlich */
+.next-btn {
     display: block;
-    margin-left: auto;
-    margin-top: 20px;
+    margin: 30px auto 0 auto;
+    width: 170px;
 }
