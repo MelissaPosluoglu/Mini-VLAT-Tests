@@ -114,11 +114,10 @@ body.test-page {
    SELECTED STATE (before correctness is known)
 ----------------------------------------------------------- */
 
-.answers li.selected {
+.answers li.selected:not(.answer-correct):not(.answer-wrong) {
     background: #e0e5ff !important;
     border-color: #3b6ff5 !important;
     box-shadow: 0 0 0 2px rgba(59,111,245,0.25);
-    transform: scale(1.02);
 }
 
 
