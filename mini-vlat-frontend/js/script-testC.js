@@ -1,210 +1,209 @@
 // =====================================================
-// MINI-VLAT — Test C (Zweistufig: View → Answer)
-// FINAL STABLE VERSION
+// MINI-VLAT — Test C
+// IDENTISCH ZU TEST B (ohne sichtbaren Timer)
+// - Ergebnisanzeige
+// - Auto-Weiter nach 2s
+// - ODER manuell per Button
 // =====================================================
 
-// -----------------------------------------------------
-// STATE
-// -----------------------------------------------------
-let scoreC = 0;
-let selectedAnswerC = "No Answer";
+let selectedAnswer = null;
+let questionStartMs = 0;
+let hasAnswered = false;
+let showingSolution = false;
+let autoNextTimeout = null;
 
-
-// -----------------------------------------------------
-// 1) LOGIK FÜR testC.html (Startseite)
-// -----------------------------------------------------
-if (location.pathname.endsWith("testC.html")) {
-
-    document.addEventListener("DOMContentLoaded", () => {
-
-        const numberScreen = document.getElementById("number-input-screen");
-        const intro = document.getElementById("testC-intro");
-
-        // Keine Teilnehmernummer → Eingabe
-        if (!localStorage.getItem("participantNumber")) {
-            numberScreen.style.display = "block";
-            return;
-        }
-
-        // Nummer existiert → Intro
-        intro.style.display = "block";
-    });
-
-    // Nummer speichern
-    document.getElementById("startNumberBtn")?.addEventListener("click", () => {
-        const num = document.getElementById("participantNumber").value.trim();
-        if (!num) return alert("Bitte gültige Nummer eingeben!");
-
-        localStorage.setItem("participantNumber", num);
-
-        document.getElementById("number-input-screen").style.display = "none";
-        document.getElementById("testC-intro").style.display = "block";
-    });
-
-    // Test starten
-    document.getElementById("startTestC")?.addEventListener("click", async () => {
-
-        scoreC = 0;
-
-        const response = await fetch("http://localhost:8000/start", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                participantNumber: localStorage.getItem("participantNumber"),
-                test_type: "C"
-            })
-        });
-
-        const data = await response.json();
-        localStorage.setItem("test_id_C", data.test_id);
-
-        // Erste Frage → View-Modus
-        location.href = "./questions/q1_treemap.html?mode=view";
-    });
-}
-
-
+const API_BASE = "http://localhost:8000";
 
 // -----------------------------------------------------
-// 2) QUESTION-PAGE LOGIK — läuft auf q1, q2, ..., q12
+// BACKEND START
 // -----------------------------------------------------
-if (location.pathname.includes("/questions/")) {
+async function ensureTestStartedC() {
+    if (localStorage.getItem("test_id")) return;
 
-    document.addEventListener("DOMContentLoaded", () => {
-
-        const app = document.getElementById("app");
-
-        const params = new URLSearchParams(location.search);
-        const id   = params.get("q");
-        const mode = params.get("mode");
-
-        const qIndex = questions.findIndex(q => q.id === id);
-
-        if (params.get("done") === "true") {
-            showResultC();
-            return;
-        }
-
-        if (qIndex === -1) return console.error("Invalid question ID");
-
-        // View- oder Answer-Modus abhängig vom Parameter
-        if (mode === "answer") renderAnswerC(qIndex);
-        else renderViewC(qIndex);
-    });
-}
-
-
-
-// -----------------------------------------------------
-// 3) VIEW MODE
-// -----------------------------------------------------
-function renderViewC(index) {
-
-    const q = questions[index];
-
-    updateProgressC(index);
-
-    document.getElementById("app").innerHTML = `
-        <h2 class="prompt-text">${q.prompt}</h2>
-
-        <img src="${q.img}" class="vlat-image">
-
-        <button class="start-btn"
-            onclick="location.href='?q=${q.id}&mode=answer'">
-            Weiter
-        </button>
-    `;
-}
-
-
-
-// -----------------------------------------------------
-// 4) ANSWER MODE
-// -----------------------------------------------------
-function renderAnswerC(index) {
-
-    const q = questions[index];
-    selectedAnswerC = "No Answer";
-
-    updateProgressC(index);
-
-    document.getElementById("app").innerHTML = `
-        <h2 class="prompt-text">${q.prompt}</h2>
-
-        <ul class="answers">
-            ${q.answers.map(a => `
-                <li class="${a === 'No Answer' ? 'selected' : ''}"
-                    onclick="selectAnswerC('${a}')">${a}</li>
-            `).join("")}
-        </ul>
-
-        <div class="nav-row">
-            <button class="nav-btn back-btn"
-                    onclick="location.href='?q=${q.id}&mode=view'">Zurück</button>
-
-            <button class="nav-btn next-btn"
-                    id="nextBtnC" disabled>Weiter</button>
-        </div>
-    `;
-
-    document.getElementById("nextBtnC").onclick = () => finishQuestionC(index);
-}
-
-
-
-// -----------------------------------------------------
-// 5) ANSWER CLICK
-// -----------------------------------------------------
-function selectAnswerC(answer) {
-
-    selectedAnswerC = answer;
-
-    document.querySelectorAll(".answers li").forEach(li => {
-        li.classList.toggle("selected", li.innerText === answer);
-    });
-
-    document.getElementById("nextBtnC").disabled = false;
-}
-
-
-
-// -----------------------------------------------------
-// 6) SAVE + NEXT QUESTION
-// -----------------------------------------------------
-async function finishQuestionC(index) {
-
-    const q = questions[index];
-    const isCorrect = (selectedAnswerC === q.correct);
-
-    if (isCorrect) scoreC++;
-
-    await fetch("http://localhost:8000/answer", {
+    const response = await fetch(`${API_BASE}/start`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            test_id: localStorage.getItem("test_id_C"),
-            question_id: q.id,
-            selected_answer: selectedAnswerC,
-            correct_answer: q.correct,
-            is_correct: isCorrect,
-            time_taken: 0
+            participantNumber: localStorage.getItem("participantNumber") || "auto",
+            test_type: "C"
         })
     });
 
-    const next = index + 1;
-
-    if (next >= questions.length) {
-        location.href = "?done=true";
-    } else {
-        const nextId = questions[next].id;
-        location.href = `?q=${nextId}&mode=view`;
-    }
+    const data = await response.json();
+    localStorage.setItem("test_id", data.test_id);
 }
 
-
+// -----------------------------------------------------
+// ZEITMESSUNG
+// -----------------------------------------------------
+function getTimeTakenSecondsC() {
+    return (Date.now() - questionStartMs) / 1000;
+}
 
 // -----------------------------------------------------
-// 7) PROGRESS BAR
+// RENDER FRAGE
+// -----------------------------------------------------
+async function renderTestC(qIndex) {
+
+    if (qIndex === 0) {
+        localStorage.removeItem("test_id");
+    }
+
+    await ensureTestStartedC();
+
+    const q = questions[qIndex];
+    selectedAnswer = null;
+    hasAnswered = false;
+    showingSolution = false;
+    questionStartMs = Date.now();
+
+    document.getElementById("app").innerHTML = `
+        <div class="question-header">
+            <div class="question-counter">
+                Frage ${qIndex + 1} von ${questions.length}
+            </div>
+        </div>
+
+        <h2 class="prompt-text">${q.prompt}</h2>
+
+        <div class="image-wrapper">
+            <img src="${q.img}" class="vlat-image">
+        </div>
+
+        <ul class="answers">
+            ${q.answers.map(a => `
+                <li class="answer-option"
+                    onclick="selectAnswerTestC('${a}')">${a}</li>
+            `).join("")}
+        </ul>
+
+        <button class="next-btn" id="nextBtn" disabled>Weiter</button>
+    `;
+
+    updateProgressC(qIndex);
+
+    document.getElementById("nextBtn").onclick = async () => {
+
+        // 👉 wenn Lösung schon sichtbar → sofort weiter
+        if (showingSolution) {
+            clearTimeout(autoNextTimeout);
+            goNextC(qIndex);
+            return;
+        }
+
+        hasAnswered = true;
+
+        const timeTaken = getTimeTakenSecondsC();
+        await submitAnswerTestC(qIndex, timeTaken);
+
+        showSolutionC(qIndex);
+    };
+}
+
+// -----------------------------------------------------
+// ANSWER SELECT
+// -----------------------------------------------------
+function selectAnswerTestC(answer) {
+    if (hasAnswered || showingSolution) return;
+
+    selectedAnswer = answer;
+
+    document.querySelectorAll(".answer-option").forEach(li => {
+        li.classList.toggle("selected", li.innerText.trim() === answer);
+    });
+
+    document.getElementById("nextBtn").disabled = false;
+}
+
+// -----------------------------------------------------
+// SAVE ANSWER
+// -----------------------------------------------------
+async function submitAnswerTestC(qIndex, timeTaken) {
+
+    const q = questions[qIndex];
+    const correct = selectedAnswer === q.correct;
+
+    await fetch(`${API_BASE}/answer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            test_id: localStorage.getItem("test_id"),
+            question_id: q.id,
+            selected_answer: selectedAnswer || "No Answer",
+            correct_answer: q.correct,
+            is_correct: correct,
+            time_taken: timeTaken
+        })
+    });
+}
+
+// -----------------------------------------------------
+// SHOW SOLUTION + AUTO NEXT
+// -----------------------------------------------------
+function showSolutionC(qIndex) {
+
+    const q = questions[qIndex];
+    const options = document.querySelectorAll(".answer-option");
+
+    showingSolution = true;
+
+    options.forEach(option => {
+        option.classList.remove("selected");
+        option.classList.add("disabled");
+        option.style.pointerEvents = "none";
+    });
+
+    // richtige Antwort
+    options.forEach(option => {
+        if (option.innerText.trim() === q.correct) {
+            option.classList.add("answer-correct");
+        }
+    });
+
+    // falsche Antworten
+    options.forEach(option => {
+        const text = option.innerText.trim();
+        if (text !== q.correct && text !== "No Answer") {
+            option.classList.add("answer-wrong");
+        }
+    });
+
+    // ausgewählte Antwort markieren
+    options.forEach(option => {
+        if (option.innerText.trim() === selectedAnswer) {
+            if (selectedAnswer === q.correct) {
+                option.classList.add("answer-correct-selected");
+            } else if (selectedAnswer !== "No Answer") {
+                option.classList.add("answer-wrong-selected");
+            }
+        }
+    });
+
+    const btn = document.getElementById("nextBtn");
+    btn.innerText = "Weiter";
+    btn.disabled = false;
+
+    // ✅ AUTO-WEITER NACH 2 SEKUNDEN (wie Test B)
+    autoNextTimeout = setTimeout(() => {
+        goNextC(qIndex);
+    }, 2000);
+}
+
+// -----------------------------------------------------
+// NEXT
+// -----------------------------------------------------
+function goNextC(qIndex) {
+    if (qIndex + 1 >= questions.length) {
+        showResultTestC();
+        return;
+    }
+
+    const next = questions[qIndex + 1];
+    location.href = "q" + (qIndex + 2) + "_" + next.id + ".html";
+}
+
+// -----------------------------------------------------
+// PROGRESS BAR
 // -----------------------------------------------------
 function updateProgressC(i) {
     const bar = document.getElementById("progress");
@@ -212,31 +211,31 @@ function updateProgressC(i) {
     bar.style.width = (100 * i / questions.length) + "%";
 }
 
-
-
 // -----------------------------------------------------
-// 8) RESULT SCREEN
+// FINISH TEST
 // -----------------------------------------------------
-async function showResultC() {
+async function showResultTestC() {
 
-    await fetch("http://localhost:8000/finish", {
+    const testId = localStorage.getItem("test_id");
+
+    const response = await fetch(`${API_BASE}/finish`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            test_id: localStorage.getItem("test_id_C"),
-            score: scoreC
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ test_id: testId })
     });
 
-    document.getElementById("app").innerHTML = `
-        <div id="result-box">
-            <h2>Test C abgeschlossen</h2>
-            <p>Du hast <strong>${scoreC}</strong> von ${questions.length} Fragen richtig beantwortet.</p>
+    const data = await response.json();
 
-            <button class="back-home-btn"
-                onclick="location.href='../feedback.html?test=C&tid=${localStorage.getItem("test_id_C")}'">
-                Weiter zum Feedback
-            </button>
+    document.getElementById("app").innerHTML = `
+        <div class="card-screen">
+            <h2>Test C abgeschlossen</h2>
+            <p><strong>Score:</strong> ${data.score} / ${questions.length}</p>
+            <p><strong>Gesamtzeit:</strong> ${Math.round(data.total_time)} Sekunden</p>
+            <button class="start-btn" id="feedbackBtn">Zum Feedback</button>
         </div>
     `;
+
+    document.getElementById("feedbackBtn").onclick = () => {
+        location.href = "../feedback.html?test_id=" + testId + "&test_type=C";
+    };
 }
