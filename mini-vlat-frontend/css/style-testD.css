@@ -4,10 +4,6 @@
 =========================================================== */
 
 
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-}
 
 /* Base layout for test pages */
 body.test-page {
@@ -15,10 +11,6 @@ body.test-page {
     background: #f7f9ff;
     margin: 0 !important;
     padding: 0 !important;
-    /* optional, aber sehr zuverlässig gegen Top-Gap */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
 }
 
 /* APP WRAPPER */
@@ -31,8 +23,12 @@ body.test-page {
     margin: 0 auto 20px;
 }
 
-body.test-page #app { margin: 0 auto !important; }
-
+body.test-page #app{
+    max-width: 680px !important;
+    width: min(680px, 94vw) !important;
+    padding: 16px !important;
+    margin: 0 auto 16px !important;
+}
 /* ===========================================================
    QUESTION HEADER
 =========================================================== */
@@ -227,4 +223,33 @@ body.test-page #app { margin: 0 auto !important; }
     display: block;
     margin: 30px auto 0 auto;
     width: 170px;
+}
+
+/* KASTEN insgesamt "kürzer" -> weniger Innenabstand */
+#app{
+    padding: 12px !important;
+    margin: 0 auto 10px !important;
+}
+
+/* Weniger Abstand untereinander */
+.question-header{ margin-bottom: 12px !important; }
+#progressbar{ margin-bottom: 12px !important; }
+.image-wrapper{ margin: 10px 0 !important; }
+.answers{ margin: 10px 0 !important; }
+
+/* Bild kleiner = größter Höhenfresser */
+.vlat-image, .image-wrapper img{
+    max-height: 290px !important;
+}
+
+/* Antwortboxen kompakter */
+.answers li{
+    margin: 6px 0 !important;
+    padding: 10px 14px !important;
+    font-size: 16px !important;
+}
+
+/* Button näher ran */
+.next-btn{
+    margin-top: 12px !important;
 }
