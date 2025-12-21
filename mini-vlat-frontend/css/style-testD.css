@@ -3,23 +3,35 @@
    Visual design and behavior for the timed test version
 =========================================================== */
 
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 /* Base layout for test pages */
 body.test-page {
     font-family: "Inter", sans-serif;
     background: #f7f9ff;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* optional, aber sehr zuverlässig gegen Top-Gap */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 /* APP WRAPPER */
 #app {
     max-width: 850px;
-    margin: 40px auto;
-    padding: 30px;
+    padding: 26px;
     background: white;
     border-radius: 18px;
     box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+    margin: 0 auto 20px;
 }
+
+body.test-page #app { margin: 0 auto !important; }
 
 /* ===========================================================
    QUESTION HEADER

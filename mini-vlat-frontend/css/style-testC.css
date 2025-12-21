@@ -2,21 +2,35 @@
    TEST C — INTERACTIVE (IDENTISCH ZU TEST B, OHNE TIMER)
 =========================================================== */
 
-body.test-page {
-    background: #f7f9ff;
-    margin: 0;
-    padding: 0;
-    font-family: "Inter", sans-serif;
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
+/* Base layout for test pages */
+body.test-page {
+    font-family: "Inter", sans-serif;
+    background: #f7f9ff;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* optional, aber sehr zuverlässig gegen Top-Gap */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* APP WRAPPER */
 #app {
     max-width: 850px;
-    margin: 40px auto;
-    padding: 30px;
+    padding: 26px;
     background: white;
     border-radius: 18px;
     box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+    margin: 0 auto 20px;
 }
+
+body.test-page #app { margin: 0 auto !important; }
 
 /* -----------------------------------------------------------
    PROGRESS BAR
@@ -35,8 +49,24 @@ body.test-page {
     height: 6px;
     width: 0%;
     background: linear-gradient(90deg, #3b6ff5, #2457d6);
-    transition: width 0.3s linear !important;
+    transition: width 0.3s linear ;
 }
+
+/* ===========================================================
+   QUESTION HEADER
+=========================================================== */
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #1e3fa3;
+}
+
 
 /* -----------------------------------------------------------
    QUESTION TEXT
