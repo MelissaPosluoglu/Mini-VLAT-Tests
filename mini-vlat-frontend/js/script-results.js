@@ -52,6 +52,7 @@ function toggleAnswers(el) {
 loadResults("A", "tableA");
 loadResults("B", "tableB");
 loadResults("C", "tableC");
+loadResults("D", "tableD");
 
 
 async function deleteParticipant() {
@@ -88,3 +89,6 @@ function viewFeedback(testId) {
     window.location.href = `feedback-view.html?test_id=${encodeURIComponent(testId)}`;
 }
 
+function goHome() {
+    window.location.href = "../index.html";
+}

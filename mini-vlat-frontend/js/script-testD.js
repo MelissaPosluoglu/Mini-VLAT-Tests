@@ -1,23 +1,19 @@
 // =====================================================
-// MINI-VLAT — Test C
-// IDENTISCH ZU TEST B (ohne sichtbaren Timer)
-// - Ergebnisanzeige
-// - Auto-Weiter nach 2s
-// - ODER manuell per Button
+// MINI-VLAT — Test D
+// WIE Test C, aber:
+
 // =====================================================
 
 let selectedAnswer = null;
 let questionStartMs = 0;
 let hasAnswered = false;
-let showingSolution = false;
-let autoNextTimeout = null;
 
 const API_BASE = "http://localhost:8000";
 
 // -----------------------------------------------------
 // BACKEND START
 // -----------------------------------------------------
-async function ensureTestStartedC() {
+async function ensureTestStartedD() {
     if (localStorage.getItem("test_id")) return;
 
     const response = await fetch(`${API_BASE}/start`, {
@@ -25,7 +21,7 @@ async function ensureTestStartedC() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             participantNumber: localStorage.getItem("participantNumber") || "auto",
-            test_type: "C"
+            test_type: "D"
         })
     });
 
@@ -34,27 +30,26 @@ async function ensureTestStartedC() {
 }
 
 // -----------------------------------------------------
-// ZEITMESSUNG
+// ZEITMESSUNG (wie Test C)
 // -----------------------------------------------------
-function getTimeTakenSecondsC() {
+function getTimeTakenSecondsD() {
     return (Date.now() - questionStartMs) / 1000;
 }
 
 // -----------------------------------------------------
 // RENDER FRAGE
 // -----------------------------------------------------
-async function renderTestC(qIndex) {
+async function renderTestD(qIndex) {
 
     if (qIndex === 0) {
         localStorage.removeItem("test_id");
     }
 
-    await ensureTestStartedC();
+    await ensureTestStartedD();
 
     const q = questions[qIndex];
     selectedAnswer = null;
     hasAnswered = false;
-    showingSolution = false;
     questionStartMs = Date.now();
 
     document.getElementById("app").innerHTML = `
@@ -73,52 +68,44 @@ async function renderTestC(qIndex) {
         <ul class="answers">
             ${q.answers.map(a => `
                 <li class="answer-option"
-                    onclick="selectAnswerTestC('${a}')">${a}</li>
+                    onclick="selectAnswerTestD('${a}')">${a}</li>
             `).join("")}
         </ul>
 
         <button class="next-btn" id="nextBtn" disabled>Weiter</button>
     `;
 
-    updateProgressC(qIndex);
+    updateProgressD(qIndex);
 
     document.getElementById("nextBtn").onclick = async () => {
-
-        // 👉 wenn Lösung schon sichtbar → sofort weiter
-        if (showingSolution) {
-            clearTimeout(autoNextTimeout);
-            goNextC(qIndex);
-            return;
-        }
-
+        if (hasAnswered) return;
         hasAnswered = true;
 
-        const timeTaken = getTimeTakenSecondsC();
-        await submitAnswerTestC(qIndex, timeTaken);
+        const timeTaken = getTimeTakenSecondsD();
+        await submitAnswerTestD(qIndex, timeTaken);
 
-        showSolutionC(qIndex);
+        goNextD(qIndex);
     };
 }
 
 // -----------------------------------------------------
 // ANSWER SELECT
 // -----------------------------------------------------
-function selectAnswerTestC(answer) {
-    if (hasAnswered || showingSolution) return;
+function selectAnswerTestD(answer) {
+    if (hasAnswered) return;
 
     selectedAnswer = answer;
 
     document.querySelectorAll(".answer-option").forEach(li => {
         li.classList.toggle("selected", li.innerText.trim() === answer);
     });
-
     document.getElementById("nextBtn").disabled = false;
 }
 
 // -----------------------------------------------------
 // SAVE ANSWER
 // -----------------------------------------------------
-async function submitAnswerTestC(qIndex, timeTaken) {
+async function submitAnswerTestD(qIndex, timeTaken) {
 
     const q = questions[qIndex];
     const correct = selectedAnswer === q.correct;
@@ -138,63 +125,11 @@ async function submitAnswerTestC(qIndex, timeTaken) {
 }
 
 // -----------------------------------------------------
-// SHOW SOLUTION + AUTO NEXT
-// -----------------------------------------------------
-function showSolutionC(qIndex) {
-
-    const q = questions[qIndex];
-    const options = document.querySelectorAll(".answer-option");
-
-    showingSolution = true;
-
-    options.forEach(option => {
-        option.classList.remove("selected");
-        option.classList.add("disabled");
-        option.style.pointerEvents = "none";
-    });
-
-    // richtige Antwort
-    options.forEach(option => {
-        if (option.innerText.trim() === q.correct) {
-            option.classList.add("answer-correct");
-        }
-    });
-
-    // falsche Antworten
-    options.forEach(option => {
-        const text = option.innerText.trim();
-        if (text !== q.correct && text !== "No Answer") {
-            option.classList.add("answer-wrong");
-        }
-    });
-
-    // ausgewählte Antwort markieren
-    options.forEach(option => {
-        if (option.innerText.trim() === selectedAnswer) {
-            if (selectedAnswer === q.correct) {
-                option.classList.add("answer-correct-selected");
-            } else if (selectedAnswer !== "No Answer") {
-                option.classList.add("answer-wrong-selected");
-            }
-        }
-    });
-
-    const btn = document.getElementById("nextBtn");
-    btn.innerText = "Weiter";
-    btn.disabled = false;
-
-    // ✅ AUTO-WEITER NACH 2 SEKUNDEN (wie Test B)
-    autoNextTimeout = setTimeout(() => {
-        goNextC(qIndex);
-    }, 2000);
-}
-
-// -----------------------------------------------------
 // NEXT
 // -----------------------------------------------------
-function goNextC(qIndex) {
+function goNextD(qIndex) {
     if (qIndex + 1 >= questions.length) {
-        showResultTestC();
+        showResultTestD();
         return;
     }
 
@@ -205,16 +140,16 @@ function goNextC(qIndex) {
 // -----------------------------------------------------
 // PROGRESS BAR
 // -----------------------------------------------------
-function updateProgressC(i) {
+function updateProgressD(i) {
     const bar = document.getElementById("progress");
     if (!bar) return;
     bar.style.width = (100 * i / questions.length) + "%";
 }
 
 // -----------------------------------------------------
-// FINISH TEST
+// FINISH TEST (Endscreen + Feedback bleibt)
 // -----------------------------------------------------
-async function showResultTestC() {
+async function showResultTestD() {
 
     const testId = localStorage.getItem("test_id");
 
@@ -228,7 +163,7 @@ async function showResultTestC() {
 
     document.getElementById("app").innerHTML = `
         <div class="card-screen">
-            <h2>Test C abgeschlossen</h2>
+            <h2>Test D abgeschlossen</h2>
             <p><strong>Score:</strong> ${data.score} / ${questions.length}</p>
             <p><strong>Gesamtzeit:</strong> ${Math.round(data.total_time)} Sekunden</p>
             <button class="start-btn" id="feedbackBtn">Zum Feedback</button>
@@ -236,6 +171,6 @@ async function showResultTestC() {
     `;
 
     document.getElementById("feedbackBtn").onclick = () => {
-        location.href = "../feedback.html?test_id=" + testId + "&test_type=C";
+        location.href = "../feedback.html?test_id=" + testId + "&test_type=D";
     };
 }

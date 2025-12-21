@@ -21,6 +21,9 @@ function renderQuestion(id) {
     if (test === "C" && typeof renderTestC === "function") {
         return renderTestC(index);
     }
+    if (test === "D" && typeof renderTestD === "function") {
+        return renderTestD(index);
+    }
 
     // ✅ Fallback: neutrale Darstellung
     coreRender(index);

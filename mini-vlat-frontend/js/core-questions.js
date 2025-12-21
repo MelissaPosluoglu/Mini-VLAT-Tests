@@ -44,7 +44,7 @@ const questions = [
     {
         id: "stackedbar",
         prompt: "What is the cost of peanuts in Seoul?",
-        img: "../../images/100stacked.png",
+        img: "../../images/stackedbar.png",
         answers: ["$7.5", "$6.1", "$5.2", "$4.5","No Answer"],
         correct: "$6.1"
     },

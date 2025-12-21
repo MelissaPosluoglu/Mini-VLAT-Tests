@@ -8,20 +8,49 @@
    GLOBAL LAYOUT (for all question pages)
 ----------------------------------------------------------- */
 
-body.test-page {
-    background: #f7f9ff;
-    margin: 0;
-    padding: 0;
-    font-family: "Inter", sans-serif;
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
+/* Base layout for test pages */
+body.test-page {
+    font-family: "Inter", sans-serif;
+    background: #f7f9ff;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* optional, aber sehr zuverlässig gegen Top-Gap */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* APP WRAPPER */
 #app {
     max-width: 850px;
-    margin: 40px auto;
-    padding: 30px;
+    padding: 26px;
     background: white;
     border-radius: 18px;
     box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+    margin: 0 auto 20px;
+}
+
+body.test-page #app { margin: 0 auto !important; }
+
+
+/* ===========================================================
+   QUESTION HEADER
+=========================================================== */
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #1e3fa3;
 }
 
 
@@ -40,11 +69,10 @@ body.test-page {
 
 #progress {
     height: 6px;
-    width: 0%;
     background: linear-gradient(90deg, #3b6ff5, #2457d6);
-    transition: width 0.3s linear !important;
+    width: 0%;
+    transition: width 0.3s linear;
 }
-
 
 /* -----------------------------------------------------------
    QUESTION TEXT
@@ -114,11 +142,10 @@ body.test-page {
    SELECTED STATE (before correctness is known)
 ----------------------------------------------------------- */
 
-.answers li.selected {
+.answers li.selected:not(.answer-correct):not(.answer-wrong) {
     background: #e0e5ff !important;
     border-color: #3b6ff5 !important;
     box-shadow: 0 0 0 2px rgba(59,111,245,0.25);
-    transform: scale(1.02);
 }
 
 
@@ -141,24 +168,73 @@ body.test-page {
     color: #d43131;
 }
 
-
-/* -----------------------------------------------------------
+/* ===========================================================
    CORRECT / WRONG VISUAL STYLES
------------------------------------------------------------ */
+   (Hintergrund + Rahmen färben, Text bleibt dunkel)
+=========================================================== */
 
+/* -----------------------------
+   RICHTIGE Antwort
+------------------------------ */
 .answer-correct {
-    background-color: #d4f8d4 !important;
-    border-color: #4caf50 !important;
+    background-color: #e4f7ea !important;
+    border: 2px solid #3fa96d !important;
+    color: #222 !important;
 }
 
+/* Wenn die richtige Antwort angeklickt wurde → dickerer Rahmen */
+.answer-correct-selected {
+    border: 4px solid #2e8f55 !important;
+    color: #222 !important;
+}
+
+/* -----------------------------
+   FALSCHE Antwort
+------------------------------ */
 .answer-wrong {
-    background-color: #f8d4d4 !important;
-    border-color: #d9534f !important;
+    background-color: #f9e5e5 !important;
+    border: 2px solid #d14f4b !important;
+    color: #222 !important;
 }
 
-.answer-selected {
-    border-width: 3px !important;
+/* Wenn die falsche Antwort angeklickt wurde → dickerer Rahmen */
+.answer-wrong-selected {
+    border: 4px solid #c43737 !important;
+    color: #222 !important;
+}
+
+
+/* ===========================================================
+   Answer Base Style
+=========================================================== */
+
+/* Grundstil für Antwortfelder */
+.answer-option {
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    background: #f2f5ff;
+    margin: 10px 0;
+    padding: 14px 18px;
+    font-size: 18px;
+    border: 1px solid #d1ddff;
+    cursor: pointer;
+    transition: all 0.22s ease;
+}
+
+/* Hover-Effekt (nur wenn nicht deaktiviert) */
+.answer-option:hover:not(.disabled) {
+    background: #e3ebff;
     transform: scale(1.02);
+}
+
+
+/* ===========================================================
+   DISABLED STATE (nach Auswahl)
+=========================================================== */
+
+.answers li.disabled {
+    pointer-events: none;
+    opacity: 0.85;
 }
 
 
@@ -257,4 +333,46 @@ body.test-page {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
+}
+/* ===========================================================
+   TIMER (Circular Blue Timer)
+=========================================================== */
+
+#circle-timer {
+    width: 70px;
+    height: 70px;
+    position: relative;
+}
+
+#circle-timer svg {
+    width: 70px;
+    height: 70px;
+    transform: rotate(-90deg);
+}
+
+/* Background circle */
+#timer-bg {
+    stroke: #d6e4ff !important;
+    stroke-width: 6;
+    fill: none;
+}
+
+/* Foreground animated progress bar */
+#timer-progress {
+    stroke: url(#timerGradientBlue) !important;
+    stroke-width: 6;
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear !important;
+}
+
+/* Timer number */
+#time-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: 600;
+    color: #2457d6;
 }

@@ -54,4 +54,8 @@ class FeedbackRequest(BaseModel):
     vision_aid: Optional[str] = None
     test_time: Optional[str] = None
     fatigue: Optional[int] = None
-
+    task_understanding: Optional[int] = None
+    eye_tracking_issue: Optional[int] = None
+    distraction: Optional[int] = None
+    visualization_experience: Optional[int] = None
+    viz_test_experience: Optional[int] = None

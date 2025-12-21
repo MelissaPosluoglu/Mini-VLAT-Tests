@@ -18,6 +18,10 @@
         loadCSS("../../css/style-testC.css");
         loadJS("../../js/script-testC.js");
     }
+    if (test === "D") {
+        loadCSS("../../css/style-testD.css");
+        loadJS("../../js/script-testD.js");
+    }
 })();
 
 function loadCSS(href) {

@@ -3,6 +3,7 @@
    Visual design and behavior for the timed test version
 =========================================================== */
 
+
 html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -32,7 +33,6 @@ body.test-page {
 
 body.test-page #app { margin: 0 auto !important; }
 
-
 /* ===========================================================
    QUESTION HEADER
 =========================================================== */
@@ -47,48 +47,6 @@ body.test-page #app { margin: 0 auto !important; }
     color: #1e3fa3;
 }
 
-/* ===========================================================
-   TIMER (Circular Blue Timer)
-=========================================================== */
-
-#circle-timer {
-    width: 70px;
-    height: 70px;
-    position: relative;
-}
-
-#circle-timer svg {
-    width: 70px;
-    height: 70px;
-    transform: rotate(-90deg);
-}
-
-/* Background circle */
-#timer-bg {
-    stroke: #d6e4ff !important;
-    stroke-width: 6;
-    fill: none;
-}
-
-/* Foreground animated progress bar */
-#timer-progress {
-    stroke: url(#timerGradientBlue) !important;
-    stroke-width: 6;
-    fill: none;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 1s linear !important;
-}
-
-/* Timer number */
-#time-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 18px;
-    font-weight: 600;
-    color: #2457d6;
-}
 
 /* ===========================================================
    PROGRESS BAR (Bottom Blue Bar)
