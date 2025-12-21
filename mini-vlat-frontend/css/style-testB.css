@@ -384,8 +384,8 @@ body.test-page #app{
 }
 
 /* Weniger Abstand untereinander */
-.question-header{ margin-bottom: 12px !important; }
-#progressbar{ margin-bottom: 12px !important; }
+.question-header{ margin-bottom: 6px !important; }
+#progressbar{ margin-bottom: 10px !important; }
 .image-wrapper{ margin: 10px 0 !important; }
 .answers{ margin: 10px 0 !important; }
 
@@ -403,5 +403,5 @@ body.test-page #app{
 
 /* Button näher ran */
 .next-btn{
-    margin-top: 12px !important;
+    margin-top: 8px !important;
 }

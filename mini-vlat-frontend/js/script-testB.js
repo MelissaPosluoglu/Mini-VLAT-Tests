@@ -76,7 +76,7 @@ async function renderTestB(qIndex) {
     app.innerHTML = `
     <div class="question-header">
       <div class="question-counter">
-        Frage ${qIndex + 1} von ${questions.length}
+        Question ${qIndex + 1} of ${questions.length}
       </div>
 
       <div id="circle-timer">
@@ -293,13 +293,13 @@ async function showResultTestB() {
 
     document.getElementById("app").innerHTML = `
         <div class="card-screen">
-            <h2>Test B abgeschlossen</h2>
+            <h2>Test B completed</h2>
 
             <p><strong>Score:</strong> ${score} / ${questions.length}</p>
-            <p><strong>Gesamtzeit:</strong> ${totalSeconds} Sekunden</p>
+            <p><strong>Total time:</strong> ${totalSeconds} seconds</p>
 
             <button class="start-btn" id="feedbackBtn">
-                Zum Feedback
+                Go to Feedback
             </button>
         </div>
     `;
