@@ -77,7 +77,7 @@ async function renderTestC(qIndex) {
             `).join("")}
         </ul>
 
-        <button class="next-btn" id="nextBtn" disabled>Weiter</button>
+        <button class="next-btn" id="nextBtn" disabled>Next</button>
     `;
 
     updateProgressC(qIndex);
@@ -180,7 +180,7 @@ function showSolutionC(qIndex) {
     });
 
     const btn = document.getElementById("nextBtn");
-    btn.innerText = "Weiter";
+    btn.innerText = "Next";
     btn.disabled = false;
 
     // ✅ AUTO-WEITER NACH 2 SEKUNDEN (wie Test B)

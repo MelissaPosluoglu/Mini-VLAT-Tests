@@ -72,7 +72,7 @@ async function renderTestD(qIndex) {
             `).join("")}
         </ul>
 
-        <button class="next-btn" id="nextBtn" disabled>Weiter</button>
+        <button class="next-btn" id="nextBtn" disabled>Next</button>
     `;
 
     updateProgressD(qIndex);
