@@ -62,7 +62,7 @@ footer {
    CARD GRID
 ===================================================== */
 .main-container {
-  padding: 55px;
+  padding: 55px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -70,25 +70,29 @@ footer {
 
 
 .cards {
+  width: 100%;
+  max-width: 1450px;
   display: flex;
   gap: 40px;
   flex-wrap: nowrap;
   justify-content: center;
-  max-width: 1300px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .card {
-  width: 320px;
-  height: 270px;
+  width: 100%;
+  min-height: 200px;
+  height: auto;
   background: #b9cbf7;
-  border-radius: 22px;
-  padding: 30px;
+  border-radius: 20px;
+  padding: 28px 26px;
 
   border: 3px solid #8aa4e8;
   box-shadow: 0 12px 40px rgba(60, 90, 180, 0.18);
 
   cursor: pointer;
   transition: 0.35s ease;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -113,6 +117,13 @@ footer {
   font-size: 1.05rem;
   line-height: 1.55;
   color: #335ccc;
+  flex: 1;
+}
+
+.card .card-strong{
+  font-size: 1.25rem;   
+  display: block;
+  margin-top: 6px;
 }
 
 
