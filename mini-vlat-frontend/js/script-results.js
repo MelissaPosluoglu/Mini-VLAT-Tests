@@ -52,6 +52,7 @@ function toggleAnswers(el) {
 loadResults("A", "tableA");
 loadResults("B", "tableB");
 loadResults("C", "tableC");
+loadResults("D", "tableD");
 
 
 async function deleteParticipant() {
