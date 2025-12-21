@@ -72,7 +72,7 @@ async function renderTestD(qIndex) {
             `).join("")}
         </ul>
 
-        <button class="next-btn" id="nextBtn">Weiter</button>
+        <button class="next-btn" id="nextBtn" disabled>Weiter</button>
     `;
 
     updateProgressD(qIndex);
@@ -99,6 +99,7 @@ function selectAnswerTestD(answer) {
     document.querySelectorAll(".answer-option").forEach(li => {
         li.classList.toggle("selected", li.innerText.trim() === answer);
     });
+    document.getElementById("nextBtn").disabled = false;
 }
 
 // -----------------------------------------------------
