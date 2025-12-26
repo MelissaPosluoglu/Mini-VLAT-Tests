@@ -7,6 +7,9 @@ Dieses Projekt implementiert drei Varianten des **Mini-VLAT (Visualization Liter
 
 Die Plattform besteht aus einem **Frontend (HTML/CSS/JS)** und einem **Python-Backend (FastAPI + MongoDB)**, betrieben über **Docker Compose**.
 
+Webeseite erreichbar unter folgendem VM-Link:
+http://[2001:7c0:2320:2:f816:3eff:fe26:d8f1]/
+
 ---
 
 ## 🔧 Technologien
