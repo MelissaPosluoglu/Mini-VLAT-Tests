@@ -1,19 +1,19 @@
 // =====================================================
-// MINI-VLAT — Test A (Zeitdruck) FINAL STABLE (FIXED)
+// MINI-VLAT — Test A (TIME PRESSURE)
+// FINAL, STABLE VERSION (FIXED)
 // =====================================================
-
 let timer = null;
 let timeLeft = 25;
 let selectedAnswer = null ;
 
 const API_BASE = "http://localhost:8000";
 
-// ✅ neue states pro Seite
+// State variables per question
 let questionStartMs = 0;
 let hasAnswered = false;
 
 // -----------------------------------------------------
-// BACKEND START (einmalig pro Test)
+// BACKEND INITIALIZATION (once per test)
 // -----------------------------------------------------
 async function ensureTestStarted() {
     if (localStorage.getItem("test_id")) return;
@@ -35,13 +35,16 @@ async function ensureTestStarted() {
     const data = await response.json();
     localStorage.setItem("test_id", data.test_id);
 
-    // nur local fürs “Anzeige/Debug”, Endergebnis kommt aus Backend
+    // Local tracking only for display/debugging
+    // Final results are computed by the backend
     localStorage.setItem("scoreA", "0");
     localStorage.setItem("totalTimeA", "0");
 }
 
+
 // -----------------------------------------------------
-// TIME TAKEN (real time, not based on timeLeft ticks)
+// TIME MEASUREMENT
+// Uses real wall-clock time, not timer ticks
 // -----------------------------------------------------
 function getTimeTakenSeconds() {
     const ms = Date.now() - questionStartMs;
@@ -54,6 +57,7 @@ function getTimeTakenSeconds() {
 // -----------------------------------------------------
 async function renderTestA(qIndex) {
 
+    // Reset test state when starting from the first question
     if (qIndex === 0) {
         localStorage.removeItem("test_id");
         localStorage.setItem("scoreA", "0");
@@ -119,6 +123,7 @@ async function renderTestA(qIndex) {
 
         clearInterval(timer);
 
+        // Disable further interaction
         document.querySelectorAll(".answer-option").forEach(li => {
             li.style.pointerEvents = "none";
         });
@@ -132,7 +137,7 @@ async function renderTestA(qIndex) {
 
 
 // -----------------------------------------------------
-// TIMER
+// TIMER HANDLING
 // -----------------------------------------------------
 async function startTimerTestA(qIndex) {
     clearInterval(timer);
@@ -172,8 +177,9 @@ async function startTimerTestA(qIndex) {
 }
 
 
+
 // -----------------------------------------------------
-// SAVE ANSWER (single source of truth)
+// SAVE ANSWER (single source of truth = backend)
 // -----------------------------------------------------
 async function submitAnswerTestA(selectedAnswer, qIndex, timeTaken) {
     const q = questions[qIndex];
@@ -192,7 +198,7 @@ async function submitAnswerTestA(selectedAnswer, qIndex, timeTaken) {
         })
     });
 
-    // local nur “mitlaufen lassen”
+    // Local tracking (not authoritative)
     let score = Number(localStorage.getItem("scoreA")) || 0;
     let totalTime = Number(localStorage.getItem("totalTimeA")) || 0;
 
@@ -218,11 +224,11 @@ function selectAnswerTestA(answer, qIndex) {
 }
 
 // -----------------------------------------------------
-// NEXT QUESTION (timeout or normal)
+// NAVIGATION TO NEXT QUESTION
 // -----------------------------------------------------
 async function autoNextTestA(qIndex, isTimeout) {
 
-    // ✅ Wenn Timeout und noch keine Antwort gespeichert wurde:
+    // If timeout occurred and no answer was saved yet
     if (isTimeout && !hasAnswered) {
         hasAnswered = true;
         await submitAnswerTestA("No Answer", qIndex, 25);
@@ -238,7 +244,7 @@ async function autoNextTestA(qIndex, isTimeout) {
 }
 
 // -----------------------------------------------------
-// PROGRESS BAR
+// PROGRESS BAR UPDATE
 // -----------------------------------------------------
 function updateProgress(i) {
     const progress = document.getElementById("progress");
@@ -247,8 +253,9 @@ function updateProgress(i) {
     progress.style.width = `${(100 * i) / questions.length}%`;
 }
 
+
 // -----------------------------------------------------
-// FINISH TEST (show backend truth)
+// FINAL RESULT SCREEN (backend truth)
 // -----------------------------------------------------
 async function showResultTestA() {
 
@@ -262,7 +269,7 @@ async function showResultTestA() {
 
     const data = await response.json();
 
-    // ✅ sauber runden (Sekunden)
+   
     const totalSeconds = Math.round(Number(data.total_time || 0));
     const score = Number(data.score || 0);
 

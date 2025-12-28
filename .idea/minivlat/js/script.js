@@ -1,6 +1,8 @@
-// ------------------------------
-// MINI-VLAT QUESTIONS
-// ------------------------------
+// ======================================================
+// MINI-VLAT — QUESTION DEFINITIONS
+// Contains all Mini-VLAT questions including prompt,
+// visualization image, answer options, and correct answer
+// ======================================================
 
 const questions = [
     {
@@ -89,40 +91,50 @@ const questions = [
     }
 ];
 
-// ------------------------------
-// STATE
-// ------------------------------
+// ======================================================
+// GLOBAL TEST STATE
+// Stores score, timer reference, remaining time,
+// and the currently selected answer
+// ======================================================
 
-let score = 0;
-let timer = null;
-let timeLeft = 30;
-let selectedAnswer = null;
+let score = 0;                   // Number of correctly answered questions
+let timer = null;                // Reference to the active countdown timer
+let timeLeft = 30;               // Remaining time per question (seconds)
+let selectedAnswer = null;       // Currently selected answer option
 
-// ------------------------------
-// URL → Frage laden
-// ------------------------------
+// ======================================================
+// URL HANDLING
+// Determines which question to load based on URL
+// parameters or whether the test has finished
+// ======================================================
 
 function getQuestionIndex() {
     const params = new URLSearchParams(location.search);
 
+    // If the test is finished, show the result screen
     if (params.get("done") === "true") {
         showResult();
         return null;
     }
-
+    
+     // If no question ID is provided, start with the first question
     const id = params.get("q");
     if (!id) return 0;
 
+    // Find the index of the question matching the given ID
     return questions.findIndex(q => q.id === id);
 }
 
-// ------------------------------
-// RENDER QUESTION
-// ------------------------------
+// ======================================================
+// QUESTION RENDERING
+// Displays the current question, image, answers,
+// timer, and progress bar
+// ======================================================
 
 function render(qIndex) {
     const q = questions[qIndex];
 
+    // Reset state for the new question
     selectedAnswer = null;
     timeLeft = 30;
 
@@ -146,9 +158,11 @@ function render(qIndex) {
     startTimer(qIndex);
 }
 
-// ------------------------------
-// TIMER
-// ------------------------------
+// ======================================================
+// TIMER LOGIC
+// Counts down once per second and automatically
+// advances when time runs out
+// ======================================================
 
 function startTimer(qIndex) {
     const t = document.getElementById("t");
@@ -166,9 +180,11 @@ function startTimer(qIndex) {
     }, 1000);
 }
 
-// ------------------------------
-// SELECT ANSWER
-// ------------------------------
+// ======================================================
+// ANSWER SELECTION
+// Highlights the selected answer and enables the
+// Next button
+// ======================================================
 
 function selectAnswer(answer) {
     selectedAnswer = answer;
@@ -180,9 +196,10 @@ function selectAnswer(answer) {
     document.getElementById("nextBtn").disabled = false;
 }
 
-// ------------------------------
-// AUTO NEXT (Timer 0)
-// ------------------------------
+// ======================================================
+// AUTOMATIC QUESTION ADVANCE
+// Triggered when the timer reaches zero
+// ======================================================
 
 function autoNext(qIndex) {
     if (qIndex + 1 >= questions.length) {
@@ -193,9 +210,11 @@ function autoNext(qIndex) {
     }
 }
 
-// ------------------------------
-// NEXT BUTTON
-// ------------------------------
+// ======================================================
+// NEXT BUTTON HANDLING
+// Evaluates the selected answer and loads the
+// next question or finishes the test
+// ======================================================
 
 function next(qIndex) {
     clearInterval(timer);
@@ -212,9 +231,11 @@ function next(qIndex) {
     }
 }
 
-// ------------------------------
-// PROGRESSBAR
-// ------------------------------
+// ======================================================
+// PROGRESS BAR UPDATE
+// Updates the visual progress indicator based
+// on the current question index
+// ======================================================
 
 function updateProgress(qIndex) {
     const percent = Math.round((qIndex / questions.length) * 100);
@@ -223,9 +244,10 @@ function updateProgress(qIndex) {
     bar.textContent = percent + "%";
 }
 
-// ------------------------------
-// RESULT
-// ------------------------------
+// ======================================================
+// RESULT SCREEN
+// Displays the final score after completing the test
+// ======================================================
 
 function showResult() {
     document.getElementById("app").innerHTML = `
@@ -237,9 +259,10 @@ function showResult() {
     document.getElementById("progress").textContent = "100%";
 }
 
-// ------------------------------
-// START TEST
-// ------------------------------
+// ======================================================
+// TEST INITIALIZATION
+// Determines the current question and starts rendering
+// ======================================================
 
 const qIndex = getQuestionIndex();
 if (qIndex !== null) render(qIndex);

@@ -1,3 +1,13 @@
+// =====================================================
+// RESULTS VIEW SCRIPT
+// Loads test results, handles deletion and feedback view
+// =====================================================
+
+/**
+ * Fetches and renders results for a given test type
+ * @param {string} testType - Test identifier (A, B, C, D)
+ * @param {string} tableId - HTML table ID where results are rendered
+ */
 
 async function loadResults(testType, tableId) {
     const response = await fetch(`http://localhost:8000/results/${testType}`);
@@ -9,6 +19,7 @@ async function loadResults(testType, tableId) {
     data.forEach(entry => {
         const tr = document.createElement("tr");
 
+        // Build detailed answer list (question, time, correctness)
         const answersHTML = entry.answers
             .map(a => `${a.question_id}: ${fmt1(a.time_taken)}s — ${a.is_correct ? "✔" : "✖"}`)
             .join("<br>");
@@ -36,12 +47,18 @@ async function loadResults(testType, tableId) {
     });
 }
 
+/**
+ * Formats a number with one decimal place
+ * Returns "-" if value is null or undefined
+ */
 function fmt1(x) {
     if (x === null || x === undefined) return "-";
     return Number(x).toFixed(1);
 }
 
-
+/**
+ * Toggles visibility of the answer details for a result row
+ */
 function toggleAnswers(el) {
     const box = el.nextElementSibling;
     const visible = box.style.display === "block";
@@ -49,10 +66,20 @@ function toggleAnswers(el) {
     el.textContent = visible ? "anzeigen ▼" : "verbergen ▲";
 }
 
+
+// -----------------------------------------------------
+// INITIAL LOAD FOR ALL TEST VARIANTS
+// -----------------------------------------------------
+
+
 loadResults("A", "tableA");
 loadResults("B", "tableB");
 loadResults("C", "tableC");
 loadResults("D", "tableD");
+
+// -----------------------------------------------------
+// DELETE PARTICIPANT (ALL TESTS + FEEDBACK)
+// -----------------------------------------------------
 
 
 async function deleteParticipant() {
@@ -74,7 +101,7 @@ async function deleteParticipant() {
         if (response.ok) {
             const result = await response.json();
             alert(`Teilnehmer ${participantNumber} erfolgreich gelöscht.`);
-            location.reload(); // Seite neu laden, um Tabellen zu aktualisieren
+            location.reload(); // Reload page to refresh tables
         } else {
             const error = await response.json();
             alert(`Fehler: ${error.detail || "Löschen nicht möglich"}`);
@@ -85,10 +112,20 @@ async function deleteParticipant() {
     }
 }
 
+// -----------------------------------------------------
+// NAVIGATION HELPERS
+// -----------------------------------------------------
+
+/**
+ * Opens feedback detail view for a specific test
+ */
 function viewFeedback(testId) {
     window.location.href = `feedback-view.html?test_id=${encodeURIComponent(testId)}`;
 }
 
+/**
+ * Navigate back to the start page
+ */
 function goHome() {
     window.location.href = "../index.html";
 }

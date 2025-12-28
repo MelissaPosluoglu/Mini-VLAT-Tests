@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Test C – Zweistufig</title>
 
-    <!-- Global & Test spezifisches CSS -->
+     <!-- Global and test-specific styles -->
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/style-testC.css">
 </head>
@@ -12,19 +12,23 @@
 <body class="test-page">
 
 <script>
-    // Signal an test-loader.js → wir sind im Test A
+    /* Signal to test-loader.js → current test condition is Test C */
     localStorage.setItem("currentTest", "C");
 </script>
 
 
-<!-- 1) NAME-SCREEN -->
+<!-- ======================================================
+     1) PARTICIPANT NUMBER SCREEN
+     ====================================================== -->
 <div id="number-input-screen" class="card-screen" style="display:none;">
     <h2>Please enter your Participant Number</h2>
     <input type="text" id="participantNumber" placeholder="Your Number">
     <button id="startNumberBtn" class="start-btn">Continue</button>
 </div>
 
-<!-- 2) INTRO-SCREEN -->
+<!-- ======================================================
+     2) INTRODUCTION SCREEN (TEST C – NO TIME PRESSURE)
+     ====================================================== -->
 <div id="testC-intro" class="test-intro-screen" style="display:none;">
     <h2>Welcome to the Visualization Literacy Test</h2>
 
@@ -38,12 +42,15 @@
     <button id="startTestC" class="start-btn">Start Test C</button>
 </div>
 
-<!-- 3) TEST-AREA (Fragen kommen per JS) -->
+<!-- ======================================================
+     3) TEST AREA
+     Questions are rendered dynamically via JavaScript
+     ====================================================== -->
 <div id="app" style="display:none;">
     <div id="progressbar"><div id="progress"></div></div>
 </div>
 
-<!-- Main Script -->
+<!-- Main Script for Test C-->
 <script src="../js/script-testC.js"></script>
 
 </body>

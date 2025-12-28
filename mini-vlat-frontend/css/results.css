@@ -1,13 +1,19 @@
-/* ===========================
+/* ===================================================
    GLOBAL CLEAN STYLE
-=========================== */
+   Base styling for the results and administration pages
+   =================================================== */
+
 body {
-    background: #f4f6ff;
-    font-family: Inter, sans-serif;
+    background: #f4f6ff;              /* Light background for reduced visual fatigue */
+    font-family: Inter, sans-serif;   /* Consistent modern sans-serif font */
     margin: 0;
     padding: 30px;
-    color:  #2f3a6e;
+    color: #2f3a6e;                   /* Primary text color */
 }
+
+/* ===================================================
+   PAGE TITLE
+   =================================================== */
 
 .results-title {
     text-align: center;
@@ -17,9 +23,11 @@ body {
     color: #5c6fbf;
 }
 
-/* ===========================
-   DELETE BOX
-=========================== */
+/* ===================================================
+   DELETE PARTICIPANT SECTION
+   Used for removing participant data by ID
+   =================================================== */
+
 .delete-section {
     background: #fff;
     padding: 15px;
@@ -50,9 +58,11 @@ body {
     cursor: pointer;
 }
 
-/* ===========================
-   TABLE LAYOUT
-=========================== */
+/* ===================================================
+   RESULTS TABLE LAYOUT
+   Displays test results in a structured format
+   =================================================== */
+
 .result-table {
     width: 90%;
     border-collapse: collapse;
@@ -80,7 +90,11 @@ body {
     border-bottom: none;
 }
 
-/* Score Badge */
+/* ===================================================
+   SCORE BADGE
+   Visual indicator for participant scores
+   =================================================== */
+
 .score-badge {
     background:  #2f3a6e;
     color: white;
@@ -89,7 +103,11 @@ body {
     font-size: 13px;
 }
 
-/* Antworten */
+/* ===================================================
+   ANSWER DETAILS
+   Toggleable display of per-question answers
+   =================================================== */
+
 .answers-btn {
     cursor: pointer;
     color:  #2f3a6e;
@@ -104,7 +122,11 @@ body {
     line-height: 1.4;
 }
 
-/* Feedback Button */
+/* ===================================================
+   FEEDBACK BUTTON
+   Used to open participant feedback responses
+   =================================================== */
+
 .feedback-btn {
     background: #2f3a6e;
     padding: 6px 12px;
@@ -119,6 +141,11 @@ body {
     opacity: 0.9;
 }
 
+
+/* ===================================================
+   BACK BUTTON
+   Navigation back to the main page
+   =================================================== */
 
 .back-btn{
     display:inline-block;

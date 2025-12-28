@@ -1,11 +1,13 @@
 /* ===========================================================
-   TEST A — TIME PRESSURE (ZEITDRUCK)
-   Visual design and behavior for the timed test version
-=========================================================== */
+   TEST D — INTERACTIVE (NO TIME PRESSURE)
+   Visual design and interaction behavior for the untimed test
+   This condition does NOT impose time pressure on participants.
+   =========================================================== */
 
 
-
-/* Base layout for test pages */
+/* -----------------------------------------------------------
+   BASE LAYOUT FOR TEST PAGES
+----------------------------------------------------------- */
 body.test-page {
     font-family: "Inter", sans-serif;
     background: #f7f9ff;
@@ -13,7 +15,10 @@ body.test-page {
     padding: 0 !important;
 }
 
-/* APP WRAPPER */
+/* -----------------------------------------------------------
+   APPLICATION WRAPPER
+   Main container for the test content
+----------------------------------------------------------- */
 #app {
     max-width: 850px;
     padding: 26px;
@@ -23,15 +28,18 @@ body.test-page {
     margin: 0 auto 20px;
 }
 
+/* Force compact layout for smaller screens */
 body.test-page #app{
     max-width: 680px !important;
     width: min(680px, 94vw) !important;
     padding: 16px !important;
     margin: 0 auto 16px !important;
 }
+
 /* ===========================================================
    QUESTION HEADER
-=========================================================== */
+   Displays question counter and timer
+   =========================================================== */
 
 .question-header {
     display: flex;
@@ -45,8 +53,9 @@ body.test-page #app{
 
 
 /* ===========================================================
-   PROGRESS BAR (Bottom Blue Bar)
-=========================================================== */
+   PROGRESS BAR
+   Bottom blue bar indicating test progress
+   =========================================================== */
 
 #progressbar {
     width: 100%;
@@ -78,7 +87,8 @@ body.test-page #app{
 
 /* ===========================================================
    IMAGE DISPLAY
-=========================================================== */
+   Centers and constrains visualization size
+   =========================================================== */
 
 .image-wrapper,
 .question-image-container {
@@ -121,25 +131,27 @@ body.test-page #app{
     border: 1px solid #d1ddff;
 }
 
+
+/* Hover effect for non-selected answers */
 .answers li:hover:not(.selected) {
     background: #e3ebff;
     transform: scale(1.02);
 }
 
-/* No Answer beim Laden (hellblau wie Hover) */
+/* Preselected state (e.g., initial focus or no-answer state) */
 .answers li.preselected {
     background: #e3ebff;
     border-color: #b8ccff;
 }
 
-/* Klick-Auswahl (dunkelblau) */
+/* Selected answer (dark blue) */
 .answers li.selected {
     background: #46539a;
     border-color: #46539a;
     color: #fff;
 }
 
-/* Hover bei selected bleibt dunkel */
+/* Maintain selected styling on hover */
 .answers li.selected:hover {
     background: #3d498a;
     border-color: #3d498a;
@@ -147,11 +159,13 @@ body.test-page #app{
 }
 
 
-/* No special correct/wrong styling for Test A (auto-next) */
+/* No correct/incorrect feedback styling for Test A
+   (automatic progression after selection) */
+
 
 /* ===========================================================
    START / NEXT BUTTONS
-=========================================================== */
+   =========================================================== */
 
 .next-btn {
     padding: 12px 26px;
@@ -189,7 +203,7 @@ body.test-page #app{
 }
 
 
-/* Next-Button disabled */
+/* Disabled start button styling */
 .start-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -200,56 +214,62 @@ body.test-page #app{
     transform: none;
 }
 
-/* ================================
-   SELECTED ANSWER (nicht grau)
-================================ */
+/* ===========================================================
+   SELECTED ANSWER (ALTERNATIVE CLASS)
+   Ensures selected answers are not rendered gray
+   =========================================================== */
 
-/* Falls deine Optionen <li class="answer-option"> sind */
+
 .answer-option.selected {
     background: #2f3a6e;
     border-color: #2f3a6e;
     color: #fff;
 }
 
-/* Hover soll nicht wieder grau werden */
+/* Preserve selected styling on hover */
 .answer-option.selected:hover {
     background: #25305f;
     border-color: #25305f;
     transform: none;
 }
 
-/* Next Button – einheitlich */
+/* ===========================================================
+   LAYOUT REFINEMENTS
+   Compact spacing to reduce vertical height
+   =========================================================== */
+
+/* Centered next button */
 .next-btn {
     display: block;
     margin: 30px auto 0 auto;
     width: 170px;
 }
 
-/* KASTEN insgesamt "kürzer" -> weniger Innenabstand */
+/* Reduce container padding */
 #app{
     padding: 12px !important;
     margin: 0 auto 10px !important;
 }
 
-/* Weniger Abstand untereinander */
+/* Reduce vertical spacing between elements */
 .question-header{ margin-bottom: 6px !important; }
 #progressbar{ margin-bottom: 10px !important; }
 .image-wrapper{ margin: 10px 0 !important; }
 .answers{ margin: 10px 0 !important; }
 
-/* Bild kleiner = größter Höhenfresser */
+/* Reduce image height (largest vertical element) */
 .vlat-image, .image-wrapper img{
     max-height: 290px !important;
 }
 
-/* Antwortboxen kompakter */
+/* More compact answer options */
 .answers li{
     margin: 6px 0 !important;
     padding: 10px 14px !important;
     font-size: 16px !important;
 }
 
-/* Button näher ran */
+/* Bring next button closer to content */
 .next-btn{
     margin-top: 8px !important;
 }

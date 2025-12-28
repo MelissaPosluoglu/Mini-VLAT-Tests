@@ -1,9 +1,9 @@
 // =====================================================
 // MINI-VLAT — Test C
-// IDENTISCH ZU TEST B (ohne sichtbaren Timer)
-// - Ergebnisanzeige
-// - Auto-Weiter nach 2s
-// - ODER manuell per Button
+// IDENTICAL TO TEST B (NO VISIBLE TIMER)
+// - Solution feedback shown
+// - Auto-advance after 2 seconds
+// - OR manual navigation via button
 // =====================================================
 
 let selectedAnswer = null;
@@ -15,7 +15,7 @@ let autoNextTimeout = null;
 const API_BASE = "http://localhost:8000";
 
 // -----------------------------------------------------
-// BACKEND START
+// BACKEND INITIALIZATION
 // -----------------------------------------------------
 async function ensureTestStartedC() {
     if (localStorage.getItem("test_id")) return;
@@ -34,17 +34,18 @@ async function ensureTestStartedC() {
 }
 
 // -----------------------------------------------------
-// ZEITMESSUNG
+// TIME MEASUREMENT (no time pressure)
 // -----------------------------------------------------
 function getTimeTakenSecondsC() {
     return (Date.now() - questionStartMs) / 1000;
 }
 
 // -----------------------------------------------------
-// RENDER FRAGE
+// RENDER QUESTION
 // -----------------------------------------------------
 async function renderTestC(qIndex) {
 
+    // Reset test state when starting from first question
     if (qIndex === 0) {
         localStorage.removeItem("test_id");
     }
@@ -84,7 +85,7 @@ async function renderTestC(qIndex) {
 
     document.getElementById("nextBtn").onclick = async () => {
 
-        // 👉 wenn Lösung schon sichtbar → sofort weiter
+        // If solution is already shown → immediately continue
         if (showingSolution) {
             clearTimeout(autoNextTimeout);
             goNextC(qIndex);
@@ -101,7 +102,7 @@ async function renderTestC(qIndex) {
 }
 
 // -----------------------------------------------------
-// ANSWER SELECT
+// ANSWER SELECTION
 // -----------------------------------------------------
 function selectAnswerTestC(answer) {
     if (hasAnswered || showingSolution) return;
@@ -116,7 +117,7 @@ function selectAnswerTestC(answer) {
 }
 
 // -----------------------------------------------------
-// SAVE ANSWER
+// SAVE ANSWER (backend is source of truth)
 // -----------------------------------------------------
 async function submitAnswerTestC(qIndex, timeTaken) {
 
@@ -138,7 +139,7 @@ async function submitAnswerTestC(qIndex, timeTaken) {
 }
 
 // -----------------------------------------------------
-// SHOW SOLUTION + AUTO NEXT
+// SHOW SOLUTION + AUTO-NEXT
 // -----------------------------------------------------
 function showSolutionC(qIndex) {
 
@@ -147,20 +148,21 @@ function showSolutionC(qIndex) {
 
     showingSolution = true;
 
+    // Disable interaction during solution display
     options.forEach(option => {
         option.classList.remove("selected");
         option.classList.add("disabled");
         option.style.pointerEvents = "none";
     });
 
-    // richtige Antwort
+    // Highlight correct answer
     options.forEach(option => {
         if (option.innerText.trim() === q.correct) {
             option.classList.add("answer-correct");
         }
     });
 
-    // falsche Antworten
+    // Highlight incorrect answers
     options.forEach(option => {
         const text = option.innerText.trim();
         if (text !== q.correct && text !== "No Answer") {
@@ -168,7 +170,7 @@ function showSolutionC(qIndex) {
         }
     });
 
-    // ausgewählte Antwort markieren
+    // Highlight selected answer
     options.forEach(option => {
         if (option.innerText.trim() === selectedAnswer) {
             if (selectedAnswer === q.correct) {
@@ -183,14 +185,14 @@ function showSolutionC(qIndex) {
     btn.innerText = "Next";
     btn.disabled = false;
 
-    // ✅ AUTO-WEITER NACH 2 SEKUNDEN (wie Test B)
+    // Auto-advance after 2 seconds (same behavior as Test B)
     autoNextTimeout = setTimeout(() => {
         goNextC(qIndex);
     }, 2000);
 }
 
 // -----------------------------------------------------
-// NEXT
+// NAVIGATION TO NEXT QUESTION
 // -----------------------------------------------------
 function goNextC(qIndex) {
     if (qIndex + 1 >= questions.length) {
@@ -203,7 +205,7 @@ function goNextC(qIndex) {
 }
 
 // -----------------------------------------------------
-// PROGRESS BAR
+// PROGRESS BAR UPDATE
 // -----------------------------------------------------
 function updateProgressC(i) {
     const bar = document.getElementById("progress");
@@ -212,7 +214,7 @@ function updateProgressC(i) {
 }
 
 // -----------------------------------------------------
-// FINISH TEST
+// FINAL RESULT SCREEN
 // -----------------------------------------------------
 async function showResultTestC() {
 

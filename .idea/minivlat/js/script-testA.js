@@ -1,9 +1,15 @@
 // =====================================================
-// MINI-VLAT — Test A (Zeitdruck) – FINAL VERSION
+// MINI-VLAT — Test A (Time Pressure)
+// This version implements a strict time limit per question
+// and automatically advances after answer selection or
+// when the timer expires.
 // =====================================================
 
+
 // ------------------------------
-// QUESTIONS
+// QUESTION SET
+// Defines all Mini-VLAT questions including prompt,
+// visualization image, answer options, and correct answer
 // ------------------------------
 
 const questions = [
@@ -22,15 +28,18 @@ const questions = [
 ];
 
 // ------------------------------
-// STATE
+// GLOBAL STATE
+// Stores score, timer reference, and remaining time
 // ------------------------------
 
-let score = 0;
-let timer = null;
-let timeLeft = 30;
+let score = 0;        // Number of correct answers
+let timer = null;     // Active timer reference
+let timeLeft = 30;    // Remaining time per question (seconds)
 
 // ------------------------------
-// PREVENT BACK NAVIGATION (WICHTIG!)
+// PREVENT BACK NAVIGATION (IMPORTANT)
+// Prevents participants from navigating back to
+// previous questions using the browser history
 // ------------------------------
 
 history.pushState(null, "", location.href);
@@ -40,26 +49,34 @@ window.onpopstate = function () {
 
 
 // ------------------------------
-// GET QUESTION INDEX
+// GET CURRENT QUESTION INDEX
+// Determines which question to load based on URL
+// parameters or shows the result screen if finished
 // ------------------------------
 
 function getQuestionIndex() {
     const params = new URLSearchParams(location.search);
 
+    
+    // Test completed → show result screen
     if (params.get("done") === "true") {
         showResult();
         return null;
     }
 
+    // No question specified → start with first question
     const id = params.get("q");
     if (!id) return 0;
 
+    // Find question index by ID
     return questions.findIndex(q => q.id === id);
 }
 
 
 // ------------------------------
 // RENDER QUESTION
+// Displays question header, prompt, visualization,
+// answer options, and initializes the timer
 // ------------------------------
 
 function render(qIndex) {
@@ -88,7 +105,9 @@ function render(qIndex) {
 
 
 // ------------------------------
-// CIRCULAR TIMER
+// CIRCULAR COUNTDOWN TIMER
+// Visual circular timer that decreases continuously
+// and triggers automatic navigation when time runs out
 // ------------------------------
 
 function startTimer(qIndex) {
@@ -127,6 +146,7 @@ function startTimer(qIndex) {
         timeLeft--;
         timeText.textContent = timeLeft;
 
+         // Update circular progress indicator
         progress.style.strokeDashoffset = offsetStep * (30 - timeLeft);
 
         if (timeLeft <= 0) {
@@ -138,7 +158,9 @@ function startTimer(qIndex) {
 
 
 // ------------------------------
-// ANSWER SELECT → auto next
+// ANSWER SELECTION
+// Immediately evaluates the answer and advances
+// to the next question
 // ------------------------------
 
 function selectAnswer(answer, qIndex) {
@@ -148,7 +170,8 @@ function selectAnswer(answer, qIndex) {
 
 
 // ------------------------------
-// NAVIGATION
+// QUESTION NAVIGATION
+// Loads the next question or finishes the test
 // ------------------------------
 
 function autoNext(qIndex) {
@@ -161,8 +184,11 @@ function autoNext(qIndex) {
 }
 
 
+
 // ------------------------------
-// PROGRESSBAR
+// PROGRESS BAR UPDATE
+// Updates the progress indicator based on
+// the current question index
 // ------------------------------
 
 function updateProgress(i) {
@@ -173,6 +199,7 @@ function updateProgress(i) {
 
 // ------------------------------
 // RESULT SCREEN
+// Displays the final score after test completion
 // ------------------------------
 
 function showResult() {
@@ -193,7 +220,8 @@ function showResult() {
 
 
 // ------------------------------
-// START
+// TEST INITIALIZATION
+// Determines the current question and starts rendering
 // ------------------------------
 
 const qIndex = getQuestionIndex();

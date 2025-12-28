@@ -1,5 +1,14 @@
+// =====================================================
+// MINI-VLAT — Test B (No Time Pressure, With Feedback)
+// This version provides immediate feedback after each
+// answer and allows participants to proceed manually.
+// =====================================================
+
+
 // ------------------------------
-// MINI-VLAT QUESTIONS
+// QUESTION SET
+// Defines all Mini-VLAT questions including prompt,
+// visualization image, answer options, and correct answer
 // ------------------------------
 
 const questions = [
@@ -18,32 +27,41 @@ const questions = [
 ];
 
 // ------------------------------
-// STATE
+// GLOBAL STATE
+// Stores the current score and the selected answer
 // ------------------------------
 
-let score = 0;
-let selectedAnswer = null;
+let score = 0;              // Number of correct answers
+let selectedAnswer = null;  // Currently selected answer
 
 // ------------------------------
 // URL HANDLING
+// Determines which question to display based on
+// URL parameters or shows the result page if finished
 // ------------------------------
 
 function getQuestionIndex() {
     const params = new URLSearchParams(location.search);
 
+    // Test finished → show result page
     if (params.get("done") === "true") {
         showResult();
         return null;
     }
 
+    
+    // No question specified → start with first question
     const id = params.get("q");
     if (!id) return 0;
 
+     // Find the index of the question by ID
     return questions.findIndex(q => q.id === id);
 }
 
 // ------------------------------
 // RENDER QUESTION
+// Displays the question prompt, visualization,
+// answer options, feedback area, and navigation button
 // ------------------------------
 
 function render(qIndex) {
@@ -69,7 +87,9 @@ function render(qIndex) {
 }
 
 // ------------------------------
-// SELECT ANSWER + FEEDBACK
+// ANSWER SELECTION AND FEEDBACK
+// Highlights the selected answer, displays immediate
+// correctness feedback, and enables navigation
 // ------------------------------
 
 function selectAnswer(answer, qIndex) {
@@ -93,6 +113,8 @@ function selectAnswer(answer, qIndex) {
 
 // ------------------------------
 // NEXT QUESTION
+// Evaluates the selected answer, updates the score,
+// and navigates to the next question or result page
 // ------------------------------
 
 function next(qIndex) {
@@ -109,8 +131,10 @@ function next(qIndex) {
 }
 
 // ------------------------------
-// PROGRESS BAR
+// PROGRESS BAR AND QUESTION COUNTER
+// Updates the progress indicator and question counter
 // ------------------------------
+
 function updateProgress(qIndex) {
     const percent = Math.round((qIndex / questions.length) * 100);
     const bar = document.getElementById("progress");
@@ -123,6 +147,7 @@ function updateProgress(qIndex) {
 
 // ------------------------------
 // RESULT PAGE
+// Displays the final score after completing the test
 // ------------------------------
 
 function showResult() {
@@ -135,7 +160,8 @@ function showResult() {
 }
 
 // ------------------------------
-// INITIALIZE
+// INITIALIZATION
+// Determines the current question and starts rendering
 // ------------------------------
 
 const qIndex = getQuestionIndex();

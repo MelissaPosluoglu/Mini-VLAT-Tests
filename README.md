@@ -1,92 +1,162 @@
 
-# 🧠 Mini-VLAT Tests — Visualization Literacy & Gaze Patterns
+# 🧠 Mini-VLAT Tests  
+## Visualization Literacy & Gaze Patterns
 
-Interaktive Web-Testplattform für wissenschaftliche Studien
+An interactive web-based test platform for scientific studies on **visualization literacy** and **eye-tracking behavior**.
 
-Dieses Projekt implementiert drei Varianten des **Mini-VLAT (Visualization Literacy Assessment Test)** und erweitert sie um moderne Web-Technologie, Eye-Tracking-Kompatibilität, Datenspeicherung und einheitliches UI-Design.
+This project implements **four variants** of the **Mini-VLAT (Visualization Literacy Assessment Test)** and extends them with modern web technologies, unified UI design, backend data storage, and eye-tracking compatibility.
 
-Die Plattform besteht aus einem **Frontend (HTML/CSS/JS)** und einem **Python-Backend (FastAPI + MongoDB)**, betrieben über **Docker Compose**.
+The platform consists of a **Frontend (HTML/CSS/JavaScript)** and a **Backend (FastAPI + MongoDB)**, deployed using **Docker Compose**.
 
-Webeseite erreichbar unter folgendem VM-Link:
+---
+
+
+## 🌐 Live Deployment
+
+**VM Address:**  
 http://[2001:7c0:2320:2:f816:3eff:fe26:d8f1]/
 
 ---
 
-## 🔧 Technologien
+## 🔧 Technologies
 
-| Bereich        | Technologie                    |
-|----------------|--------------------------------|
-| Backend        | Python 3.11, FastAPI, Uvicorn  |
-| Datenbank      | MongoDB                        |
-| Plattform      | Docker + Docker Compose        |
-| Frontend       | HTML, CSS, JavaScript          |
+| Component | Technology |
+|---------|------------|
+| Backend | Python 3.11, FastAPI, Uvicorn |
+| Database | MongoDB |
+| Platform | Docker & Docker Compose |
+| Frontend | HTML, CSS, JavaScript |
+| Research Focus | Visualization Literacy, Eye Tracking |
 
 ---
+## 📥 Prerequisites
 
-## 📥 Voraussetzungen
+Please install the following before running the project:
 
-Installiere vor der Nutzung:
-
-### ✔ Python 3.11
+### ✔ Python 3.11  
 https://www.python.org/downloads/release/python-3110/
 
-### ✔ Docker Desktop
-(enthält automatisch Docker Compose)  
+### ✔ Docker Desktop  
+(Includes Docker Compose)  
 https://www.docker.com/products/docker-desktop/
 
-### ✔ Webbrowser (Chrome/Firefox empfohlen)
+### ✔ Web Browser  
+Chrome or Firefox recommended
 
+---
+## ⚙️ Installation & Setup
 
-## ⚙️ Installation
-
-### 1. Repository klonen
+### 1️⃣ Clone the Repository
 
 ```bash
 git clone <https://github.com/MelissaPosluoglu/Mini-VLAT-Tests.git>
 ```
 
-### 2. Ins Backend Ordner navigieren
+### 2️⃣ Navigate to the Backend Directory
 
 ```bash
 cd mini-vlat-backend
 ```
 
-### 3. Docker starten
+### 3️⃣ Start Backend & Database
 ```bash
 docker-compose up --build
 ```
 
-### 4. Frontend
-*Das Frontend ist statisch und benötigt keinen Server.*
-```
-mini-vlat-frontend/index.html öffnen
-```
+### 4️⃣ Open the Frontend
+The frontend is fully static and does not require a server.
 
-*Wenn man docker stoppen will:*
+mini-vlat-frontend/index.html
+
+
+Open the file directly in your browser.
+
+5️⃣ Stop Docker (Optional)
 
 ```bash
 docker-compose down
 ```
 
 
-## 📊 Tests im Überblick
+## 📊 Test Conditions Overview
 
-### 🅰️ Test A – Zeitdruck
+All test variants use the same Mini-VLAT question set (12 questions).
+They differ only in time pressure, feedback, and interaction design.
 
-- 12 VLAT-Fragen
-- 30 Sekunden pro Frage
-- Automatischer Weitergang
-- Kein Feedback
-- Rund-Timer (blauer Kreis)
+### 🅰️ Test A — Time Pressure (Baseline)
 
-### 🅱️ Test B – Feedback
+Description:
+Baseline condition with strict time constraints.
 
-- Kein Zeitlimit
-- Direktes Feedback (richtig/falsch)
-- Unterstützt Lern-/Strategieanalyse
+Features:
 
-### 🅲 Test C – Zweistufig
+- 12 Mini-VLAT questions
+- ⏱ 25–30 seconds per question
+- Circular countdown timer
+- Automatic progression
+- ❌ No feedback
+- Measures performance under time pressure
 
-- Phase 1: Grafik + Frage
-- Phase 2: Antwortmöglichkeiten erscheinen
-- Trennt Wahrnehmung und Entscheidung
+### 🅱️ Test B — Time Pressure + Feedback
+
+Description:
+Timed condition with immediate correctness feedback.
+
+Features:
+
+- 12 Mini-VLAT questions
+- ⏱ 25–30 seconds per question
+- Circular countdown timer
+- ✅ Immediate feedback (correct / incorrect)
+- Correct solution displayed for 2 seconds
+- Supports learning and strategy analysis
+
+### 🅲 Test C — No Time Pressure + Feedback
+
+Description:
+Interactive condition without visible time pressure.
+
+Features:
+
+- 12 Mini-VLAT questions
+- ⏸ No time limit
+- ✅ Immediate feedback after each answer
+- Correct solution displayed for 2 seconds
+- Automatic or manual progression
+- Separates perception from decision-making
+
+### 🅳 Test D — No Time Pressure (Baseline)
+
+Description:
+Control condition without time pressure or feedback.
+
+Features:
+
+- 12 Mini-VLAT questions
+- ⏸ No time limit
+- ❌ No feedback
+- Manual progression only
+- Serves as a baseline comparison condition
+
+### 🗂️ Data Handling & Storage
+
+Each test session is stored with a unique test_id
+
+Stored data includes:
+  - Selected answers
+  - Correctness per question
+  - Time spent per question
+  - Total completion time
+  - Final score
+- Feedback questionnaires are stored separately
+- Feedback is linked via test_id
+- MongoDB acts as the single source of truth
+
+### 📈 Research Context
+
+This platform was developed for a scientific research project investigating:
+- Visualization literacy
+- Effects of time pressure
+- Impact of immediate feedback
+- Strategy adaptation during visual decision-making
+- Eye-tracking behavior in controlled experiments

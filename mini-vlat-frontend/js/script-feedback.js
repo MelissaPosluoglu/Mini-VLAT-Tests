@@ -7,8 +7,8 @@ const API_BASE = "http://localhost:8000";
 document.addEventListener("DOMContentLoaded", () => {
 
     // -------------------------------------------------
-    // URL Parameter lesen
-    // Erwartet: ?test_id=XYZ&test_type=A|B|C
+    // Read URL parameters
+    // Expected: ?test_id=XYZ&test_type=A|B|C|D
     // -------------------------------------------------
     const params = new URLSearchParams(window.location.search);
 
@@ -20,12 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Hidden Inputs setzen
+    // Set hidden form inputs
     document.getElementById("test_id").value = testId;
     document.getElementById("test_type").value = testType;
 
-    // -------------------------------------------------
-    // Optionale Blöcke je nach Testtyp
+   // -------------------------------------------------
+    // Optional feedback blocks depending on test type
     // -------------------------------------------------
     const feedbackBlock = document.getElementById("feedback_block");
     if (feedbackBlock) {
@@ -35,14 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // =====================================================
-// FORM SUBMIT
+// FORM SUBMISSION HANDLER
 // =====================================================
-
 document.getElementById("feedbackForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     // -------------------------------------------------
-    // Payload aufbauen (robust & backend-sicher)
+    // Build payload (robust & backend-safe)
     // -------------------------------------------------
     const payload = {
         test_id: document.getElementById("test_id").value,
@@ -54,7 +53,7 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
         confidence: getRadioNumber("confidence"),
         strategy_change: getRadioNumber("strategy_change"),
 
-        // Optional – nur wenn vorhanden
+        // Optional field – only included if present
         feedback_helpful: getRadioNumber("feedback_helpful", true),
 
         task_understanding: getRadioNumber("task_understanding"),
@@ -74,7 +73,7 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
     };
 
     // -------------------------------------------------
-    // Absenden
+    // Submit feedback to backend
     // -------------------------------------------------
     try {
         const res = await fetch(`${API_BASE}/feedback`, {
@@ -96,17 +95,24 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
     }
 });
 
-
 // =====================================================
-// HILFSFUNKTIONEN
+// HELPER FUNCTIONS
 // =====================================================
 
+/**
+ * Returns the numeric value of a selected radio button.
+ * If no option is selected, returns 0 or null (if optional).
+ */
 function getRadioNumber(name, optional = false) {
     const el = document.querySelector(`input[name="${name}"]:checked`);
     if (!el) return optional ? null : 0;
     return Number(el.value);
 }
 
+/**
+ * Returns the value of a selected radio button as a string.
+ * Returns null if no option is selected.
+ */
 function getRadioValue(name) {
     const el = document.querySelector(`input[name="${name}"]:checked`);
     return el ? el.value : null;

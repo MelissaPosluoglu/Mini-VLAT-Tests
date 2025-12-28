@@ -1,5 +1,14 @@
+// =====================================================
+// MINI-VLAT — Test C (Two-Step Interaction)
+// Participants first view the visualization only,
+// then switch to an answer-selection view.
+// No time pressure and no immediate feedback.
+// =====================================================
+
+
 // ------------------------------
-// MINI-VLAT QUESTIONS – identical dataset
+// QUESTION SET (IDENTICAL DATASET)
+// Shared question set across all test conditions
 // ------------------------------
 
 const questions = [
@@ -18,19 +27,23 @@ const questions = [
 ];
 
 // ------------------------------
-// STATE
+// GLOBAL STATE
+// Stores the current score and selected answer
 // ------------------------------
 
-let score = 0;
-let selectedAnswer = null;
+let score = 0;              // Number of correct answers
+let selectedAnswer = null;  // Currently selected answer
 
 // ------------------------------
-// URL → Frage & Modus bestimmen
+// URL STATE HANDLING
+// Determines the current question and interaction mode
+// (view mode or answer mode) based on URL parameters
 // ------------------------------
 
 function getStateFromURL() {
     const params = new URLSearchParams(location.search);
 
+    // Test finished → show result page
     if (params.get("done") === "true") {
         showResult();
         return null;
@@ -39,13 +52,16 @@ function getStateFromURL() {
     const id = params.get("q");
     const mode = params.get("mode") || "view";
 
+    // Determine question index by ID
     const index = questions.findIndex(q => q.id === id);
 
     return { index: index === -1 ? 0 : index, mode };
 }
 
 // ------------------------------
-// RENDER VIEW MODE (nur Grafik + Frage)
+// RENDER VIEW MODE
+// Displays only the visualization and the question
+// Participants must switch to answer mode manually
 // ------------------------------
 
 function renderViewMode(qIndex) {
@@ -61,8 +77,9 @@ function renderViewMode(qIndex) {
 }
 
 // ------------------------------
-// RENDER ANSWER MODE (Antwortoptionen)
-// ------------------------------
+// RENDER ANSWER MODE
+// Displays answer options and allows selection
+// ------------------------------------------------
 
 function renderAnswerMode(qIndex) {
     const q = questions[qIndex];
@@ -85,7 +102,8 @@ function renderAnswerMode(qIndex) {
 }
 
 // ------------------------------
-// SELECT ANSWER
+// ANSWER SELECTION
+// Highlights the selected answer and enables navigation
 // ------------------------------
 
 function selectAnswer(answer) {
@@ -99,7 +117,8 @@ function selectAnswer(answer) {
 }
 
 // ------------------------------
-// NAVIGATION
+// MODE NAVIGATION
+// Switches between visualization and answer modes
 // ------------------------------
 
 function goToAnswerMode(id) {
@@ -112,6 +131,7 @@ function goBackToView(id) {
 
 // ------------------------------
 // NEXT QUESTION
+// Evaluates the answer and advances to the next item
 // ------------------------------
 
 function nextQuestion(qIndex) {
@@ -127,7 +147,8 @@ function nextQuestion(qIndex) {
 }
 
 // ------------------------------
-// PROGRESS BAR
+// PROGRESS BAR AND QUESTION COUNTER
+// Updates the visual progress indicator
 // ------------------------------
 
 function updateProgress(qIndex) {
@@ -142,6 +163,7 @@ function updateProgress(qIndex) {
 
 // ------------------------------
 // RESULT PAGE
+// Displays the final score after completion
 // ------------------------------
 
 function showResult() {
@@ -154,7 +176,8 @@ function showResult() {
 }
 
 // ------------------------------
-// INIT
+// INITIALIZATION
+// Determines the current state and renders accordingly
 // ------------------------------
 
 const state = getStateFromURL();

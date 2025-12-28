@@ -1,5 +1,11 @@
 // core-render.js
+// Central rendering logic that dispatches rendering
+// to the appropriate test condition (A–D)
 
+/**
+ * Renders a question based on its ID and the currently active test condition.
+ * The active test is determined via localStorage ("currentTest").
+ */
 function renderQuestion(id) {
     const index = questions.findIndex(q => q.id === id);
 
@@ -10,6 +16,7 @@ function renderQuestion(id) {
 
     const test = localStorage.getItem("currentTest");
 
+    // Dispatch to test-specific render functions
     if (test === "A" && typeof renderTestA === "function") {
         return renderTestA(index);
     }
@@ -25,13 +32,18 @@ function renderQuestion(id) {
         return renderTestD(index);
     }
 
-    // ✅ Fallback: neutrale Darstellung
+    // Fallback: neutral rendering without test-specific logic
     coreRender(index);
 }
 
 // -----------------------------------------------------
-// NEUTRALES RENDERING (ohne Testlogik)
+// NEUTRAL RENDERING (no test-specific behavior)
 // -----------------------------------------------------
+
+/**
+ * Renders a question in a neutral, non-interactive way.
+ * Used as a fallback if no test-specific renderer is available.
+ */
 function coreRender(index) {
     const q = questions[index];
 

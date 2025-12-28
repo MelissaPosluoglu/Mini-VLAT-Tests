@@ -5,7 +5,7 @@
 
 
 /* =====================================================
-   GLOBAL
+   GLOBAL STYLES
 ===================================================== */
 html, body {
   margin: 0;
@@ -24,7 +24,7 @@ html, body {
 .header {
   padding: 55px 20px;
   text-align: center;
-  background: #dce7ff; /* hellblau */
+  background: #dce7ff;       /* Light blue background */
 }
 
 .header h1 {
@@ -59,7 +59,7 @@ footer {
 
 
 /* =====================================================
-   CARD GRID
+   CARD GRID (START PAGE)
 ===================================================== */
 .main-container {
   padding: 55px 20px;
@@ -128,7 +128,7 @@ footer {
 
 
 /* =====================================================
-   TEST PAGE BOX
+   TEST PAGE CONTAINER
 ===================================================== */
 body.test-page #app {
   background: #ffffff;
@@ -191,7 +191,7 @@ body.test-page #app {
 }
 
 /* =====================================================
-   IMAGES
+   IMAGE DISPLAY
 ===================================================== */
 .vlat-image {
   max-width: 70%;
@@ -231,8 +231,10 @@ body.test-page #app {
 
 
 /* =====================================================
-   TIMER (neutral: color in test-specific CSS)
-===================================================== */
+   TIMER (NEUTRAL BASE STYLE)
+   Color is defined in test-specific CSS files
+   ===================================================== */
+
 #circle-timer {
   width: 70px;
   height: 70px;
@@ -300,7 +302,7 @@ body.test-page #app {
 
 
 /* =====================================================
-   BOTTOM BAR
+   BOTTOM DECORATIVE BAR
 ===================================================== */
 .bottom-lavender-bar {
   width: 100%;
@@ -309,7 +311,7 @@ body.test-page #app {
 }
 
 /* =====================================================
-   TEST INTRO
+   TEST INTRO SCREEN
 ===================================================== */
 .test-intro-screen {
   max-width: 900px;
@@ -340,7 +342,9 @@ body.test-page #app {
   font-weight: 700;
 }
 
-/* Button */
+/* =====================================================
+   START BUTTON
+   ===================================================== */
 .start-btn {
   margin-top: 25px;
   padding: 14px 24px;
@@ -360,22 +364,21 @@ body.test-page #app {
 }
 
 /* =====================================================
-   RESULTS
-===================================================== */
-/* Neuer schlanker Results-Button unter den Karten */
+   RESULTS BUTTON (START PAGE)
+   ===================================================== */
 .results-btn {
   margin: 45px auto 0;
   display: block;
 
-  width: 640px;          /* exakt wie .card */
-  padding: 16px 0;       /* gleiche Höhe wie ein schöner CTA */
+  width: 640px;          
+  padding: 16px 0;       
 
   background: linear-gradient(135deg, #3e6bff, #6d8dff);
   color: #ffffff;
   font-size: 1.2rem;
   font-weight: 600;
 
-  border-radius: 20px;   /* ähnlicher Look wie die Karten */
+  border-radius: 20px;   
   border: none;
   cursor: pointer;
 

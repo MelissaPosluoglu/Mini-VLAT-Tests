@@ -1,5 +1,6 @@
 // =====================================================
-// MINI-VLAT — Test B (Zeitdruck) FINAL STABLE (NEXT + 2s SOLUTION)
+// MINI-VLAT — Test B (TIME PRESSURE + FEEDBACK)
+// FINAL, STABLE VERSION (NEXT + 2s SOLUTION)
 // =====================================================
 
 let timer = null;
@@ -10,12 +11,12 @@ let showingSolution = false;
 
 const API_BASE = "http://localhost:8000";
 
-// neue states pro Seite
+// State variables per question
 let questionStartMs = 0;
 let hasAnswered = false;
 
 // -----------------------------------------------------
-// BACKEND START (einmalig pro Test)
+// BACKEND INITIALIZATION (once per test)
 // -----------------------------------------------------
 async function ensureTestStartedB() {
     if (localStorage.getItem("test_id")) return;
@@ -37,12 +38,14 @@ async function ensureTestStartedB() {
     const data = await response.json();
     localStorage.setItem("test_id", data.test_id);
 
+    // Local tracking only (final values come from backend)
     localStorage.setItem("scoreB", "0");
     localStorage.setItem("totalTimeB", "0");
 }
 
 // -----------------------------------------------------
-// TIME TAKEN (nur bis NEXT-Klick / Timeout)
+// TIME MEASUREMENT
+// Counts only until NEXT click or timeout
 // -----------------------------------------------------
 function getTimeTakenSecondsB() {
     const ms = Date.now() - questionStartMs;
@@ -55,6 +58,7 @@ function getTimeTakenSecondsB() {
 // -----------------------------------------------------
 async function renderTestB(qIndex) {
 
+    // Reset test state when starting from first question
     if (qIndex === 0) {
         localStorage.removeItem("test_id");
         localStorage.setItem("scoreB", "0");
@@ -129,7 +133,7 @@ async function renderTestB(qIndex) {
 }
 
 // -----------------------------------------------------
-// TIMER
+// TIMER HANDLING
 // -----------------------------------------------------
 function startTimerTestB(qIndex) {
     clearInterval(timer);
@@ -165,7 +169,7 @@ function startTimerTestB(qIndex) {
 }
 
 // -----------------------------------------------------
-// SAVE ANSWER
+// SAVE ANSWER (backend is single source of truth)
 // -----------------------------------------------------
 async function submitAnswerTestB(selectedAnswer, qIndex, timeTaken) {
     const q = questions[qIndex];
@@ -184,6 +188,7 @@ async function submitAnswerTestB(selectedAnswer, qIndex, timeTaken) {
         })
     });
 
+    // Local tracking only
     let score = Number(localStorage.getItem("scoreB")) || 0;
     let totalTime = Number(localStorage.getItem("totalTimeB")) || 0;
 
@@ -195,7 +200,7 @@ async function submitAnswerTestB(selectedAnswer, qIndex, timeTaken) {
 }
 
 // -----------------------------------------------------
-// ANSWER SELECT (nur markieren, NICHT speichern!)
+// ANSWER SELECTION (visual only, no saving yet)
 // -----------------------------------------------------
 function selectAnswerTestB(answer, qIndex) {
     if (hasAnswered || showingSolution) return;
@@ -209,7 +214,8 @@ function selectAnswerTestB(answer, qIndex) {
 }
 
 // -----------------------------------------------------
-// SHOW SOLUTION 2s THEN NEXT (zählt NICHT zur Zeit)
+// SHOW SOLUTION FOR 2 SECONDS, THEN CONTINUE
+// (Solution display does NOT count towards time)
 // -----------------------------------------------------
 function showSolutionThenNextB(qIndex) {
     const q = questions[qIndex];
@@ -217,25 +223,25 @@ function showSolutionThenNextB(qIndex) {
 
     showingSolution = true;
 
-    // deaktivieren während Lösung
+    // Disable interaction during solution display
     options.forEach(option => {
         option.classList.add("disabled");
         option.style.pointerEvents = "none";
     });
 
-    // richtige Antwort grün
+    // Highlight correct answer (green)
     options.forEach(option => {
         const text = option.textContent.trim();
         if (text === q.correct) option.classList.add("answer-correct");
     });
 
-    // falsche rot (außer No Answer)
+    // Highlight incorrect answers (red)
     options.forEach(option => {
         const text = option.textContent.trim();
         if (text !== q.correct && text !== "No Answer") option.classList.add("answer-wrong");
     });
 
-    // ausgewählte Antwort extra Rahmen
+    // Highlight selected answer with thicker border
     options.forEach(option => {
         const text = option.textContent.trim();
         if (text === selectedAnswer) {
@@ -250,10 +256,10 @@ function showSolutionThenNextB(qIndex) {
 }
 
 // -----------------------------------------------------
-// NEXT QUESTION
+// NAVIGATION TO NEXT QUESTION
 // -----------------------------------------------------
 async function autoNextTestB(qIndex, isTimeout) {
-    // (Timeout-Speichern passiert schon im Timer)
+    
     if (qIndex + 1 >= questions.length) {
         showResultTestB();
         return;
@@ -264,7 +270,7 @@ async function autoNextTestB(qIndex, isTimeout) {
 }
 
 // -----------------------------------------------------
-// PROGRESS BAR
+// PROGRESS BAR UPDATE
 // -----------------------------------------------------
 function updateProgressB(i) {
     const progress = document.getElementById("progress");
@@ -274,7 +280,7 @@ function updateProgressB(i) {
 }
 
 // -----------------------------------------------------
-// FINISH TEST (Backend)
+// FINAL RESULT SCREEN (backend truth)
 // -----------------------------------------------------
 async function showResultTestB() {
 
