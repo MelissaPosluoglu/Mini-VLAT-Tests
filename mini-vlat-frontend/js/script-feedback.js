@@ -118,3 +118,17 @@ function getRadioValue(name) {
     return el ? el.value : null;
 }
 
+
+function toggleVisionType(show) {
+    const wrapper = document.getElementById("vision-type-wrapper");
+
+    if (show) {
+        wrapper.style.display = "block";
+    } else {
+        wrapper.style.display = "none";
+
+        // Auswahl zurücksetzen, falls vorher etwas gewählt wurde
+        const radios = wrapper.querySelectorAll('input[type="radio"]');
+        radios.forEach(r => r.checked = false);
+    }
+}

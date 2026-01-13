@@ -23,6 +23,30 @@
         <input type="hidden" id="test_id">
         <input type="hidden" id="test_type">
 
+        <!-- DEMOGRAPHISCHE DATEN (NEU) -->
+        <h2>Demographische Angaben</h2>
+        <div class="question-group">
+            <label>Alter:</label>
+            <input type="number" id="age" min="18" max="100">
+
+            <label>Geschlecht:</label>
+            <select id="gender">
+                <option value="">Bitte auswählen</option>
+                <option value="female">Weiblich</option>
+                <option value="male">Männlich</option>
+                <option value="diverse">Divers</option>
+                <option value="no_answer">Keine Angabe</option>
+            </select>
+
+            <label>Studienfach / Beruf:</label>
+            <input type="text" id="field_of_study">
+        </div>
+
+        <!-- SKALENHINWEIS (NEU) -->
+        <div class="question-group">
+            <p><strong>Hinweis zur Skala:</strong> 1 = sehr gering · 5 = sehr stark</p>
+        </div>
+
         <!-- 1. Difficulty / Cognitive Load -->
         <h2>1. Schwierigkeit / Cognitive Load</h2>
         <div class="question-group">
@@ -51,6 +75,26 @@
                 <label><input type="radio" name="stress" value="3">3</label>
                 <label><input type="radio" name="stress" value="4">4</label>
                 <label><input type="radio" name="stress" value="5">5</label>
+            </div>
+
+            <!-- NASA-TLX FEHLEND: ZEITDRUCK (NEU) -->
+            <label>Wie stark empfanden Sie den Zeitdruck während des Tests?</label>
+            <div class="likert">
+                <label><input type="radio" name="temporal_demand" value="1">1</label>
+                <label><input type="radio" name="temporal_demand" value="2">2</label>
+                <label><input type="radio" name="temporal_demand" value="3">3</label>
+                <label><input type="radio" name="temporal_demand" value="4">4</label>
+                <label><input type="radio" name="temporal_demand" value="5">5</label>
+            </div>
+
+            <!-- NASA-TLX FEHLEND: PHYSISCHE ANFORDERUNG (NEU) -->
+            <label>Wie körperlich anstrengend war der Test für Sie?</label>
+            <div class="likert">
+                <label><input type="radio" name="physical_demand" value="1">1</label>
+                <label><input type="radio" name="physical_demand" value="2">2</label>
+                <label><input type="radio" name="physical_demand" value="3">3</label>
+                <label><input type="radio" name="physical_demand" value="4">4</label>
+                <label><input type="radio" name="physical_demand" value="5">5</label>
             </div>
         </div>
 
@@ -83,19 +127,56 @@
         <!-- 4. Vision -->
         <h2>4. Sehvermögen</h2>
         <div class="question-group">
+
             <label>Haben Sie Sehschwächen?</label>
             <div class="likert">
-                <label><input type="radio" name="vision_issue" value="yes">Ja</label>
-                <label><input type="radio" name="vision_issue" value="no">Nein</label>
+                <label>
+                    <input type="radio" name="vision_issue" value="yes" onclick="toggleVisionType(true)">
+                    Ja
+                </label>
+                <label>
+                    <input type="radio" name="vision_issue" value="no" onclick="toggleVisionType(false)">
+                    Nein
+                </label>
+            </div>
+
+            <!-- NUR SICHTBAR WENN "JA" -->
+            <div id="vision-type-wrapper" style="display: none; margin-top: 15px;">
+                <label>Falls ja, welche Sehschwäche?</label>
+                <div class="likert">
+                    <label>
+                        <input type="radio" name="vision_type" value="short_sighted">
+                        Kurzsichtig
+                    </label>
+                    <label>
+                        <input type="radio" name="vision_type" value="long_sighted">
+                        Weitsichtig
+                    </label>
+                    <label>
+                        <input type="radio" name="vision_type" value="both">
+                        Beides
+                    </label>
+                </div>
             </div>
 
             <label>Tragen Sie eine Sehhilfe?</label>
             <div class="likert">
-                <label><input type="radio" name="vision_aid" value="glasses">Brille</label>
-                <label><input type="radio" name="vision_aid" value="contacts">Kontaktlinsen</label>
-                <label><input type="radio" name="vision_aid" value="none">Keine</label>
+                <label>
+                    <input type="radio" name="vision_aid" value="glasses">
+                    Brille
+                </label>
+                <label>
+                    <input type="radio" name="vision_aid" value="contacts">
+                    Kontaktlinsen
+                </label>
+                <label>
+                    <input type="radio" name="vision_aid" value="none">
+                    Keine
+                </label>
             </div>
+
         </div>
+
 
         <!-- 5. Chart Design -->
         <h2>5. Diagrammgestaltung</h2>
@@ -198,7 +279,7 @@
             </div>
         </div>
 
-        <<!-- 11. Open Feedback -->
+        <!-- 11. Open Feedback -->
         <h2>11. Offenes Feedback</h2>
         <textarea id="open_feedback" placeholder="Gibt es etwas, das Sie uns mitteilen möchten?"></textarea>
 

@@ -284,3 +284,23 @@ async def delete_participant(participant_number: str):
         "deleted_tests": delete_tests.deleted_count,
         "deleted_feedback": delete_feedback.deleted_count
     }
+
+# =====================================================
+# UPDATE PARTICIPANT NAME
+# =====================================================
+
+@app.patch("/participant/{test_id}")
+async def update_participant_name(test_id: str, participantNumber: str):
+    """
+    Updates the participantNumber for a given test.
+    """
+
+    result = await tests_collection.update_one(
+        {"_id": ObjectId(test_id)},
+        {"$set": {"participantNumber": participantNumber}}
+    )
+
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Test nicht gefunden")
+
+    return {"status": "updated", "participantNumber": participantNumber}

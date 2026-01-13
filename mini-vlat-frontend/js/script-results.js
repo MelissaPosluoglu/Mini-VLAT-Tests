@@ -25,7 +25,23 @@ async function loadResults(testType, tableId) {
             .join("<br>");
 
         tr.innerHTML = `
-            <td>${entry.participantNumber}</td>
+            <td>
+                <span class="participant-name" id="name-${entry._id}">
+                    ${entry.participantNumber}
+                </span>
+
+                <input
+                    type="text"
+                    class="edit-input"
+                    id="input-${entry._id}"
+                    value="${entry.participantNumber}"
+                    style="display:none; width:90px;"
+                >
+
+                <button class="edit-btn" onclick="editName('${entry._id}')">✏️</button>
+                <button class="save-btn" onclick="saveName('${entry._id}')" style="display:none;">💾</button>
+            </td>
+
             <td>${fmt1(entry.total_time)}</td>
             <td><span class="score-badge">${entry.score ?? "-"}</span></td>
 
@@ -37,9 +53,9 @@ async function loadResults(testType, tableId) {
             </td>
 
             <td>
-               <button class="feedback-btn" onclick="viewFeedback('${entry._id}')">
-                   Feedback
-               </button>
+                <button class="feedback-btn" onclick="viewFeedback('${entry._id}')">
+                    Feedback
+                </button>
             </td>
         `;
 
@@ -71,16 +87,15 @@ function toggleAnswers(el) {
 // INITIAL LOAD FOR ALL TEST VARIANTS
 // -----------------------------------------------------
 
-
 loadResults("A", "tableA");
 loadResults("B", "tableB");
 loadResults("C", "tableC");
 loadResults("D", "tableD");
 
+
 // -----------------------------------------------------
 // DELETE PARTICIPANT (ALL TESTS + FEEDBACK)
 // -----------------------------------------------------
-
 
 async function deleteParticipant() {
     const participantNumber = document.getElementById("deleteInput").value.trim();
@@ -99,9 +114,8 @@ async function deleteParticipant() {
         });
 
         if (response.ok) {
-            const result = await response.json();
             alert(`Teilnehmer ${participantNumber} erfolgreich gelöscht.`);
-            location.reload(); // Reload page to refresh tables
+            location.reload();
         } else {
             const error = await response.json();
             alert(`Fehler: ${error.detail || "Löschen nicht möglich"}`);
@@ -128,4 +142,47 @@ function viewFeedback(testId) {
  */
 function goHome() {
     window.location.href = "../index.html";
+}
+
+
+// -----------------------------------------------------
+// EDIT PARTICIPANT NAME
+// -----------------------------------------------------
+
+function editName(testId) {
+    document.getElementById(`name-${testId}`).style.display = "none";
+    document.getElementById(`input-${testId}`).style.display = "inline-block";
+
+    document.querySelector(`[onclick="editName('${testId}')"]`).style.display = "none";
+    document.querySelector(`[onclick="saveName('${testId}')"]`).style.display = "inline-block";
+}
+
+async function saveName(testId) {
+    const input = document.getElementById(`input-${testId}`);
+    const newName = input.value.trim();
+
+    if (!newName) {
+        alert("Name darf nicht leer sein");
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `http://localhost:8000/participant/${testId}?participantNumber=${encodeURIComponent(newName)}`,
+            { method: "PATCH" }
+        );
+
+        if (!res.ok) throw new Error("Update fehlgeschlagen");
+
+        document.getElementById(`name-${testId}`).textContent = newName;
+        document.getElementById(`name-${testId}`).style.display = "inline";
+        document.getElementById(`input-${testId}`).style.display = "none";
+
+        document.querySelector(`[onclick="editName('${testId}')"]`).style.display = "inline-block";
+        document.querySelector(`[onclick="saveName('${testId}')"]`).style.display = "none";
+
+    } catch (err) {
+        console.error(err);
+        alert("Name konnte nicht gespeichert werden");
+    }
 }
