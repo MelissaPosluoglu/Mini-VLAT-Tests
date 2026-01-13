@@ -116,12 +116,18 @@ async function renderTestB(qIndex) {
     <button class="next-btn" id="nextBtn" disabled>Next</button>
     `;
 
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.disabled = true;
+    nextBtn.textContent = "Next";
+
+
     updateProgressB(qIndex);
     startTimerTestB(qIndex);
 
-    document.getElementById("nextBtn").addEventListener("click", async () => {
-        if (hasAnswered || showingSolution) return;
+   document.getElementById("nextBtn").addEventListener("click", async () => {
 
+    
+    if (!hasAnswered && !showingSolution) {
         hasAnswered = true;
         clearInterval(timer);
 
@@ -129,7 +135,15 @@ async function renderTestB(qIndex) {
         await submitAnswerTestB(selectedAnswer, qIndex, timeTaken);
 
         showSolutionThenNextB(qIndex);
-    });
+        return;
+    }
+
+    
+    if (showingSolution) {
+        autoNextTestB(qIndex, false);
+    }
+});
+
 }
 
 // -----------------------------------------------------
@@ -223,37 +237,33 @@ function showSolutionThenNextB(qIndex) {
 
     showingSolution = true;
 
-    // Disable interaction during solution display
     options.forEach(option => {
         option.classList.add("disabled");
         option.style.pointerEvents = "none";
     });
 
-    // Highlight correct answer (green)
     options.forEach(option => {
         const text = option.textContent.trim();
         if (text === q.correct) option.classList.add("answer-correct");
+        else if (text !== "No Answer") option.classList.add("answer-wrong");
     });
 
-    // Highlight incorrect answers (red)
-    options.forEach(option => {
-        const text = option.textContent.trim();
-        if (text !== q.correct && text !== "No Answer") option.classList.add("answer-wrong");
-    });
-
-    // Highlight selected answer with thicker border
     options.forEach(option => {
         const text = option.textContent.trim();
         if (text === selectedAnswer) {
-            if (selectedAnswer === q.correct) option.classList.add("answer-correct-selected");
-            else if (selectedAnswer !== "No Answer") option.classList.add("answer-wrong-selected");
+            if (selectedAnswer === q.correct)
+                option.classList.add("answer-correct-selected");
+            else if (selectedAnswer !== "No Answer")
+                option.classList.add("answer-wrong-selected");
         }
     });
 
-    setTimeout(() => {
-        autoNextTestB(qIndex, false);
-    }, 2000);
+    
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.disabled = false;
+    nextBtn.textContent = "Next";
 }
+
 
 // -----------------------------------------------------
 // NAVIGATION TO NEXT QUESTION

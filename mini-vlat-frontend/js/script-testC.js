@@ -81,24 +81,31 @@ async function renderTestC(qIndex) {
         <button class="next-btn" id="nextBtn" disabled>Next</button>
     `;
 
+    const btn = document.getElementById("nextBtn");
+    btn.disabled = true;
+    btn.innerText = "Next";
+
     updateProgressC(qIndex);
 
-    document.getElementById("nextBtn").onclick = async () => {
+   document.getElementById("nextBtn").onclick = async () => {
 
-        // If solution is already shown → immediately continue
-        if (showingSolution) {
-            clearTimeout(autoNextTimeout);
-            goNextC(qIndex);
-            return;
-        }
-
+    
+    if (!hasAnswered && !showingSolution) {
         hasAnswered = true;
 
         const timeTaken = getTimeTakenSecondsC();
         await submitAnswerTestC(qIndex, timeTaken);
 
         showSolutionC(qIndex);
-    };
+        return;
+    }
+
+   
+    if (showingSolution) {
+        goNextC(qIndex);
+    }
+};
+
 }
 
 // -----------------------------------------------------
@@ -148,29 +155,21 @@ function showSolutionC(qIndex) {
 
     showingSolution = true;
 
-    // Disable interaction during solution display
     options.forEach(option => {
         option.classList.remove("selected");
         option.classList.add("disabled");
         option.style.pointerEvents = "none";
     });
 
-    // Highlight correct answer
-    options.forEach(option => {
-        if (option.innerText.trim() === q.correct) {
-            option.classList.add("answer-correct");
-        }
-    });
-
-    // Highlight incorrect answers
     options.forEach(option => {
         const text = option.innerText.trim();
-        if (text !== q.correct && text !== "No Answer") {
+        if (text === q.correct) {
+            option.classList.add("answer-correct");
+        } else if (text !== "No Answer") {
             option.classList.add("answer-wrong");
         }
     });
 
-    // Highlight selected answer
     options.forEach(option => {
         if (option.innerText.trim() === selectedAnswer) {
             if (selectedAnswer === q.correct) {
@@ -184,12 +183,8 @@ function showSolutionC(qIndex) {
     const btn = document.getElementById("nextBtn");
     btn.innerText = "Next";
     btn.disabled = false;
-
-    // Auto-advance after 2 seconds (same behavior as Test B)
-    autoNextTimeout = setTimeout(() => {
-        goNextC(qIndex);
-    }, 2000);
 }
+
 
 // -----------------------------------------------------
 // NAVIGATION TO NEXT QUESTION
