@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Feedbackbogen</title>
+    <title>Study Feedback Questionnaire</title>
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/style-feedback.css">
@@ -12,278 +12,247 @@
 
 <div id="app" class="feedback-card">
 
-    <h1>Feedbackbogen zur Studie</h1>
+    <h1>Study Feedback Questionnaire</h1>
     <p class="subtitle">
-        Bitte beantworten Sie die folgenden Fragen, um uns bei der Auswertung der Testvarianten zu unterstützen.
+        Please answer the following questions to support the evaluation of the test variants.
     </p>
 
     <form id="feedbackForm">
 
-        <!-- Hidden -->
         <input type="hidden" id="test_id">
         <input type="hidden" id="test_type">
 
-        <!-- DEMOGRAPHISCHE DATEN (NEU) -->
-        <h2>Demographische Angaben</h2>
+        <!-- DEMOGRAPHICS -->
+        <h2>Demographic Information</h2>
         <div class="question-group">
-            <label>Alter:</label>
+            <label>Age:</label>
             <input type="number" id="age" min="18" max="100">
 
-            <label>Geschlecht:</label>
+            <label>Gender:</label>
             <select id="gender">
-                <option value="">Bitte auswählen</option>
-                <option value="female">Weiblich</option>
-                <option value="male">Männlich</option>
-                <option value="diverse">Divers</option>
-                <option value="no_answer">Keine Angabe</option>
+                <option value="">Please select</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="diverse">Diverse</option>
+                <option value="no_answer">Prefer not to say</option>
             </select>
 
-            <label>Studienfach / Beruf:</label>
+            <label>Field of study / profession:</label>
             <input type="text" id="field_of_study">
         </div>
 
-        <!-- SKALENHINWEIS (NEU) -->
+        <!-- 1. DIFFICULTY -->
+        <h2>1. Perceived Difficulty & Cognitive Load</h2>
         <div class="question-group">
-            <p><strong>Hinweis zur Skala:</strong> 1 = sehr gering · 5 = sehr stark</p>
+
+            <label>How difficult did you find this test overall?</label>
+            <div class="likert">
+                <label><input type="radio" name="difficulty" value="1"><span class="likert-number">1</span><span class="likert-text">Not difficult at all</span></label>
+                <label><input type="radio" name="difficulty" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="difficulty" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="difficulty" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="difficulty" value="5"><span class="likert-number">5</span><span class="likert-text">Extremely difficult</span></label>
+            </div>
+
+            <label>How high was your mental workload (concentration, effort)?</label>
+            <div class="likert">
+                <label><input type="radio" name="mental_load" value="1"><span class="likert-number">1</span><span class="likert-text">Very low</span></label>
+                <label><input type="radio" name="mental_load" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="mental_load" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="mental_load" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="mental_load" value="5"><span class="likert-number">5</span><span class="likert-text">Very high</span></label>
+            </div>
+
+            <label>How stressed did you feel during the test?</label>
+            <div class="likert">
+                <label><input type="radio" name="stress" value="1"><span class="likert-number">1</span><span class="likert-text">Not stressed at all</span></label>
+                <label><input type="radio" name="stress" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="stress" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="stress" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="stress" value="5"><span class="likert-number">5</span><span class="likert-text">Extremely stressed</span></label>
+            </div>
+
+            <label>How strong was the perceived time pressure during the test?</label>
+            <div class="likert">
+                <label><input type="radio" name="temporal_demand" value="1"><span class="likert-number">1</span><span class="likert-text">No time pressure</span></label>
+                <label><input type="radio" name="temporal_demand" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="temporal_demand" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="temporal_demand" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="temporal_demand" value="5"><span class="likert-number">5</span><span class="likert-text">Very strong</span></label>
+            </div>
+
+            <label>How physically demanding was the test for you?</label>
+            <div class="likert">
+                <label><input type="radio" name="physical_demand" value="1"><span class="likert-number">1</span><span class="likert-text">Not demanding</span></label>
+                <label><input type="radio" name="physical_demand" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="physical_demand" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="physical_demand" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="physical_demand" value="5"><span class="likert-number">5</span><span class="likert-text">Very demanding</span></label>
+            </div>
+
         </div>
 
-        <!-- 1. Difficulty / Cognitive Load -->
-        <h2>1. Schwierigkeit / Cognitive Load</h2>
+        <!-- 2. CONFIDENCE -->
+        <h2>2. Confidence</h2>
         <div class="question-group">
-            <label>Wie schwierig fanden Sie diesen Test insgesamt?</label>
+            <label>How confident were you in your answers?</label>
             <div class="likert">
-                <label><input type="radio" name="difficulty" value="1">1</label>
-                <label><input type="radio" name="difficulty" value="2">2</label>
-                <label><input type="radio" name="difficulty" value="3">3</label>
-                <label><input type="radio" name="difficulty" value="4">4</label>
-                <label><input type="radio" name="difficulty" value="5">5</label>
-            </div>
-
-            <label>Wie hoch war Ihre mentale Belastung (Konzentration, Anstrengung)?</label>
-            <div class="likert">
-                <label><input type="radio" name="mental_load" value="1">1</label>
-                <label><input type="radio" name="mental_load" value="2">2</label>
-                <label><input type="radio" name="mental_load" value="3">3</label>
-                <label><input type="radio" name="mental_load" value="4">4</label>
-                <label><input type="radio" name="mental_load" value="5">5</label>
-            </div>
-
-            <label>Wie gestresst fühlten Sie sich während des Tests?</label>
-            <div class="likert">
-                <label><input type="radio" name="stress" value="1">1</label>
-                <label><input type="radio" name="stress" value="2">2</label>
-                <label><input type="radio" name="stress" value="3">3</label>
-                <label><input type="radio" name="stress" value="4">4</label>
-                <label><input type="radio" name="stress" value="5">5</label>
-            </div>
-
-            <!-- NASA-TLX FEHLEND: ZEITDRUCK (NEU) -->
-            <label>Wie stark empfanden Sie den Zeitdruck während des Tests?</label>
-            <div class="likert">
-                <label><input type="radio" name="temporal_demand" value="1">1</label>
-                <label><input type="radio" name="temporal_demand" value="2">2</label>
-                <label><input type="radio" name="temporal_demand" value="3">3</label>
-                <label><input type="radio" name="temporal_demand" value="4">4</label>
-                <label><input type="radio" name="temporal_demand" value="5">5</label>
-            </div>
-
-            <!-- NASA-TLX FEHLEND: PHYSISCHE ANFORDERUNG (NEU) -->
-            <label>Wie körperlich anstrengend war der Test für Sie?</label>
-            <div class="likert">
-                <label><input type="radio" name="physical_demand" value="1">1</label>
-                <label><input type="radio" name="physical_demand" value="2">2</label>
-                <label><input type="radio" name="physical_demand" value="3">3</label>
-                <label><input type="radio" name="physical_demand" value="4">4</label>
-                <label><input type="radio" name="physical_demand" value="5">5</label>
-            </div>
-        </div>
-
-        <!-- 2. Understanding & Confidence -->
-        <h2>2. Verständnis & Sicherheit</h2>
-        <div class="question-group">
-            <label>Wie sicher waren Sie sich bei der Beantwortung der Fragen?</label>
-            <div class="likert">
-                <label><input type="radio" name="confidence" value="1">1</label>
-                <label><input type="radio" name="confidence" value="2">2</label>
-                <label><input type="radio" name="confidence" value="3">3</label>
-                <label><input type="radio" name="confidence" value="4">4</label>
-                <label><input type="radio" name="confidence" value="5">5</label>
+                <label><input type="radio" name="confidence" value="1"><span class="likert-number">1</span><span class="likert-text">Not confident</span></label>
+                <label><input type="radio" name="confidence" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="confidence" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="confidence" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="confidence" value="5"><span class="likert-number">5</span><span class="likert-text">Very confident</span></label>
             </div>
         </div>
 
-        <!-- 3. Task Understanding -->
-        <h2>3. Aufgabenverständnis</h2>
+        <!-- 3. TASK UNDERSTANDING -->
+        <h2>3. Task Understanding</h2>
         <div class="question-group">
-            <label>Ich habe die Aufgabenstellung jederzeit verstanden.</label>
+            <label>I understood the task instructions at all times.</label>
             <div class="likert">
-                <label><input type="radio" name="task_understanding" value="1">1</label>
-                <label><input type="radio" name="task_understanding" value="2">2</label>
-                <label><input type="radio" name="task_understanding" value="3">3</label>
-                <label><input type="radio" name="task_understanding" value="4">4</label>
-                <label><input type="radio" name="task_understanding" value="5">5</label>
+                <label><input type="radio" name="task_understanding" value="1"><span class="likert-number">1</span><span class="likert-text">Strongly disagree</span></label>
+                <label><input type="radio" name="task_understanding" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="task_understanding" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="task_understanding" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="task_understanding" value="5"><span class="likert-number">5</span><span class="likert-text">Strongly agree</span></label>
             </div>
         </div>
 
-        <!-- 4. Vision -->
-        <h2>4. Sehvermögen</h2>
+        <!-- 4. VISION -->
+        <h2>4. Vision</h2>
         <div class="question-group">
 
-            <label>Haben Sie Sehschwächen?</label>
+            <label>Do you have any visual impairments?</label>
             <div class="likert">
-                <label>
-                    <input type="radio" name="vision_issue" value="yes" onclick="toggleVisionType(true)">
-                    Ja
-                </label>
-                <label>
-                    <input type="radio" name="vision_issue" value="no" onclick="toggleVisionType(false)">
-                    Nein
-                </label>
+                <label><input type="radio" name="vision_issue" value="yes" onclick="toggleVisionType(true)">Yes</label>
+                <label><input type="radio" name="vision_issue" value="no" onclick="toggleVisionType(false)">No</label>
             </div>
 
-            <!-- NUR SICHTBAR WENN "JA" -->
-            <div id="vision-type-wrapper" style="display: none; margin-top: 15px;">
-                <label>Falls ja, welche Sehschwäche?</label>
+            <div id="vision-type-wrapper" style="display:none;margin-top:15px;">
+                <label>If yes, which type?</label>
                 <div class="likert">
-                    <label>
-                        <input type="radio" name="vision_type" value="short_sighted">
-                        Kurzsichtig
-                    </label>
-                    <label>
-                        <input type="radio" name="vision_type" value="long_sighted">
-                        Weitsichtig
-                    </label>
-                    <label>
-                        <input type="radio" name="vision_type" value="both">
-                        Beides
-                    </label>
+                    <label><input type="radio" name="vision_type" value="short_sighted">Near-sighted</label>
+                    <label><input type="radio" name="vision_type" value="long_sighted">Far-sighted</label>
+                    <label><input type="radio" name="vision_type" value="both">Both</label>
                 </div>
             </div>
 
-            <label>Tragen Sie eine Sehhilfe?</label>
+            <label>Do you use visual aids?</label>
             <div class="likert">
-                <label>
-                    <input type="radio" name="vision_aid" value="glasses">
-                    Brille
-                </label>
-                <label>
-                    <input type="radio" name="vision_aid" value="contacts">
-                    Kontaktlinsen
-                </label>
-                <label>
-                    <input type="radio" name="vision_aid" value="none">
-                    Keine
-                </label>
+                <label><input type="radio" name="vision_aid" value="glasses">Glasses</label>
+                <label><input type="radio" name="vision_aid" value="contacts">Contact lenses</label>
+                <label><input type="radio" name="vision_aid" value="none">None</label>
             </div>
 
         </div>
 
-
-        <!-- 5. Chart Design -->
-        <h2>5. Diagrammgestaltung</h2>
+        <!-- 5. CHART DESIGN -->
+        <h2>5. Chart Design</h2>
         <div class="question-group">
-            <label>Ich fand die im Test verwendeten Diagramme gut gewählt und verständlich.</label>
+            <label>The charts used in the test were well chosen and easy to understand.</label>
             <div class="likert">
-                <label><input type="radio" name="diagram_quality" value="1">1</label>
-                <label><input type="radio" name="diagram_quality" value="2">2</label>
-                <label><input type="radio" name="diagram_quality" value="3">3</label>
-                <label><input type="radio" name="diagram_quality" value="4">4</label>
-                <label><input type="radio" name="diagram_quality" value="5">5</label>
+                <label><input type="radio" name="diagram_quality" value="1"><span class="likert-number">1</span><span class="likert-text">Strongly disagree</span></label>
+                <label><input type="radio" name="diagram_quality" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="diagram_quality" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="diagram_quality" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="diagram_quality" value="5"><span class="likert-number">5</span><span class="likert-text">Strongly agree</span></label>
             </div>
         </div>
 
-        <!-- 6. Answer Strategy / Learning Effect -->
-        <h2>6. Antwortstrategie / Lerneffekt</h2>
+        <!-- 6. STRATEGY -->
+        <h2>6. Answer Strategy & Learning Effect</h2>
         <div class="question-group">
-            <label>
-                Das Feedback oder die Struktur des Tests (z.B. Zeitdruck oder zweistufige Anzeige)
-                hat meine Antwortstrategie verändert.
-            </label>
+            <label>The feedback or test structure influenced my answering strategy.</label>
             <div class="likert">
-                <label><input type="radio" name="strategy_change" value="1">1</label>
-                <label><input type="radio" name="strategy_change" value="2">2</label>
-                <label><input type="radio" name="strategy_change" value="3">3</label>
-                <label><input type="radio" name="strategy_change" value="4">4</label>
-                <label><input type="radio" name="strategy_change" value="5">5</label>
+                <label><input type="radio" name="strategy_change" value="1"><span class="likert-number">1</span><span class="likert-text">Not at all</span></label>
+                <label><input type="radio" name="strategy_change" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="strategy_change" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="strategy_change" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="strategy_change" value="5"><span class="likert-number">5</span><span class="likert-text">Very strongly</span></label>
             </div>
         </div>
 
-        <!-- 7. Test Environment & Eye Tracking -->
-        <h2>7. Testumgebung & Eye-Tracking</h2>
+        <!-- 7. ENVIRONMENT -->
+        <h2>7. Test Environment & Eye Tracking</h2>
         <div class="question-group">
-            <label>Ich hatte während des Tests Probleme mit der Blickerfassung.</label>
+
+            <label>I experienced problems with eye tracking.</label>
             <div class="likert">
-                <label><input type="radio" name="eye_tracking_issue" value="1">1</label>
-                <label><input type="radio" name="eye_tracking_issue" value="2">2</label>
-                <label><input type="radio" name="eye_tracking_issue" value="3">3</label>
-                <label><input type="radio" name="eye_tracking_issue" value="4">4</label>
-                <label><input type="radio" name="eye_tracking_issue" value="5">5</label>
+                <label><input type="radio" name="eye_tracking_issue" value="1"><span class="likert-number">1</span><span class="likert-text">No problems</span></label>
+                <label><input type="radio" name="eye_tracking_issue" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="eye_tracking_issue" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="eye_tracking_issue" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="eye_tracking_issue" value="5"><span class="likert-number">5</span><span class="likert-text">Severe problems</span></label>
             </div>
 
-            <label>Ich wurde während des Tests abgelenkt (Geräusche, Personen, Handy).</label>
+            <label>I was distracted during the test.</label>
             <div class="likert">
-                <label><input type="radio" name="distraction" value="1">1</label>
-                <label><input type="radio" name="distraction" value="2">2</label>
-                <label><input type="radio" name="distraction" value="3">3</label>
-                <label><input type="radio" name="distraction" value="4">4</label>
-                <label><input type="radio" name="distraction" value="5">5</label>
+                <label><input type="radio" name="distraction" value="1"><span class="likert-number">1</span><span class="likert-text">Not distracted</span></label>
+                <label><input type="radio" name="distraction" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="distraction" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="distraction" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="distraction" value="5"><span class="likert-number">5</span><span class="likert-text">Very distracted</span></label>
+            </div>
+
+        </div>
+
+        <!-- 8. FATIGUE -->
+        <h2>8. Fatigue</h2>
+        <div class="question-group">
+            <label>How tired do you feel right now?</label>
+            <div class="likert">
+                <label><input type="radio" name="fatigue" value="1"><span class="likert-number">1</span><span class="likert-text">Not tired</span></label>
+                <label><input type="radio" name="fatigue" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="fatigue" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="fatigue" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="fatigue" value="5"><span class="likert-number">5</span><span class="likert-text">Extremely tired</span></label>
             </div>
         </div>
 
-        <!-- 8. Fatigue -->
-        <h2>8. Müdigkeit</h2>
+        <!-- 9. TIME -->
+        <h2>9. Time of Day</h2>
         <div class="question-group">
-            <label>Wie müde fühlen Sie sich aktuell?</label>
-            <div class="likert">
-                <label><input type="radio" name="fatigue" value="1">1</label>
-                <label><input type="radio" name="fatigue" value="2">2</label>
-                <label><input type="radio" name="fatigue" value="3">3</label>
-                <label><input type="radio" name="fatigue" value="4">4</label>
-                <label><input type="radio" name="fatigue" value="5">5</label>
-            </div>
-        </div>
-
-        <!-- 9. Time of Day -->
-        <h2>9. Testzeitpunkt</h2>
-        <div class="question-group">
-            <label>Zu welcher Tageszeit haben Sie den Test durchgeführt?</label>
+            <label>At what time of day did you complete the test?</label>
             <select id="test_time">
-                <option value="">Bitte auswählen</option>
-                <option value="morning">Morgens</option>
-                <option value="midday">Mittags</option>
-                <option value="evening">Abends</option>
-                <option value="night">Nachts</option>
+                <option value="">Please select</option>
+                <option value="morning">Morning</option>
+                <option value="midday">Midday</option>
+                <option value="evening">Evening</option>
+                <option value="night">Night</option>
             </select>
         </div>
 
-        <!-- 10. Prior Experience -->
-        <h2>10. Vorerfahrung</h2>
+        <!-- 10. EXPERIENCE -->
+        <h2>10. Prior Experience</h2>
         <div class="question-group">
-            <label>Ich habe regelmäßig mit Diagrammen oder Datenvisualisierungen zu tun.</label>
+            <label>I regularly work with charts or data visualizations.</label>
             <div class="likert">
-                <label><input type="radio" name="visualization_experience" value="1">1</label>
-                <label><input type="radio" name="visualization_experience" value="2">2</label>
-                <label><input type="radio" name="visualization_experience" value="3">3</label>
-                <label><input type="radio" name="visualization_experience" value="4">4</label>
-                <label><input type="radio" name="visualization_experience" value="5">5</label>
+                <label><input type="radio" name="visualization_experience" value="1"><span class="likert-number">1</span><span class="likert-text">Strongly disagree</span></label>
+                <label><input type="radio" name="visualization_experience" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="visualization_experience" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="visualization_experience" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="visualization_experience" value="5"><span class="likert-number">5</span><span class="likert-text">Strongly agree</span></label>
             </div>
         </div>
 
         <div class="question-group">
-            <label>Ich habe bereits ähnliche Tests oder Aufgaben zu Datenvisualisierungen bearbeitet.</label>
+            <label>I have previously completed similar visualization-related tests.</label>
             <div class="likert">
-                <label><input type="radio" name="viz_test_experience" value="1">1</label>
-                <label><input type="radio" name="viz_test_experience" value="2">2</label>
-                <label><input type="radio" name="viz_test_experience" value="3">3</label>
-                <label><input type="radio" name="viz_test_experience" value="4">4</label>
-                <label><input type="radio" name="viz_test_experience" value="5">5</label>
+                <label><input type="radio" name="viz_test_experience" value="1"><span class="likert-number">1</span><span class="likert-text">Strongly disagree</span></label>
+                <label><input type="radio" name="viz_test_experience" value="2"><span class="likert-number">2</span></label>
+                <label><input type="radio" name="viz_test_experience" value="3"><span class="likert-number">3</span></label>
+                <label><input type="radio" name="viz_test_experience" value="4"><span class="likert-number">4</span></label>
+                <label><input type="radio" name="viz_test_experience" value="5"><span class="likert-number">5</span><span class="likert-text">Strongly agree</span></label>
             </div>
         </div>
 
-        <!-- 11. Open Feedback -->
-        <h2>11. Offenes Feedback</h2>
-        <textarea id="open_feedback" placeholder="Gibt es etwas, das Sie uns mitteilen möchten?"></textarea>
+        <!-- 11. OPEN -->
+        <h2>11. Open Feedback</h2>
+        <textarea id="open_feedback" placeholder="Is there anything you would like to share with us?"></textarea>
 
-        <button type="submit" class="submit-btn">Absenden</button>
+        <button type="submit" class="submit-btn" id="submitBtn" disabled>
+            Submit
+        </button>
 
     </form>
 </div>

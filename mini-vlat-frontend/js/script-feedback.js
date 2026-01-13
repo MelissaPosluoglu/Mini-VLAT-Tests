@@ -146,3 +146,78 @@ function toggleVisionType(show) {
         radios.forEach(r => r.checked = false);
     }
 }
+// =====================================================
+// FORM VALIDATION — ENABLE SUBMIT ONLY WHEN COMPLETE
+// =====================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("feedbackForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function allQuestionsAnswered() {
+
+        // Alle Pflicht-Radio-Gruppen
+        const requiredRadioGroups = [
+            "difficulty",
+            "mental_load",
+            "stress",
+            "temporal_demand",
+            "physical_demand",
+            "confidence",
+            "task_understanding",
+            "diagram_quality",
+            "strategy_change",
+            "eye_tracking_issue",
+            "distraction",
+            "fatigue",
+            "visualization_experience",
+            "viz_test_experience"
+        ];
+
+        for (const name of requiredRadioGroups) {
+            if (!document.querySelector(`input[name="${name}"]:checked`)) {
+                return false;
+            }
+        }
+
+        // Vision (Pflicht)
+        const visionIssue = document.querySelector(`input[name="vision_issue"]:checked`);
+        if (!visionIssue) return false;
+
+        if (visionIssue.value === "yes") {
+            if (!document.querySelector(`input[name="vision_type"]:checked`)) {
+                return false;
+            }
+        }
+
+        if (!document.querySelector(`input[name="vision_aid"]:checked`)) {
+            return false;
+        }
+
+        // Select-Felder
+        if (!document.getElementById("gender").value) return false;
+        if (!document.getElementById("test_time").value) return false;
+
+        // Demographie
+        if (!document.getElementById("age").value) return false;
+        if (!document.getElementById("field_of_study").value.trim()) return false;
+
+        return true;
+    }
+
+    function updateSubmitButton() {
+        submitBtn.disabled = !allQuestionsAnswered();
+    }
+
+    // Auf jede Änderung reagieren
+    form.addEventListener("change", updateSubmitButton);
+    form.addEventListener("input", updateSubmitButton);
+
+    // Sicherheitsnetz: auch beim Submit blocken
+    form.addEventListener("submit", (e) => {
+        if (!allQuestionsAnswered()) {
+            e.preventDefault();
+            alert("Please answer ALL questions before submitting the form.");
+        }
+    });
+});

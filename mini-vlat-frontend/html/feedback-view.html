@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Feedback anzeigen</title>
+    <title>View Feedback</title>
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/results.css">
@@ -12,9 +12,9 @@
 <body class="test-page">
 
 <div class="feedback-container">
-    <h1 id="feedback-title">Feedback-Details</h1>
+    <h1 id="feedback-title">Feedback Details</h1>
     <div id="feedback-content"></div>
-    <button class="back-btn" onclick="goBack()">← Zurück</button>
+    <button class="back-btn" onclick="goBack()">← Back</button>
 </div>
 
 <script>
@@ -26,70 +26,71 @@
         const title = document.getElementById("feedback-title");
 
         if (!testId) {
-            box.innerHTML = `<p style="text-align:center;color:#777;">Kein test_id übergeben.</p>`;
+            box.innerHTML = `<p style="text-align:center;color:#777;">No test_id provided.</p>`;
             return;
         }
 
         try {
-            const res = await fetch(`http://localhost:8000/feedback/test/${encodeURIComponent(testId)}`);
+            const res = await fetch(
+                `http://localhost:8000/feedback/test/${encodeURIComponent(testId)}`
+            );
 
             if (!res.ok) {
-                box.innerHTML = `<p style="text-align:center;color:#777;">Kein Feedback vorhanden.</p>`;
+                box.innerHTML = `<p style="text-align:center;color:#777;">No feedback available.</p>`;
                 return;
             }
 
             const data = await res.json();
             const f = data.feedback;
 
-            title.textContent = `Feedback für Teilnehmer ${f.participantNumber ?? "-"}`;
+            title.textContent = `Feedback for Participant ${f.participantNumber ?? "-"}`;
 
             box.innerHTML = `
 <div class="feedback-card">
 
-  <h3>Allgemein</h3>
-  <p><strong>Testtyp:</strong> ${f.test_type ?? "-"}</p>
+  <h3>General</h3>
+  <p><strong>Test Type:</strong> ${f.test_type ?? "-"}</p>
 
-  <h3>Demographie</h3>
-  <p><strong>Alter:</strong> ${f.age ?? "-"}</p>
-  <p><strong>Geschlecht:</strong> ${f.gender ?? "-"}</p>
-  <p><strong>Studienfach / Beruf:</strong> ${f.field_of_study ?? "-"}</p>
+  <h3>Demographic Information</h3>
+  <p><strong>Age:</strong> ${f.age ?? "-"}</p>
+  <p><strong>Gender:</strong> ${f.gender ?? "-"}</p>
+  <p><strong>Field of Study / Profession:</strong> ${f.field_of_study ?? "-"}</p>
 
-  <h3>Schwierigkeit & Belastung</h3>
-  <p><strong>Schwierigkeit:</strong> ${f.difficulty ?? "-"}</p>
-  <p><strong>Mentale Belastung:</strong> ${f.mental_load ?? "-"}</p>
-  <p><strong>Stress:</strong> ${f.stress ?? "-"}</p>
-  <p><strong>Zeitdruck:</strong> ${f.temporal_demand ?? "-"}</p>
-  <p><strong>Körperliche Anforderung:</strong> ${f.physical_demand ?? "-"}</p>
+  <h3>Difficulty & Cognitive Load</h3>
+  <p><strong>Overall Difficulty:</strong> ${f.difficulty ?? "-"}</p>
+  <p><strong>Mental Workload:</strong> ${f.mental_load ?? "-"}</p>
+  <p><strong>Stress Level:</strong> ${f.stress ?? "-"}</p>
+  <p><strong>Time Pressure:</strong> ${f.temporal_demand ?? "-"}</p>
+  <p><strong>Physical Demand:</strong> ${f.physical_demand ?? "-"}</p>
 
-  <h3>Verständnis & Strategie</h3>
-  <p><strong>Aufgabenverständnis:</strong> ${f.task_understanding ?? "-"}</p>
-  <p><strong>Sicherheit:</strong> ${f.confidence ?? "-"}</p>
-  <p><strong>Strategie geändert:</strong> ${f.strategy_change ?? "-"}</p>
+  <h3>Understanding & Confidence</h3>
+  <p><strong>Task Understanding:</strong> ${f.task_understanding ?? "-"}</p>
+  <p><strong>Confidence:</strong> ${f.confidence ?? "-"}</p>
+  <p><strong>Strategy Change:</strong> ${f.strategy_change ?? "-"}</p>
 
-  <h3>Sehvermögen</h3>
-  <p><strong>Sehschwäche:</strong> ${f.vision_issue ?? "-"}</p>
-  <p><strong>Art der Sehschwäche:</strong> ${f.vision_type ?? "-"}</p>
-  <p><strong>Sehhilfe:</strong> ${f.vision_aid ?? "-"}</p>
+  <h3>Vision</h3>
+  <p><strong>Visual Impairment:</strong> ${f.vision_issue ?? "-"}</p>
+  <p><strong>Type of Impairment:</strong> ${f.vision_type ?? "-"}</p>
+  <p><strong>Visual Aid:</strong> ${f.vision_aid ?? "-"}</p>
 
-  <h3>Testumgebung</h3>
-  <p><strong>Blickerfassungsprobleme:</strong> ${f.eye_tracking_issue ?? "-"}</p>
-  <p><strong>Ablenkung:</strong> ${f.distraction ?? "-"}</p>
-  <p><strong>Müdigkeit:</strong> ${f.fatigue ?? "-"}</p>
-  <p><strong>Testzeitpunkt:</strong> ${f.test_time ?? "-"}</p>
+  <h3>Test Environment</h3>
+  <p><strong>Eye Tracking Issues:</strong> ${f.eye_tracking_issue ?? "-"}</p>
+  <p><strong>Distraction:</strong> ${f.distraction ?? "-"}</p>
+  <p><strong>Fatigue:</strong> ${f.fatigue ?? "-"}</p>
+  <p><strong>Time of Day:</strong> ${f.test_time ?? "-"}</p>
 
-  <h3>Erfahrung</h3>
-  <p><strong>Visualisierungserfahrung:</strong> ${f.visualization_experience ?? "-"}</p>
-  <p><strong>Testerfahrung:</strong> ${f.viz_test_experience ?? "-"}</p>
+  <h3>Prior Experience</h3>
+  <p><strong>Visualization Experience:</strong> ${f.visualization_experience ?? "-"}</p>
+  <p><strong>Previous Test Experience:</strong> ${f.viz_test_experience ?? "-"}</p>
 
-  <h3>Freitext</h3>
+  <h3>Open Feedback</h3>
   <p>${f.open_feedback || "-"}</p>
 
 </div>
 `;
-
         } catch (err) {
             console.error(err);
-            box.innerHTML = `<p style="text-align:center;color:#777;">Fehler beim Laden.</p>`;
+            box.innerHTML = `<p style="text-align:center;color:#777;">Error while loading feedback.</p>`;
         }
     }
 
