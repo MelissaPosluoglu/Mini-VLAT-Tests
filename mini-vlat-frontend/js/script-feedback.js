@@ -47,30 +47,44 @@ document.getElementById("feedbackForm").addEventListener("submit", async (e) => 
         test_id: document.getElementById("test_id").value,
         test_type: document.getElementById("test_type").value,
 
+        // Difficulty / Cognitive Load
         difficulty: getRadioNumber("difficulty"),
         mental_load: getRadioNumber("mental_load"),
         stress: getRadioNumber("stress"),
+
+        // NASA-TLX Ergänzungen
+        temporal_demand: getRadioNumber("temporal_demand", true),
+        physical_demand: getRadioNumber("physical_demand", true),
+
+        // Verständnis & Strategie
         confidence: getRadioNumber("confidence"),
+        task_understanding: getRadioNumber("task_understanding"),
         strategy_change: getRadioNumber("strategy_change"),
 
-        // Optional field – only included if present
-        feedback_helpful: getRadioNumber("feedback_helpful", true),
-
-        task_understanding: getRadioNumber("task_understanding"),
-        eye_tracking_issue: getRadioNumber("eye_tracking_issue"),
-        distraction: getRadioNumber("distraction"),
-        visualization_experience: getRadioNumber("visualization_experience"),
-
+        // Sehvermögen
         vision_issue: getRadioValue("vision_issue"),
+        vision_type: getRadioValue("vision_type"),
         vision_aid: getRadioValue("vision_aid"),
 
+        // Testumgebung
+        eye_tracking_issue: getRadioNumber("eye_tracking_issue", true),
+        distraction: getRadioNumber("distraction", true),
+        fatigue: getRadioNumber("fatigue", true),
         test_time: document.getElementById("test_time")?.value || null,
 
-        fatigue: getRadioNumber("fatigue"),
-        viz_test_experience: getRadioNumber("viz_test_experience"),
+        // Erfahrung
+        visualization_experience: getRadioNumber("visualization_experience", true),
+        viz_test_experience: getRadioNumber("viz_test_experience", true),
 
+        // 🆕 Demographie
+        age: Number(document.getElementById("age")?.value) || null,
+        gender: document.getElementById("gender")?.value || null,
+        field_of_study: document.getElementById("field_of_study")?.value || null,
+
+        // Freitext
         open_feedback: document.getElementById("open_feedback")?.value || null
     };
+
 
     // -------------------------------------------------
     // Submit feedback to backend

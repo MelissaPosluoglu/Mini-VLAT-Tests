@@ -44,48 +44,49 @@
             title.textContent = `Feedback für Teilnehmer ${f.participantNumber ?? "-"}`;
 
             box.innerHTML = `
-                <div class="feedback-card">
+<div class="feedback-card">
 
-                    <h3>Allgemein</h3>
-                    <p><strong>Testtyp:</strong> ${f.test_type ?? "-"}</p>
+  <h3>Allgemein</h3>
+  <p><strong>Testtyp:</strong> ${f.test_type ?? "-"}</p>
 
-                    <h3>Demographische Angaben</h3>
-                    <p><strong>Alter:</strong> ${f.age ?? "-"}</p>
-                    <p><strong>Geschlecht:</strong> ${f.gender ?? "-"}</p>
-                    <p><strong>Studienfach / Beruf:</strong> ${f.field_of_study ?? "-"}</p>
+  <h3>Demographie</h3>
+  <p><strong>Alter:</strong> ${f.age ?? "-"}</p>
+  <p><strong>Geschlecht:</strong> ${f.gender ?? "-"}</p>
+  <p><strong>Studienfach / Beruf:</strong> ${f.field_of_study ?? "-"}</p>
 
-                    <h3>Schwierigkeit & NASA-TLX</h3>
-                    <p><strong>Schwierigkeit:</strong> ${f.difficulty ?? "-"}</p>
-                    <p><strong>Mentale Belastung:</strong> ${f.mental_load ?? "-"}</p>
-                    <p><strong>Zeitdruck:</strong> ${f.temporal_demand ?? "-"}</p>
-                    <p><strong>Physische Anforderung:</strong> ${f.physical_demand ?? "-"}</p>
-                    <p><strong>Stress:</strong> ${f.stress ?? "-"}</p>
+  <h3>Schwierigkeit & Belastung</h3>
+  <p><strong>Schwierigkeit:</strong> ${f.difficulty ?? "-"}</p>
+  <p><strong>Mentale Belastung:</strong> ${f.mental_load ?? "-"}</p>
+  <p><strong>Stress:</strong> ${f.stress ?? "-"}</p>
+  <p><strong>Zeitdruck:</strong> ${f.temporal_demand ?? "-"}</p>
+  <p><strong>Körperliche Anforderung:</strong> ${f.physical_demand ?? "-"}</p>
 
-                    <h3>Verständnis & Strategie</h3>
-                    <p><strong>Sicherheit:</strong> ${f.confidence ?? "-"}</p>
-                    <p><strong>Aufgabenverständnis:</strong> ${f.task_understanding ?? "-"}</p>
-                    <p><strong>Strategie geändert:</strong> ${f.strategy_change ?? "-"}</p>
+  <h3>Verständnis & Strategie</h3>
+  <p><strong>Aufgabenverständnis:</strong> ${f.task_understanding ?? "-"}</p>
+  <p><strong>Sicherheit:</strong> ${f.confidence ?? "-"}</p>
+  <p><strong>Strategie geändert:</strong> ${f.strategy_change ?? "-"}</p>
 
-                    <h3>Sehvermögen</h3>
-                    <p><strong>Sehschwäche:</strong> ${f.vision_issue ?? "-"}</p>
-                    <p><strong>Art der Sehschwäche:</strong> ${f.vision_type ?? "-"}</p>
-                    <p><strong>Sehhilfe:</strong> ${f.vision_aid ?? "-"}</p>
+  <h3>Sehvermögen</h3>
+  <p><strong>Sehschwäche:</strong> ${f.vision_issue ?? "-"}</p>
+  <p><strong>Art der Sehschwäche:</strong> ${f.vision_type ?? "-"}</p>
+  <p><strong>Sehhilfe:</strong> ${f.vision_aid ?? "-"}</p>
 
-                    <h3>Testumgebung</h3>
-                    <p><strong>Blickerfassungsprobleme:</strong> ${f.eye_tracking_issue ?? "-"}</p>
-                    <p><strong>Ablenkung:</strong> ${f.distraction ?? "-"}</p>
-                    <p><strong>Müdigkeit:</strong> ${f.fatigue ?? "-"}</p>
-                    <p><strong>Testzeit:</strong> ${f.test_time ?? "-"}</p>
+  <h3>Testumgebung</h3>
+  <p><strong>Blickerfassungsprobleme:</strong> ${f.eye_tracking_issue ?? "-"}</p>
+  <p><strong>Ablenkung:</strong> ${f.distraction ?? "-"}</p>
+  <p><strong>Müdigkeit:</strong> ${f.fatigue ?? "-"}</p>
+  <p><strong>Testzeitpunkt:</strong> ${f.test_time ?? "-"}</p>
 
-                    <h3>Erfahrung</h3>
-                    <p><strong>Visualisierungserfahrung:</strong> ${f.visualization_experience ?? "-"}</p>
-                    <p><strong>Ähnliche Tests:</strong> ${f.viz_test_experience ?? "-"}</p>
+  <h3>Erfahrung</h3>
+  <p><strong>Visualisierungserfahrung:</strong> ${f.visualization_experience ?? "-"}</p>
+  <p><strong>Testerfahrung:</strong> ${f.viz_test_experience ?? "-"}</p>
 
-                    <h3>Offenes Feedback</h3>
-                    <p>${f.open_feedback || "-"}</p>
+  <h3>Freitext</h3>
+  <p>${f.open_feedback || "-"}</p>
 
-                </div>
-            `;
+</div>
+`;
+
         } catch (err) {
             console.error(err);
             box.innerHTML = `<p style="text-align:center;color:#777;">Fehler beim Laden.</p>`;
