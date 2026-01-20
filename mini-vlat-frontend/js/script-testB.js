@@ -321,6 +321,8 @@ async function showResultTestB() {
     `;
 
     document.getElementById("feedbackBtn").addEventListener("click", () => {
-        window.location.href = "/html/results.html";
-    });
+    const basePath = window.location.pathname.split("/questionsB/")[0];
+    window.location.href = basePath + "/results.html";
+});
+
 }

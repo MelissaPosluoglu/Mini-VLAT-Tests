@@ -232,7 +232,9 @@ async function showResultTestC() {
         </div>
     `;
 
-    document.getElementById("feedbackBtn").onclick = () => {
-        window.location.href = "/html/results.html";
-    };
+    document.getElementById("feedbackBtn").addEventListener("click", () => {
+    const basePath = window.location.pathname.split("/questionsC/")[0];
+    window.location.href = basePath + "/results.html";
+});
+
 }
