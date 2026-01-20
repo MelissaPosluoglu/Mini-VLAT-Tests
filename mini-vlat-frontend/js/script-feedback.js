@@ -168,16 +168,34 @@ async function submitFeedback() {
 async function preloadFeedback(testId) {
     try {
         const res = await fetch(`${API_BASE}/feedback/test/${encodeURIComponent(testId)}`);
-        if (!res.ok) return;
 
-        const f = (await res.json()).feedback;
+        // ❌ kein Feedback → normaler Zustand, nichts vorbefüllen
+        if (res.status === 404) {
+            return;
+        }
 
+        if (!res.ok) {
+            console.warn("Fehler beim Laden des Feedbacks");
+            return;
+        }
+
+        const data = await res.json();
+
+        // ✅ WICHTIG: zusätzlicher Guard
+        if (!data || !data.feedback) {
+            return;
+        }
+
+        const f = data.feedback;
+
+        // Inputs / Selects
         setValue("age", f.age);
         setValue("gender", f.gender);
         setValue("field_of_study", f.field_of_study);
         setValue("test_time", f.test_time);
         setValue("open_feedback", f.open_feedback);
 
+        // Radio-Gruppen
         setRadio("difficulty", f.difficulty);
         setRadio("mental_load", f.mental_load);
         setRadio("stress", f.stress);
@@ -195,12 +213,15 @@ async function preloadFeedback(testId) {
         setRadio("vision_type", f.vision_type);
         setRadio("vision_aid", f.vision_aid);
 
-        if (f.vision_issue === "yes") toggleVisionType(true);
+        if (f.vision_issue === "yes") {
+            toggleVisionType(true);
+        }
 
-    } catch {
-        console.warn("Kein bestehendes Feedback geladen");
+    } catch (err) {
+        console.warn("Feedback konnte nicht geladen werden", err);
     }
 }
+
 
 // =====================================================
 // HELPERS

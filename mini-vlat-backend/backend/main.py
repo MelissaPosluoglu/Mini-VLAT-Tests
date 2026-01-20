@@ -192,7 +192,7 @@ async def get_feedback_by_test_id(test_id: str):
     
     doc = await feedback_collection.find_one({"test_id": test_id})
     if not doc:
-        raise HTTPException(status_code=404, detail="Kein Feedback gefunden")
+        return {"status": "empty", "feedback": None}
 
     doc["_id"] = str(doc["_id"])
     return {"status": "ok", "feedback": doc}

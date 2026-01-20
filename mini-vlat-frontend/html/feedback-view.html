@@ -20,14 +20,18 @@
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const testId = urlParams.get("test_id");
-    const API_BASE = window.location.origin;
-    let currentTestType = null;
+
+    // 🔑 Test-Typ optional aus URL (sauberer Fallback)
+    let currentTestType = urlParams.get("test_type");
+
+    const API_BASE = "http://localhost:8000";
+
     async function loadFeedback() {
         const box = document.getElementById("feedback-content");
         const title = document.getElementById("feedback-title");
 
         if (!testId) {
-            box.innerHTML = `<p style="text-align:center;color:#777;">No test_id provided.</p>`;
+            box.innerHTML = `<p>No test_id provided.</p>`;
             return;
         }
 
@@ -36,15 +40,48 @@
                 `${API_BASE}/feedback/test/${encodeURIComponent(testId)}`
             );
 
-            if (!res.ok) {
-                box.innerHTML = `<p style="text-align:center;color:#777;">No feedback available.</p>`;
+            // ✅ FALL 1: KEIN FEEDBACK (404)
+            if (res.status === 404) {
+                title.textContent = "Feedback";
+                box.innerHTML = `
+                    <p style="text-align:center;color:#777;">
+                        Für diesen Test wurde noch kein Feedback abgegeben.
+                    </p>
+
+                    <button class="submit-btn" onclick="editFeedback()">
+                        ✏️ Feedback ausfüllen
+                    </button>
+                `;
                 return;
             }
 
-            const data = await res.json();
-            const f = data.feedback;
-            currentTestType = f.test_type;
+            // ❌ echter Serverfehler
+            if (!res.ok) {
+                throw new Error("Serverfehler");
+            }
 
+            const data = await res.json();
+
+            // ✅ WICHTIG: zusätzliche Absicherung
+            if (!data.feedback) {
+                title.textContent = "Feedback";
+                box.innerHTML = `
+                    <p style="text-align:center;color:#777;">
+                        Für diesen Test wurde noch kein Feedback abgegeben.
+                    </p>
+
+                    <button class="submit-btn" onclick="editFeedback()">
+                        ✏️ Feedback ausfüllen
+                    </button>
+                `;
+                return;
+            }
+
+            // ✅ FALL 2: FEEDBACK EXISTIERT
+            const f = data.feedback;
+
+            // test_type sicher setzen
+            currentTestType = f.test_type || currentTestType || "A";
 
             title.textContent = `Feedback for Participant ${f.participantNumber ?? "-"}`;
 
@@ -93,35 +130,30 @@
     ✏️ Feedback bearbeiten
   </button>
 
-
 </div>
 `;
+
         } catch (err) {
             console.error(err);
-            box.innerHTML = `<p style="text-align:center;color:#777;">Error while loading feedback.</p>`;
+            box.innerHTML = `<p>Error while loading feedback.</p>`;
         }
-    }
-
-    function goBack() {
-        window.location.href = "/html/results.html";
     }
 
     function editFeedback() {
-        if (!currentTestType) {
-            alert("Test-Typ nicht verfügbar.");
-            return;
-        }
+        // 🔒 absoluter Fallback
+        const type = currentTestType || "A";
 
         window.location.href =
-            `../html/feedback.html?test_id=${encodeURIComponent(testId)}&test_type=${encodeURIComponent(currentTestType)}`;
+            `feedback.html?test_id=${encodeURIComponent(testId)}&test_type=${encodeURIComponent(type)}`;
     }
 
-
+    function goBack() {
+        window.location.href = "results.html";
+    }
 
     loadFeedback();
-
-
 </script>
+
 
 </body>
 </html>

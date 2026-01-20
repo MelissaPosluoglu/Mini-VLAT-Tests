@@ -135,7 +135,8 @@ async function deleteParticipant() {
  * Opens feedback detail view for a specific test
  */
 function viewFeedback(testId) {
-    checkFeedbackAndNavigate(testId);
+    window.location.href =
+        `../html/feedback-view.html?test_id=${encodeURIComponent(testId)}`;
 }
 
 /**
@@ -188,24 +189,6 @@ async function saveName(testId) {
     }
 }
 
-async function checkFeedbackAndNavigate(testId) {
-    try {
-        const res = await fetch(`${API_BASE}/feedback/test/${encodeURIComponent(testId)}`);
-
-        if (res.ok) {
-            // ✅ Feedback existiert → anzeigen
-            window.location.href = `../html/feedback-view.html?test_id=${encodeURIComponent(testId)}`;
-        } else {
-            // ❌ Kein Feedback → Formular öffnen
-            const testType = getTestTypeFromRow(testId);
-            window.location.href =
-                `feedback.html?test_id=${encodeURIComponent(testId)}&test_type=${testType}`;
-        }
-    } catch (err) {
-        console.error(err);
-        alert("Fehler beim Prüfen des Feedbacks.");
-    }
-}
 
 function getTestTypeFromRow(testId) {
     if (document.querySelector(`#tableA #name-${testId}`)) return "A";
