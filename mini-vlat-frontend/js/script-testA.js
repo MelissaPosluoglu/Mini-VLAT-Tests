@@ -287,6 +287,8 @@ async function showResultTestA() {
     `;
 
     document.getElementById("feedbackBtn").addEventListener("click", () => {
-        window.location.href = "/html/results.html";
-    });
+    const basePath = window.location.pathname.split("/questionsA/")[0];
+    window.location.href = basePath + "/results.html";
+});
+
 }
