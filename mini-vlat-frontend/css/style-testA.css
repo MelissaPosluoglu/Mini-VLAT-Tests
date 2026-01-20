@@ -320,3 +320,12 @@ body.test-page #app{
 .next-btn{
     margin-top: 8px !important;
 }
+/* IMAGE SIZE OVERRIDE – LARGER */
+.image-wrapper img,
+.question-image-container img,
+.vlat-image {
+    max-width: 600px !important;
+    max-height: 480px !important;
+    width: auto !important;
+    height: auto !important;
+}
