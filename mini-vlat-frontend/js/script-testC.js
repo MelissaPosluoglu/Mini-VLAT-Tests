@@ -12,7 +12,7 @@ let hasAnswered = false;
 let showingSolution = false;
 let autoNextTimeout = null;
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = window.location.origin;
 
 // -----------------------------------------------------
 // BACKEND INITIALIZATION
@@ -228,11 +228,11 @@ async function showResultTestC() {
             <h2>Test C completed</h2>
             <p><strong>Score:</strong> ${data.score} / ${questions.length}</p>
             <p><strong>Total time:</strong> ${Math.round(data.total_time)} seconds</p>
-            <button class="start-btn" id="feedbackBtn">Go to Feedback</button>
+            <button class="start-btn" id="feedbackBtn">Go to Results</button>
         </div>
     `;
 
     document.getElementById("feedbackBtn").onclick = () => {
-        location.href = "../feedback.html?test_id=" + testId + "&test_type=C";
+        window.location.href = "/html/results.html";
     };
 }

@@ -1,5 +1,5 @@
 // =====================================================
-// MINI-VLAT — FEEDBACK SCRIPT (FINAL, STABLE)
+// MINI-VLAT — FEEDBACK SCRIPT (FINAL, CLEAN, LOCAL)
 // =====================================================
 
 const API_BASE = "http://localhost:8000";
@@ -7,11 +7,9 @@ const API_BASE = "http://localhost:8000";
 document.addEventListener("DOMContentLoaded", () => {
 
     // -------------------------------------------------
-    // Read URL parameters
-    // Expected: ?test_id=XYZ&test_type=A|B|C|D
+    // READ URL PARAMETERS
     // -------------------------------------------------
     const params = new URLSearchParams(window.location.search);
-
     const testId = params.get("test_id");
     const testType = params.get("test_type");
 
@@ -20,143 +18,51 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Set hidden form inputs
+    // -------------------------------------------------
+    // SET HIDDEN INPUTS
+    // -------------------------------------------------
     document.getElementById("test_id").value = testId;
     document.getElementById("test_type").value = testType;
 
-   // -------------------------------------------------
-    // Optional feedback blocks depending on test type
+    // -------------------------------------------------
+    // OPTIONAL BLOCKS BY TEST TYPE
     // -------------------------------------------------
     const feedbackBlock = document.getElementById("feedback_block");
     if (feedbackBlock) {
         feedbackBlock.style.display = (testType === "B") ? "block" : "none";
     }
-});
-
-
-// =====================================================
-// FORM SUBMISSION HANDLER
-// =====================================================
-document.getElementById("feedbackForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
 
     // -------------------------------------------------
-    // Build payload (robust & backend-safe)
+    // PRELOAD EXISTING FEEDBACK (EDIT MODE)
     // -------------------------------------------------
-    const payload = {
-        test_id: document.getElementById("test_id").value,
-        test_type: document.getElementById("test_type").value,
-
-        // Difficulty / Cognitive Load
-        difficulty: getRadioNumber("difficulty"),
-        mental_load: getRadioNumber("mental_load"),
-        stress: getRadioNumber("stress"),
-
-        // NASA-TLX Ergänzungen
-        temporal_demand: getRadioNumber("temporal_demand", true),
-        physical_demand: getRadioNumber("physical_demand", true),
-
-        // Verständnis & Strategie
-        confidence: getRadioNumber("confidence"),
-        task_understanding: getRadioNumber("task_understanding"),
-        strategy_change: getRadioNumber("strategy_change"),
-
-        // Sehvermögen
-        vision_issue: getRadioValue("vision_issue"),
-        vision_type: getRadioValue("vision_type"),
-        vision_aid: getRadioValue("vision_aid"),
-
-        // Testumgebung
-        eye_tracking_issue: getRadioNumber("eye_tracking_issue", true),
-        distraction: getRadioNumber("distraction", true),
-        fatigue: getRadioNumber("fatigue", true),
-        test_time: document.getElementById("test_time")?.value || null,
-
-        // Erfahrung
-        visualization_experience: getRadioNumber("visualization_experience", true),
-        viz_test_experience: getRadioNumber("viz_test_experience", true),
-
-        // 🆕 Demographie
-        age: Number(document.getElementById("age")?.value) || null,
-        gender: document.getElementById("gender")?.value || null,
-        field_of_study: document.getElementById("field_of_study")?.value || null,
-
-        // Freitext
-        open_feedback: document.getElementById("open_feedback")?.value || null
-    };
-
+    preloadFeedback(testId).then(() => {
+        updateSubmitButton();
+    });
 
     // -------------------------------------------------
-    // Submit feedback to backend
+    // FORM VALIDATION SETUP
     // -------------------------------------------------
-    try {
-        const res = await fetch(`${API_BASE}/feedback`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-            throw new Error("Feedback konnte nicht gespeichert werden");
-        }
-
-        alert("Vielen Dank! Ihr Feedback wurde gespeichert.");
-        window.location.href = "../html/results.html";
-
-    } catch (err) {
-        console.error(err);
-        alert("Fehler beim Speichern des Feedbacks.");
-    }
-});
-
-// =====================================================
-// HELPER FUNCTIONS
-// =====================================================
-
-/**
- * Returns the numeric value of a selected radio button.
- * If no option is selected, returns 0 or null (if optional).
- */
-function getRadioNumber(name, optional = false) {
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    if (!el) return optional ? null : 0;
-    return Number(el.value);
-}
-
-/**
- * Returns the value of a selected radio button as a string.
- * Returns null if no option is selected.
- */
-function getRadioValue(name) {
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    return el ? el.value : null;
-}
-
-
-function toggleVisionType(show) {
-    const wrapper = document.getElementById("vision-type-wrapper");
-
-    if (show) {
-        wrapper.style.display = "block";
-    } else {
-        wrapper.style.display = "none";
-
-        // Auswahl zurücksetzen, falls vorher etwas gewählt wurde
-        const radios = wrapper.querySelectorAll('input[type="radio"]');
-        radios.forEach(r => r.checked = false);
-    }
-}
-// =====================================================
-// FORM VALIDATION — ENABLE SUBMIT ONLY WHEN COMPLETE
-// =====================================================
-
-document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("feedbackForm");
     const submitBtn = document.getElementById("submitBtn");
 
+    form.addEventListener("change", updateSubmitButton);
+    form.addEventListener("input", updateSubmitButton);
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!allQuestionsAnswered()) {
+            alert("Please answer ALL questions before submitting the form.");
+            return;
+        }
+        await submitFeedback();
+    });
+
+    function updateSubmitButton() {
+        submitBtn.disabled = !allQuestionsAnswered();
+    }
+
     function allQuestionsAnswered() {
 
-        // Alle Pflicht-Radio-Gruppen
         const requiredRadioGroups = [
             "difficulty",
             "mental_load",
@@ -180,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Vision (Pflicht)
         const visionIssue = document.querySelector(`input[name="vision_issue"]:checked`);
         if (!visionIssue) return false;
 
@@ -190,34 +95,146 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        if (!document.querySelector(`input[name="vision_aid"]:checked`)) {
-            return false;
-        }
-
-        // Select-Felder
+        if (!document.querySelector(`input[name="vision_aid"]:checked`)) return false;
         if (!document.getElementById("gender").value) return false;
         if (!document.getElementById("test_time").value) return false;
-
-        // Demographie
         if (!document.getElementById("age").value) return false;
         if (!document.getElementById("field_of_study").value.trim()) return false;
 
         return true;
     }
-
-    function updateSubmitButton() {
-        submitBtn.disabled = !allQuestionsAnswered();
-    }
-
-    // Auf jede Änderung reagieren
-    form.addEventListener("change", updateSubmitButton);
-    form.addEventListener("input", updateSubmitButton);
-
-    // Sicherheitsnetz: auch beim Submit blocken
-    form.addEventListener("submit", (e) => {
-        if (!allQuestionsAnswered()) {
-            e.preventDefault();
-            alert("Please answer ALL questions before submitting the form.");
-        }
-    });
 });
+
+// =====================================================
+// SUBMIT FEEDBACK
+// =====================================================
+
+async function submitFeedback() {
+
+    const payload = {
+        test_id: getVal("test_id"),
+        test_type: getVal("test_type"),
+
+        difficulty: getRadioNumber("difficulty"),
+        mental_load: getRadioNumber("mental_load"),
+        stress: getRadioNumber("stress"),
+        temporal_demand: getRadioNumber("temporal_demand", true),
+        physical_demand: getRadioNumber("physical_demand", true),
+
+        confidence: getRadioNumber("confidence"),
+        task_understanding: getRadioNumber("task_understanding"),
+        strategy_change: getRadioNumber("strategy_change"),
+
+        vision_issue: getRadioValue("vision_issue"),
+        vision_type: getRadioValue("vision_type"),
+        vision_aid: getRadioValue("vision_aid"),
+
+        eye_tracking_issue: getRadioNumber("eye_tracking_issue", true),
+        distraction: getRadioNumber("distraction", true),
+        fatigue: getRadioNumber("fatigue", true),
+        test_time: getVal("test_time"),
+
+        visualization_experience: getRadioNumber("visualization_experience", true),
+        viz_test_experience: getRadioNumber("viz_test_experience", true),
+
+        age: Number(getVal("age")) || null,
+        gender: getVal("gender"),
+        field_of_study: getVal("field_of_study"),
+
+        open_feedback: getVal("open_feedback")
+    };
+
+    try {
+        const res = await fetch(`${API_BASE}/feedback`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error();
+
+        alert("Vielen Dank! Ihr Feedback wurde gespeichert.");
+        window.location.href = "../html/results.html";
+
+    } catch {
+        alert("Fehler beim Speichern des Feedbacks.");
+    }
+}
+
+// =====================================================
+// PRELOAD EXISTING FEEDBACK (EDIT MODE)
+// =====================================================
+
+async function preloadFeedback(testId) {
+    try {
+        const res = await fetch(`${API_BASE}/feedback/test/${encodeURIComponent(testId)}`);
+        if (!res.ok) return;
+
+        const f = (await res.json()).feedback;
+
+        setValue("age", f.age);
+        setValue("gender", f.gender);
+        setValue("field_of_study", f.field_of_study);
+        setValue("test_time", f.test_time);
+        setValue("open_feedback", f.open_feedback);
+
+        setRadio("difficulty", f.difficulty);
+        setRadio("mental_load", f.mental_load);
+        setRadio("stress", f.stress);
+        setRadio("temporal_demand", f.temporal_demand);
+        setRadio("physical_demand", f.physical_demand);
+        setRadio("confidence", f.confidence);
+        setRadio("task_understanding", f.task_understanding);
+        setRadio("strategy_change", f.strategy_change);
+        setRadio("eye_tracking_issue", f.eye_tracking_issue);
+        setRadio("distraction", f.distraction);
+        setRadio("fatigue", f.fatigue);
+        setRadio("visualization_experience", f.visualization_experience);
+        setRadio("viz_test_experience", f.viz_test_experience);
+        setRadio("vision_issue", f.vision_issue);
+        setRadio("vision_type", f.vision_type);
+        setRadio("vision_aid", f.vision_aid);
+
+        if (f.vision_issue === "yes") toggleVisionType(true);
+
+    } catch {
+        console.warn("Kein bestehendes Feedback geladen");
+    }
+}
+
+// =====================================================
+// HELPERS
+// =====================================================
+
+function getVal(id) {
+    return document.getElementById(id)?.value || null;
+}
+
+function setValue(id, value) {
+    if (value != null) document.getElementById(id).value = value;
+}
+
+function setRadio(name, value) {
+    if (value == null) return;
+    const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+    if (el) el.checked = true;
+}
+
+function getRadioNumber(name, optional = false) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    if (!el) return optional ? null : 0;
+    return Number(el.value);
+}
+
+function getRadioValue(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : null;
+}
+
+function toggleVisionType(show) {
+    const wrapper = document.getElementById("vision-type-wrapper");
+    wrapper.style.display = show ? "block" : "none";
+    if (!show) {
+        wrapper.querySelectorAll("input").forEach(r => r.checked = false);
+    }
+}

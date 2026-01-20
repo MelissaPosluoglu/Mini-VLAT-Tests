@@ -8,9 +8,10 @@
  * @param {string} testType - Test identifier (A, B, C, D)
  * @param {string} tableId - HTML table ID where results are rendered
  */
+const API_BASE =  "http://localhost:8000";
 
 async function loadResults(testType, tableId) {
-    const response = await fetch(`http://localhost:8000/results/${testType}`);
+    const response = await fetch(`${API_BASE}/results/${testType}`);
     const data = await response.json();
 
     const tbody = document.querySelector(`#${tableId} tbody`);
@@ -109,7 +110,7 @@ async function deleteParticipant() {
     if (!confirmDelete) return;
 
     try {
-        const response = await fetch(`http://localhost:8000/delete/${participantNumber}`, {
+        const response = await fetch(`${API_BASE}/delete/${participantNumber}`, {
             method: "DELETE"
         });
 
@@ -134,7 +135,7 @@ async function deleteParticipant() {
  * Opens feedback detail view for a specific test
  */
 function viewFeedback(testId) {
-    window.location.href = `feedback-view.html?test_id=${encodeURIComponent(testId)}`;
+    checkFeedbackAndNavigate(testId);
 }
 
 /**
@@ -168,7 +169,7 @@ async function saveName(testId) {
 
     try {
         const res = await fetch(
-            `http://localhost:8000/participant/${testId}?participantNumber=${encodeURIComponent(newName)}`,
+            `${API_BASE}/participant/${testId}?participantNumber=${encodeURIComponent(newName)}`,
             { method: "PATCH" }
         );
 
@@ -185,4 +186,31 @@ async function saveName(testId) {
         console.error(err);
         alert("Name konnte nicht gespeichert werden");
     }
+}
+
+async function checkFeedbackAndNavigate(testId) {
+    try {
+        const res = await fetch(`${API_BASE}/feedback/test/${encodeURIComponent(testId)}`);
+
+        if (res.ok) {
+            // ✅ Feedback existiert → anzeigen
+            window.location.href = `../html/feedback-view.html?test_id=${encodeURIComponent(testId)}`;
+        } else {
+            // ❌ Kein Feedback → Formular öffnen
+            const testType = getTestTypeFromRow(testId);
+            window.location.href =
+                `feedback.html?test_id=${encodeURIComponent(testId)}&test_type=${testType}`;
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Fehler beim Prüfen des Feedbacks.");
+    }
+}
+
+function getTestTypeFromRow(testId) {
+    if (document.querySelector(`#tableA #name-${testId}`)) return "A";
+    if (document.querySelector(`#tableB #name-${testId}`)) return "B";
+    if (document.querySelector(`#tableC #name-${testId}`)) return "C";
+    if (document.querySelector(`#tableD #name-${testId}`)) return "D";
+    return null;
 }

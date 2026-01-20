@@ -9,7 +9,7 @@ let timeLeft = 25;
 let selectedAnswer = null ;
 let showingSolution = false;
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = window.location.origin;
 
 // State variables per question
 let questionStartMs = 0;
@@ -315,12 +315,12 @@ async function showResultTestB() {
             <p><strong>Total time:</strong> ${totalSeconds} seconds</p>
 
             <button class="start-btn" id="feedbackBtn">
-                Go to Feedback
+                Go to Results
             </button>
         </div>
     `;
 
     document.getElementById("feedbackBtn").addEventListener("click", () => {
-        window.location.href = `../feedback.html?test_id=${testId}&test_type=B`;
+        window.location.href = "/html/results.html";
     });
 }

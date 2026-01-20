@@ -281,12 +281,12 @@ async function showResultTestA() {
             <p><strong>Total time:</strong> ${totalSeconds} seconds</p>
 
             <button class="start-btn" id="feedbackBtn">
-                Go to Feedback
+                Go to Results
             </button>
         </div>
     `;
 
     document.getElementById("feedbackBtn").addEventListener("click", () => {
-        window.location.href = `../feedback.html?test_id=${testId}&test_type=A`;
+        window.location.href = "/html/results.html";
     });
 }

@@ -20,7 +20,8 @@
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const testId = urlParams.get("test_id");
-
+    const API_BASE = window.location.origin;
+    let currentTestType = null;
     async function loadFeedback() {
         const box = document.getElementById("feedback-content");
         const title = document.getElementById("feedback-title");
@@ -32,7 +33,7 @@
 
         try {
             const res = await fetch(
-                `http://localhost:8000/feedback/test/${encodeURIComponent(testId)}`
+                `${API_BASE}/feedback/test/${encodeURIComponent(testId)}`
             );
 
             if (!res.ok) {
@@ -42,6 +43,8 @@
 
             const data = await res.json();
             const f = data.feedback;
+            currentTestType = f.test_type;
+
 
             title.textContent = `Feedback for Participant ${f.participantNumber ?? "-"}`;
 
@@ -86,6 +89,11 @@
   <h3>Open Feedback</h3>
   <p>${f.open_feedback || "-"}</p>
 
+  <button class="submit-btn" onclick="editFeedback()">
+    ✏️ Feedback bearbeiten
+  </button>
+
+
 </div>
 `;
         } catch (err) {
@@ -95,10 +103,24 @@
     }
 
     function goBack() {
-        window.location.href = "results.html";
+        window.location.href = "/html/results.html";
     }
 
+    function editFeedback() {
+        if (!currentTestType) {
+            alert("Test-Typ nicht verfügbar.");
+            return;
+        }
+
+        window.location.href =
+            `../html/feedback.html?test_id=${encodeURIComponent(testId)}&test_type=${encodeURIComponent(currentTestType)}`;
+    }
+
+
+
     loadFeedback();
+
+
 </script>
 
 </body>

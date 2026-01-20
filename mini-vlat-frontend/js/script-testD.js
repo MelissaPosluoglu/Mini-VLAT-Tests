@@ -1,19 +1,17 @@
 // =====================================================
 // MINI-VLAT — Test D
-// IDENTICAL TO TEST C, BUT:
-// - No visible timer
-// - No solution feedback
-// - Manual navigation only
+// WIE Test C, aber:
+
 // =====================================================
 
 let selectedAnswer = null;
 let questionStartMs = 0;
 let hasAnswered = false;
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = window.location.origin;
 
 // -----------------------------------------------------
-// BACKEND INITIALIZATION
+// BACKEND START
 // -----------------------------------------------------
 async function ensureTestStartedD() {
     if (localStorage.getItem("test_id")) return;
@@ -32,18 +30,17 @@ async function ensureTestStartedD() {
 }
 
 // -----------------------------------------------------
-// TIME MEASUREMENT (same as Test C, no time pressure)
+// ZEITMESSUNG (wie Test C)
 // -----------------------------------------------------
 function getTimeTakenSecondsD() {
     return (Date.now() - questionStartMs) / 1000;
 }
 
 // -----------------------------------------------------
-// RENDER QUESTION
+// RENDER FRAGE
 // -----------------------------------------------------
 async function renderTestD(qIndex) {
 
-    // Reset test state when starting from first question
     if (qIndex === 0) {
         localStorage.removeItem("test_id");
     }
@@ -92,7 +89,7 @@ async function renderTestD(qIndex) {
 }
 
 // -----------------------------------------------------
-// ANSWER SELECTION
+// ANSWER SELECT
 // -----------------------------------------------------
 function selectAnswerTestD(answer) {
     if (hasAnswered) return;
@@ -106,7 +103,7 @@ function selectAnswerTestD(answer) {
 }
 
 // -----------------------------------------------------
-// SAVE ANSWER (backend is single source of truth)
+// SAVE ANSWER
 // -----------------------------------------------------
 async function submitAnswerTestD(qIndex, timeTaken) {
 
@@ -128,7 +125,7 @@ async function submitAnswerTestD(qIndex, timeTaken) {
 }
 
 // -----------------------------------------------------
-// NAVIGATION TO NEXT QUESTION
+// NEXT
 // -----------------------------------------------------
 function goNextD(qIndex) {
     if (qIndex + 1 >= questions.length) {
@@ -141,7 +138,7 @@ function goNextD(qIndex) {
 }
 
 // -----------------------------------------------------
-// PROGRESS BAR UPDATE 
+// PROGRESS BAR
 // -----------------------------------------------------
 function updateProgressD(i) {
     const bar = document.getElementById("progress");
@@ -150,7 +147,7 @@ function updateProgressD(i) {
 }
 
 // -----------------------------------------------------
-// FINAL RESULT SCREEN (no feedback shown during test)
+// FINISH TEST (Endscreen + Feedback bleibt)
 // -----------------------------------------------------
 async function showResultTestD() {
 
@@ -169,11 +166,11 @@ async function showResultTestD() {
             <h2>Test D completed</h2>
             <p><strong>Score:</strong> ${data.score} / ${questions.length}</p>
             <p><strong>Total time:</strong> ${Math.round(data.total_time)} seconds</p>
-            <button class="start-btn" id="feedbackBtn">Go to Feedback</button>
+            <button class="start-btn" id="feedbackBtn">Go to Results</button>
         </div>
     `;
 
     document.getElementById("feedbackBtn").onclick = () => {
-        location.href = "../feedback.html?test_id=" + testId + "&test_type=D";
+        window.location.href = "/html/results.html";
     };
 }
