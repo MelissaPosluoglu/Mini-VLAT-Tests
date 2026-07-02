@@ -64,6 +64,7 @@ class FeedbackRequest(BaseModel):
     # Verständnis & Strategie
     # -------------------------
     task_understanding: Optional[int] = None
+    diagram_quality: Optional[int] = None
     strategy_change: int
 
     # -------------------------

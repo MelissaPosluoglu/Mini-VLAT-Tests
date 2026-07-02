@@ -123,6 +123,7 @@ async function submitFeedback() {
 
         confidence: getRadioNumber("confidence"),
         task_understanding: getRadioNumber("task_understanding"),
+        diagram_quality: getRadioNumber("diagram_quality"),
         strategy_change: getRadioNumber("strategy_change"),
 
         vision_issue: getRadioValue("vision_issue"),
@@ -203,6 +204,7 @@ async function preloadFeedback(testId) {
         setRadio("physical_demand", f.physical_demand);
         setRadio("confidence", f.confidence);
         setRadio("task_understanding", f.task_understanding);
+        setRadio("diagram_quality", f.diagram_quality);
         setRadio("strategy_change", f.strategy_change);
         setRadio("eye_tracking_issue", f.eye_tracking_issue);
         setRadio("distraction", f.distraction);
