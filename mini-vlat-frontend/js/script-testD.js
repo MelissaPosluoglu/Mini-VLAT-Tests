@@ -8,7 +8,7 @@ let selectedAnswer = null;
 let questionStartMs = 0;
 let hasAnswered = false;
 
-const API_BASE = window.location.origin;
+const API_BASE = "http://localhost:8000";
 
 // -----------------------------------------------------
 // BACKEND START

@@ -9,7 +9,7 @@ let timeLeft = 25;
 let selectedAnswer = null ;
 let showingSolution = false;
 
-const API_BASE = window.location.origin;
+const API_BASE = "http://localhost:8000";
 
 // State variables per question
 let questionStartMs = 0;

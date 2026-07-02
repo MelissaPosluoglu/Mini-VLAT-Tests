@@ -12,7 +12,7 @@ let hasAnswered = false;
 let showingSolution = false;
 let autoNextTimeout = null;
 
-const API_BASE = window.location.origin;
+const API_BASE = "http://localhost:8000";
 
 // -----------------------------------------------------
 // BACKEND INITIALIZATION
