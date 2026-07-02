@@ -10,14 +10,6 @@ The platform consists of a **Frontend (HTML/CSS/JavaScript)** and a **Backend (F
 
 ---
 
-
-## 🌐 Live Deployment
-
-**VM Address:**  
-http://[2001:7c0:2320:2:f816:3eff:fe26:d8f1]/
-
----
-
 ## 🔧 Technologies
 
 | Component | Technology |
